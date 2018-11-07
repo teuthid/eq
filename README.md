@@ -1,1 +1,1 @@
-# eq
+## EQ - transcendental fan controller ;)
