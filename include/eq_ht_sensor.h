@@ -74,7 +74,7 @@ bool EqHtSensor<SensorType, HumidityOn>::init(const bool &isITSensor) {
   for (uint8_t __i = 0; __i < EqConfig::htSensorCollectorSize; __i++) {
     if (read())
       __c++;
-    delay(500); // FIXME
+    delay(500);
   } 
   if (__c == 0) {
     setAlert();
