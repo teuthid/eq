@@ -194,12 +194,12 @@ void eqHTMeasurementCallback() {
 #ifdef EQ_DEBUG
   Serial.print(F(" L="));
   Serial.print(eqLightSensor.intensity());
-/*
+
 Serial.print(F(" H="));
 Serial.print(eqHtSensor.humidity());
 Serial.print(F(" T="));
 Serial.print(eqHtSensor.temperature());
-*/
+
   /*
 Serial.print(F(" HTD="));
 Serial.print(eqHtSensor.trendHumidity());
