@@ -1,0 +1,251 @@
+
+#include "eq_config.h"
+#include "eq_eeprom.h"
+
+#include <FastGPIO.h>
+#include <avr/wdt.h>
+
+#ifdef EQ_DEBUG
+#define __ASSERT_USE_STDERR
+#include <assert.h>
+void __assert(const char *__func, const char *__file, int __lineno,
+              const char *__sexp) {
+  Serial.println();
+  Serial.println(F("--- Assertion ---"));
+  Serial.println(__func);
+  Serial.println(__file);
+  Serial.println(__lineno, DEC);
+  Serial.println(__sexp);
+  Serial.flush();
+  abort();
+}
+#endif // EQ_DEBUG
+
+EqAlertType EqConfig::alert_ = EqAlertType::None;
+uint16_t EqConfig::overdriveTime_ = 0;
+uint16_t EqConfig::backlightTimeCounter_ = 0;
+
+void EqConfig::init() {
+  EqEeprom::init();
+  cancelOverheating();
+  FastGPIO::Pin<fanTachometerControlPin>::setInputPulledUp();
+  backlightTimeCounter_ = backlightTime();
+}
+
+void EqConfig::reset(const bool &cleanEeprom) {
+  EqEeprom::init(cleanEeprom);
+  wdt_enable(WDTO_15MS);
+  while (true) {
+  }
+}
+
+void EqConfig::setAlert(const EqAlertType &value) {
+  setBacklight(value != alert_);
+  alert_ = value;
+}
+
+void EqConfig::resetAlert(const EqAlertType &value) {
+  alert_ = (alert_ == value) ? EqAlertType::None : alert_;
+}
+
+bool EqConfig::isAlertOnZeroSpeed() {
+  return EqEeprom::readValue<bool>(EqEeprom::AlertOnZeroSpeed,
+                                   alertOnZeroSpeedDefault);
+}
+
+void EqConfig::setAlertOnZeroSpeed(const bool &enabled) {
+  EqEeprom::writeValue<bool>(EqEeprom::AlertOnZeroSpeed, enabled);
+}
+
+String EqConfig::alertAsString() {
+  switch (alert_) {
+  case EqAlertType::None:
+    return String(F("None"));
+  case EqAlertType::Display:
+    return String(F("Display"));
+  case EqAlertType::Fan:
+    return String(F("Fan"));
+  case EqAlertType::HtSensor:
+    return String(F("HT Sensor"));
+  case EqAlertType::LightSensor:
+    return String(F("Light Sensor"));
+  case EqAlertType::TempSensor:
+    return String(F("Temp Sensor"));
+  case EqAlertType::ItSensor:
+    return String(F("IT Sensor"));
+  case EqAlertType::Overheating:
+    return String(F("Overheating"));
+  default:
+    return String(F("Unknown"));
+  }
+}
+
+bool EqConfig::overheating() {
+  return (EqEeprom::readValue<uint8_t>(EqEeprom::OverheatingCounter, 0) >
+          maxCountOverheating);
+}
+
+void EqConfig::registerOverheating() {
+  EqEeprom::writeValue<uint8_t>(
+      EqEeprom::OverheatingCounter,
+      EqEeprom::readValue<uint8_t>(EqEeprom::OverheatingCounter, 0) + 1);
+}
+
+void EqConfig::cancelOverheating() {
+  EqEeprom::writeValue<uint8_t>(EqEeprom::OverheatingCounter, 0);
+}
+
+uint8_t EqConfig::lightSensorThreshold() {
+  return EqEeprom::readValue<uint8_t>(EqEeprom::LightSensorThreshold,
+                                      lightSensorThresholdDefault);
+}
+
+void EqConfig::setLightSensorThreshold(const uint8_t &value) {
+  EqEeprom::writeValue<uint8_t>(
+      EqEeprom::LightSensorThreshold,
+      constrain(value, lightSensorThresholdMin, lightSensorThresholdMax));
+}
+
+uint8_t EqConfig::htSensorInterval() {
+  return EqEeprom::readValue<uint8_t>(EqEeprom::HtSensorInterval,
+                                      htSensorIntervalDefault);
+}
+
+void EqConfig::setHtSensorInterval(const uint8_t &value) {
+  EqEeprom::writeValue<uint8_t>(
+      EqEeprom::HtSensorInterval,
+      constrain(value, htSensorIntervalMin, htSensorIntervalMax));
+}
+
+uint8_t EqConfig::htSensorHumidityThreshold() {
+  return EqEeprom::readValue<uint8_t>(EqEeprom::HtSensorHumidityThreshold,
+                                      htSensorHumidityThresholdDefault);
+}
+
+void EqConfig::setHtSensorHumidityThreshold(const uint8_t &value) {
+  EqEeprom::writeValue<uint8_t>(EqEeprom::HtSensorHumidityThreshold,
+                                constrain(value, htSensorHumidityThresholdMin,
+                                          htSensorHumidityThresholdMax));
+}
+
+uint8_t EqConfig::htSensorTemperatureThreshold() {
+  return EqEeprom::readValue<uint8_t>(EqEeprom::HtSensorTemperatureThreshold,
+                                      htSensorTemperatureThresholdDefault);
+}
+
+void EqConfig::setHtSensorTemperatureThreshold(const uint8_t &value) {
+  EqEeprom::writeValue<uint8_t>(EqEeprom::HtSensorTemperatureThreshold,
+                                constrain(value,
+                                          htSensorTemperatureThresholdMin,
+                                          htSensorTemperatureThresholdMax));
+}
+
+EqHtIndexType EqConfig::htIndexType() {
+  return EqEeprom::readValue<EqHtIndexType>(EqEeprom::HtIndexType,
+                                            EqHtIndexType::Default);
+}
+
+void EqConfig::setHtIndexType(const EqHtIndexType &value) {
+  EqEeprom::writeValue<EqHtIndexType>(EqEeprom::HtIndexType, value);
+}
+
+void EqConfig::setOverdriveTime(const uint16_t &value) {
+  EqConfig::overdriveTime_ =
+      constrain(value, overdriveStepMin, overdriveMaxTime);
+}
+
+void EqConfig::decreaseOverdriveTime(const uint16_t &value) {
+  overdriveTime_ = (overdriveTime_ > value) ? (overdriveTime_ - value) : 0;
+}
+
+void EqConfig::increaseOverdriveTime(const uint16_t &value) {
+  if (overdriveTime_ < overdriveMaxTime) {
+    overdriveTime_ = min(overdriveTime_ + value, overdriveMaxTime);
+    setBacklight();
+  }
+}
+
+uint16_t EqConfig::overdriveStep() {
+  return EqEeprom::readValue<uint16_t>(EqEeprom::OverdriveStep,
+                                       overdriveStepDefault);
+}
+
+void EqConfig::setOverdriveStep(const uint16_t &value) {
+  EqEeprom::writeValue<uint16_t>(
+      EqEeprom::OverdriveStep,
+      constrain(value, overdriveStepMin, overdriveStepMax));
+}
+
+uint8_t EqConfig::fanPwmInterval() {
+  return EqEeprom::readValue<uint8_t>(EqEeprom::FanPwmInterval,
+                                      fanPwmIntervalDefault);
+}
+
+void EqConfig::setFanPwmInterval(const uint8_t &value) {
+  EqEeprom::writeValue<uint8_t>(
+      EqEeprom::FanPwmInterval,
+      constrain(value, fanPwmIntervalMin, fanPwmIntervalMax));
+}
+
+uint8_t EqConfig::fanPwmMin() {
+  return EqEeprom::readValue<uint8_t>(EqEeprom::FanPwmMin, fanPwmMinDefault);
+}
+
+void EqConfig::setFanPwmMin(const uint8_t &value) {
+  uint8_t __v = constrain(value, fanPwmMinDefault, fanPwmMaxDefault - 1);
+  if (__v < EqConfig::fanPwmMax())
+    EqEeprom::writeValue<uint8_t>(EqEeprom::FanPwmMin, __v);
+}
+
+uint8_t EqConfig::fanPwmMax() {
+  return EqEeprom::readValue<uint8_t>(EqEeprom::FanPwmMax, fanPwmMaxDefault);
+}
+
+void EqConfig::setFanPwmMax(const uint8_t &value) {
+  uint8_t __v = constrain(value, fanPwmMinDefault + 1, fanPwmMaxDefault);
+  if (__v > EqConfig::fanPwmMin())
+    EqEeprom::writeValue<uint8_t>(EqEeprom::FanPwmMax, __v);
+}
+
+uint8_t EqConfig::fanPwmOverdrive() {
+  return EqEeprom::readValue<uint8_t>(EqEeprom::FanPwmOverdrive,
+                                      fanPwmOverdriveDefault);
+}
+
+void EqConfig::setFanPwmOverdrive(const uint8_t &value) {
+  EqEeprom::writeValue<uint8_t>(EqEeprom::FanPwmOverdrive,
+                                constrain(value, EqConfig::fanPwmMin(), 100));
+}
+
+bool EqConfig::isFanPwmStepModeEnabled() {
+  return EqEeprom::readValue<bool>(EqEeprom::FanPwmStepMode,
+                                   fanPwmStepModeDefault);
+}
+
+void EqConfig::setFanPwmStepMode(const bool &enabled) {
+  EqEeprom::writeValue<bool>(EqEeprom::FanPwmStepMode, enabled);
+}
+
+bool EqConfig::isFanTachometerEnabled() {
+  return FastGPIO::Pin<EqConfig::fanTachometerControlPin>::isInputHigh();
+}
+
+uint16_t EqConfig::backlightTime() {
+  return EqEeprom::readValue<uint16_t>(EqEeprom::BacklighTime,
+                                       backlightTimeDefault);
+}
+
+void EqConfig::setBacklighTime(const uint16_t &value) {
+  EqEeprom::writeValue<uint16_t>(
+      EqEeprom::BacklighTime,
+      constrain(value, backlightTimeMin, backlightTimeMax));
+}
+
+void EqConfig::setBacklight(bool enabled) {
+  backlightTimeCounter_ = enabled ? backlightTime() : 0;
+}
+
+void EqConfig::decreaseBacklightTimeCounter() {
+  if (backlightTimeCounter_ > 0)
+    backlightTimeCounter_--;
+}
