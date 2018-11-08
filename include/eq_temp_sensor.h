@@ -44,7 +44,9 @@ template <> struct __EqHtSensorObject<EQ_DS18B20> {
 template <>
 EqHtSensor<EQ_DS18B20, false>::EqHtSensor(const uint8_t &sensorPin)
     : sensor_(sensorPin) {}
-
+template <> uint16_t EqHtSensor<EQ_DS18B20, false>::samplingPeriod_() const {
+  return 1000;
+}
 template <> bool EqHtSensor<EQ_DS18B20, false>::initHtSensor_() {
   return sensor_.init();
 }

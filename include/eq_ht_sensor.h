@@ -43,7 +43,8 @@ private:
       humidityCollector_;
   EqCollector<EqConfig::htSensorCollectorSize> temperatureCollector_;
 
-  bool initHtSensor_(); // { return true; }
+  uint16_t samplingPeriod_() const; // in milliseconds
+  bool initHtSensor_() { return true; }
   void readHTSensor_(float &humidity, float &temperature);
 
   void setAlert() {
@@ -74,8 +75,8 @@ bool EqHtSensor<SensorType, HumidityOn>::init(const bool &isITSensor) {
   for (uint8_t __i = 0; __i < EqConfig::htSensorCollectorSize; __i++) {
     if (read())
       __c++;
-    delay(500);
-  } 
+    delay(samplingPeriod_());
+  }
   if (__c == 0) {
     setAlert();
     return false;
@@ -153,6 +154,9 @@ uint8_t EqHtSensor<SensorType, HumidityOn>::index() const {
 template <> struct __EqHtSensorObject<EQ_AM2320> {
   typedef Adafruit_AM2320 Type;
 };
+template <> uint16_t EqHtSensor<EQ_AM2320, true>::samplingPeriod_() const {
+  return 2000;
+}
 template <> bool EqHtSensor<EQ_AM2320, true>::initHtSensor_() {
   return sensor_.begin();
 }
@@ -162,6 +166,7 @@ void EqHtSensor<EQ_AM2320, true>::readHTSensor_(float &humidity,
   humidity = sensor_.readHumidity();
   temperature = sensor_.readTemperature();
 }
+
 // ----------------------------------------------------------------------------
 
 // --- DHT11 ------------------------------------------------------------------
@@ -174,6 +179,9 @@ EqHtSensor<EQ_DHT11, true>::EqHtSensor(
     const uint8_t &sensorPin = EqConfig::htSensorPin)
     : sensor_(sensorPin, DHT11) {
   sensor_.begin();
+}
+template <> uint16_t EqHtSensor<EQ_DHT11, true>::samplingPeriod_() const {
+  return 2000;
 }
 template <>
 void EqHtSensor<EQ_DHT11, true>::readHTSensor_(float &humidity,
@@ -194,6 +202,9 @@ EqHtSensor<EQ_DHT21, true>::EqHtSensor(
     : sensor_(sensorPin, DHT21) {
   sensor_.begin();
 }
+template <> uint16_t EqHtSensor<EQ_DHT21, true>::samplingPeriod_() const {
+  return 2000;
+}
 template <>
 void EqHtSensor<EQ_DHT21, true>::readHTSensor_(float &humidity,
                                                float &temperature) {
@@ -213,6 +224,9 @@ EqHtSensor<EQ_DHT22, true>::EqHtSensor(
     : sensor_(sensorPin, DHT22) {
   sensor_.begin();
 }
+template <> uint16_t EqHtSensor<EQ_DHT22, true>::samplingPeriod_() const {
+  return 2000;
+}
 template <>
 void EqHtSensor<EQ_DHT22, true>::readHTSensor_(float &humidity,
                                                float &temperature) {
@@ -227,6 +241,9 @@ void EqHtSensor<EQ_DHT22, true>::readHTSensor_(float &humidity,
 #include <Wire.h>
 
 template <> struct __EqHtSensorObject<EQ_HTU21D> { typedef HTU21D Type; };
+template <> uint16_t EqHtSensor<EQ_HTU21D, true>::samplingPeriod_() const {
+  return 100;
+}
 template <> bool EqHtSensor<EQ_HTU21D, true>::initHtSensor_() {
   return sensor_.begin();
 }
