@@ -75,7 +75,7 @@ bool EqHtSensor<SensorType, HumidityOn>::init(const bool &isITSensor) {
     if (read())
       __c++;
     delay(500); // FIXME
-  }
+  } 
   if (__c == 0) {
     setAlert();
     return false;
