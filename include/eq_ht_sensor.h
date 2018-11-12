@@ -14,7 +14,7 @@ public:
   constexpr bool humidityOn() const { return HumidityOn; }
 
   bool init(const bool &isITSensor = false);
-  bool read(const bool &isITSensor = false);
+  bool read();
 
   constexpr float humidity() const {
     return HumidityOn ? humidityCollector_.average() : 0;
@@ -42,6 +42,7 @@ private:
   EqCollector<(HumidityOn ? EqConfig::htSensorCollectorSize : 1)>
       humidityCollector_;
   EqCollector<EqConfig::htSensorCollectorSize> temperatureCollector_;
+  bool isITSensor_ = false;
 
   uint16_t samplingPeriod_() const; // in milliseconds
   bool initHtSensor_() { return true; }
@@ -61,6 +62,7 @@ bool EqHtSensor<SensorType, HumidityOn>::init(const bool &isITSensor) {
 #ifdef EQ_DEBUG
   Serial.print(HumidityOn ? F("[HT Sensor] ") : F("[Temp Sensor] "));
 #endif
+  isITSensor_ = isITSensor;
   if (!initHtSensor_()) {
     setAlert();
     return false;
@@ -68,7 +70,7 @@ bool EqHtSensor<SensorType, HumidityOn>::init(const bool &isITSensor) {
   if (HumidityOn)
     humidityCollector_.setAcceptableValueRange(EqConfig::htSensorHumidityMin,
                                                EqConfig::htSensorHumidityMax);
-  if (!isITSensor)
+  if (!isITSensor_)
     temperatureCollector_.setAcceptableValueRange(
         EqConfig::htSensorTemperatureMin, EqConfig::htSensorTemperatureMax);
   uint8_t __c = 0;
@@ -85,7 +87,7 @@ bool EqHtSensor<SensorType, HumidityOn>::init(const bool &isITSensor) {
 }
 
 template <uint8_t SensorType, bool HumidityOn>
-bool EqHtSensor<SensorType, HumidityOn>::read(const bool &isITSensor) {
+bool EqHtSensor<SensorType, HumidityOn>::read() {
   float __h = 0, __t = 0;
   readHTSensor_(__h, __t);
   if ((HumidityOn && isnan(__h)) || isnan(__t))
@@ -95,7 +97,7 @@ bool EqHtSensor<SensorType, HumidityOn>::read(const bool &isITSensor) {
   if (HumidityOn)
     __ctrl = __ctrl &&
              (humidityCollector_.deviation() < EqConfig::sensorMaxDeviation);
-  if (!isITSensor)
+  if (!isITSensor_)
     __ctrl = __ctrl &&
              (temperatureCollector_.deviation() < EqConfig::sensorMaxDeviation);
   return __ctrl;

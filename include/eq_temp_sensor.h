@@ -4,6 +4,7 @@
 
 #include <DallasTemperature.h>
 #include <OneWire.h>
+#include <float.h>
 
 #include "eq_ht_sensor.h"
 
@@ -19,7 +20,12 @@ private:
   OneWire onewire_;
   DallasTemperature sensor_;
   DeviceAddress address_;
+  bool isCorrect_(float temp) const;
 };
+
+bool __EqTempSensor::isCorrect_(float temp) const {
+  return (fabs(temp + 127.0) >= FLT_EPSILON);
+}
 
 bool __EqTempSensor::init() {
   sensor_.begin();
@@ -30,10 +36,12 @@ bool __EqTempSensor::init() {
 }
 
 float __EqTempSensor::read() {
-  sensor_.requestTemperatures();
-  while (!sensor_.isConversionComplete())
-    ;
-  return sensor_.getTempC(address_);
+  float __t;
+  do {
+    sensor_.requestTemperatures();
+    __t = sensor_.getTempC(address_);
+  } while (!isCorrect_(__t)); // FIXME: waiting for watchdog
+  return __t;
 }
 
 // specializations for DS18B20
@@ -54,7 +62,9 @@ template <>
 void EqHtSensor<EQ_DS18B20, false>::readHTSensor_(float &humidity,
                                                   float &temperature) {
   humidity = 0;
+  noInterrupts();
   temperature = sensor_.read();
+  interrupts();
 }
 
 typedef EqHtSensor<EQ_DS18B20, false> EqTempSensor;

@@ -172,7 +172,7 @@ void eqSleep() {
 }
 
 void eqITMeasurementCallback() {
-  if (!eqItSensor.read(true))
+  if (!eqItSensor.read())
     EqConfig::setAlert(EqAlertType::ItSensor);
   else {
     EqConfig::resetAlert(EqAlertType::ItSensor);
