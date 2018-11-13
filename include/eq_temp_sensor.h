@@ -38,8 +38,10 @@ bool __EqTempSensor::init() {
 float __EqTempSensor::read() {
   float __t;
   do {
+    noInterrupts();
     sensor_.requestTemperatures();
     __t = sensor_.getTempC(address_);
+    interrupts();
   } while (!isCorrect_(__t)); // FIXME: waiting for watchdog
   return __t;
 }
@@ -62,9 +64,7 @@ template <>
 void EqHtSensor<EQ_DS18B20, false>::readHTSensor_(float &humidity,
                                                   float &temperature) {
   humidity = 0;
-  noInterrupts();
   temperature = sensor_.read();
-  interrupts();
 }
 
 typedef EqHtSensor<EQ_DS18B20, false> EqTempSensor;
