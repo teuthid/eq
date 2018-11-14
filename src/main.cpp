@@ -1,5 +1,4 @@
 
-//#include "Arduino.h"
 #include <avr/sleep.h>
 
 #include "eq_button.h"
@@ -55,6 +54,7 @@ Task eqButtonControl(EqConfig::buttonReadInterval *TASK_MILLISECOND,
 
 bool eqInit() {
   EqConfig::init();
+  Wire.begin();
   if (!eqDisplay.init())
     return false;
   eqLedHeartbeat.test(200, 3);

@@ -150,23 +150,21 @@ uint8_t EqHtSensor<SensorType, HumidityOn>::index() const {
 
 // --- AM2320 -----------------------------------------------------------------
 #if (EQ_HT_SENSOR_TYPE == EQ_AM2320)
-#include <Adafruit_AM2320.h>
-#include <Adafruit_Sensor.h>
+#include <AM232X.h>
 
-template <> struct __EqHtSensorObject<EQ_AM2320> {
-  typedef Adafruit_AM2320 Type;
-};
+template <> struct __EqHtSensorObject<EQ_AM2320> { typedef AM232X Type; };
 template <> uint16_t EqHtSensor<EQ_AM2320, true>::samplingPeriod_() const {
   return 2000;
 }
 template <> bool EqHtSensor<EQ_AM2320, true>::initHtSensor_() {
-  return sensor_.begin();
+  return (sensor_.read() == AM232X_OK);
 }
 template <>
 void EqHtSensor<EQ_AM2320, true>::readHTSensor_(float &humidity,
                                                 float &temperature) {
-  humidity = sensor_.readHumidity();
-  temperature = sensor_.readTemperature();
+  sensor_.read();
+  humidity = sensor_.humidity;
+  temperature = sensor_.temperature;
 }
 
 // ----------------------------------------------------------------------------

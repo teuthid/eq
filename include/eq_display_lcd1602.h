@@ -74,7 +74,6 @@ const PROGMEM __EqLcd1602::Digit_ __EqLcd1602::digits_[] = {
     {2, 3, 1, 7, 6, 1}};    // 9
 
 bool __EqLcd1602::init() {
-  Wire.begin();
   Wire.beginTransmission(0x27);
   if (Wire.endTransmission() != 0) {
     EqConfig::setAlert(EqAlertType::Display);
