@@ -63,7 +63,6 @@ template <> bool EqHtSensor<EQ_DS18B20, false>::initHtSensor_() {
 template <>
 void EqHtSensor<EQ_DS18B20, false>::readHTSensor_(float &humidity,
                                                   float &temperature) {
-  humidity = 0;
   temperature = sensor_.read();
 }
 

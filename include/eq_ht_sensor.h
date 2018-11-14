@@ -162,9 +162,10 @@ template <> bool EqHtSensor<EQ_AM2320, true>::initHtSensor_() {
 template <>
 void EqHtSensor<EQ_AM2320, true>::readHTSensor_(float &humidity,
                                                 float &temperature) {
-  sensor_.read();
-  humidity = sensor_.humidity;
-  temperature = sensor_.temperature;
+  if (sensor_.read() == AM232X_OK) {
+    humidity = sensor_.humidity;
+    temperature = sensor_.temperature;
+  }
 }
 
 // ----------------------------------------------------------------------------
