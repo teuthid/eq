@@ -107,11 +107,11 @@ template <uint8_t SensorType, bool HumidityOn>
 int8_t EqHtSensor<SensorType, HumidityOn>::indexH_() const {
   if (HumidityOn) {
     long __h = round(10 * humidity()) + trendHumidity(),
-         __ht = 10 * EqConfig::htSensorHumidityThreshold();
+         __ht = 10L * EqConfig::htSensorHumidityThreshold();
     if (__h < __ht)
-      return map(__h, 10 * EqConfig::htSensorHumidityMin, __ht, -100, 0);
+      return map(__h, 10L * EqConfig::htSensorHumidityMin, __ht, -100, 0);
     else
-      return map(__h, __ht, 10 * EqConfig::htSensorHumidityMax, 0, 100);
+      return map(__h, __ht, 10L * EqConfig::htSensorHumidityMax, 0, 100);
   } else
     return 0; // humidity measure is off
 }
@@ -119,11 +119,11 @@ int8_t EqHtSensor<SensorType, HumidityOn>::indexH_() const {
 template <uint8_t SensorType, bool HumidityOn>
 int8_t EqHtSensor<SensorType, HumidityOn>::indexT_() const {
   long __t = round(10 * temperature()) + trendTemperature(),
-       __tt = 10 * EqConfig::htSensorTemperatureThreshold();
+       __tt = 10L * EqConfig::htSensorTemperatureThreshold();
   if (__t < __tt)
-    return map(__t, 10 * EqConfig::htSensorTemperatureMin, __tt, -100, 0);
+    return map(__t, 10L * EqConfig::htSensorTemperatureMin, __tt, -100, 0);
   else
-    return map(__t, __tt, 10 * EqConfig::htSensorTemperatureMax, 0, 100);
+    return map(__t, __tt, 10L * EqConfig::htSensorTemperatureMax, 0, 100);
 }
 
 template <uint8_t SensorType, bool HumidityOn>
