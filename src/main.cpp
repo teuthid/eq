@@ -15,6 +15,7 @@
 #include "MemoryFree.h"
 #endif // EQ_DEBUG
 
+//#define _TASK_OO_CALLBACKS
 #include <TaskScheduler.h>
 
 EqLed<EqConfig::ledHeartbeatPin> eqLedHeartbeat;
@@ -27,13 +28,13 @@ EqButton<EqConfig::buttonOverdrivePin> eqButtonOverdrive;
 EqButton<EqConfig::buttonBacklightPin> eqButtonBacklight;
 EqFanPwm eqFanPwm;
 
+Scheduler eqRunner;
+
 // tasks calbacks
 void eqHeartbeatCallback();
 void eqITMeasurementCallback();
 void eqHTMeasurementCallback();
 void eqFanPwmControlCallback();
-
-Scheduler eqRunner;
 
 // tasks
 Task eqHeartbeat(TASK_SECOND, TASK_FOREVER, &eqHeartbeatCallback, &eqRunner,
@@ -135,7 +136,7 @@ void setup() {
     abort();
   }
 #ifdef EQ_DEBUG
-  //printConfig();
+  // printConfig();
   Serial.println();
 #endif
 }
@@ -194,7 +195,7 @@ void eqHTMeasurementCallback() {
 #ifdef EQ_DEBUG
   Serial.print(F(" L="));
   Serial.print(eqLightSensor.intensity());
-/*
+  /*
 Serial.print(F(" H="));
 Serial.print(eqHtSensor.humidity());
 Serial.print(F(" T="));

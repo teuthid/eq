@@ -145,7 +145,7 @@ uint8_t EqHtSensor<SensorType, HumidityOn>::index() const {
 }
 
 /*
-  sensors specializations:
+  sensor specializations:
 */
 
 // --- AM2320 -----------------------------------------------------------------
