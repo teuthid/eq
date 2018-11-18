@@ -15,11 +15,13 @@
 #include "MemoryFree.h"
 #endif // EQ_DEBUG
 
-//#define _TASK_OO_CALLBACKS
+#define _TASK_OO_CALLBACKS
 #include <TaskScheduler.h>
+#include "eq_tasks.h"
 
-EqLed<EqConfig::ledHeartbeatPin> eqLedHeartbeat;
+//sensors & actuators:
 EqLed<EqConfig::ledAlertPin> eqLedAlert;
+EqLed<EqConfig::ledHeartbeatPin> eqLedHeartbeat;
 EqLightSensor eqLightSensor;
 EqHtSensor<EQ_HT_SENSOR_TYPE> eqHtSensor;
 EqTempSensor eqItSensor(EqConfig::itSensorPin);
@@ -28,7 +30,9 @@ EqButton<EqConfig::buttonOverdrivePin> eqButtonOverdrive;
 EqButton<EqConfig::buttonBacklightPin> eqButtonBacklight;
 EqFanPwm eqFanPwm;
 
+// tasks:
 Scheduler eqRunner;
+EqHeartbeat taskHeartbeat(&eqRunner);
 
 // tasks calbacks
 void eqHeartbeatCallback();
@@ -36,7 +40,7 @@ void eqITMeasurementCallback();
 void eqHTMeasurementCallback();
 void eqFanPwmControlCallback();
 
-// tasks
+/*
 Task eqHeartbeat(TASK_SECOND, TASK_FOREVER, &eqHeartbeatCallback, &eqRunner,
                  false);
 Task eqITMeasurement(TASK_SECOND, TASK_FOREVER, &eqITMeasurementCallback,
@@ -52,6 +56,7 @@ Task eqButtonControl(EqConfig::buttonReadInterval *TASK_MILLISECOND,
                        eqButtonOverdrive.read();
                      },
                      &eqRunner, false);
+*/
 
 bool eqInit() {
   EqConfig::init();
@@ -117,11 +122,13 @@ void setup() {
   Serial.print(F("Initializing... "));
 #endif
   if (eqInit()) {
+    /*
     eqHeartbeat.enable();
     eqButtonControl.enable();
     eqITMeasurement.enable();
     eqHTMeasurement.enable();
     eqFanPwmControl.enable();
+    */
     eqRunner.startNow();
   } else {
     eqLedAlert.setState(true);
@@ -142,7 +149,7 @@ void setup() {
 }
 
 void eqHeartbeatCallback() {
-  eqLightSensor.read();
+  //eqLightSensor.read();
   if (EqConfig::anyAlert())
     eqLedAlert.toggle(true); // force blinking led
   else

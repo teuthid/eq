@@ -4,11 +4,9 @@
 
 #include "eq_config.h"
 
-template <uint8_t DisplayType> struct __EqDisplayObject { typedef void *Type; };
-
 template <uint8_t DisplayType> class EqDisplay {
 public:
-  constexpr EqDisplay() {}
+  EqDisplay() {}
   void show(const float &humidity, const float &temperature,
             const int16_t &trendHumidity, const int16_t &trendTemperature,
             const uint8_t &fanSpeed);
@@ -33,7 +31,7 @@ private:
 
 private:
   bool isOn_ = false;
-  typename __EqDisplayObject<DisplayType>::Type display_;
+  void *display_ = nullptr;
 };
 
 template <uint8_t DisplayType> bool EqDisplay<DisplayType>::init() {
@@ -77,11 +75,5 @@ void EqDisplay<DisplayType>::backlight_(const bool &on) {
     isOn_ = false;
   }
 }
-
-#if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
-#include "eq_display_lcd1602.h"
-#else
-#error "Unknown type of display"
-#endif
 
 #endif // __EQ_DISPLAY_H__

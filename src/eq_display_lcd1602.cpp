@@ -1,12 +1,7 @@
 
-// Do not include this file directly
+#if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
 
-#ifndef __EQ_DISPLAY_H__
-#error "Do not include this file directly"
-#endif
-
-#ifndef __EQ_DISPLAY_LCD1602_H__
-#define __EQ_DISPLAY_LCD1602_H__
+#include "eq_display.h"
 
 #include <LiquidCrystal_PCF8574.h>
 #include <PGMWrap.h>
@@ -187,40 +182,49 @@ void __EqLcd1602::showCalibrating(const uint8_t &percents) {
   specializations of EqDisplay
 */
 
-template <> struct __EqDisplayObject<EQ_LCD_1602> { typedef __EqLcd1602 Type; };
-
-template <> bool EqDisplay<EQ_LCD_1602>::initDisplay_() {
-  return display_.init();
+template <> EqDisplay<EQ_LCD_1602>::EqDisplay() {
+  display_ = new __EqLcd1602();
 }
 
-template <> void EqDisplay<EQ_LCD_1602>::turnOff_() { display_.turnOff(); }
+template <> bool EqDisplay<EQ_LCD_1602>::initDisplay_() {
+  return static_cast<__EqLcd1602 *>(display_)->init();
+}
 
-template <> void EqDisplay<EQ_LCD_1602>::turnOn_() { display_.turnOn(); }
+template <> void EqDisplay<EQ_LCD_1602>::turnOff_() {
+  static_cast<__EqLcd1602 *>(display_)->turnOff();
+}
+
+template <> void EqDisplay<EQ_LCD_1602>::turnOn_() {
+  static_cast<__EqLcd1602 *>(display_)->turnOn();
+}
 
 template <>
 void EqDisplay<EQ_LCD_1602>::showHT_(const float &humidity,
                                      const float &temperature) {
-  display_.showHT(humidity, temperature);
+  static_cast<__EqLcd1602 *>(display_)->showHT(humidity, temperature);
 }
 
 template <>
 void EqDisplay<EQ_LCD_1602>::showTrends_(const int16_t &trendHumidity,
                                          const int16_t &trendTemperature) {
-  display_.showTrends(trendHumidity, trendTemperature);
+  static_cast<__EqLcd1602 *>(display_)->showTrends(trendHumidity,
+                                                   trendTemperature);
 }
 
 template <> void EqDisplay<EQ_LCD_1602>::showOverdriveTime_() {
-  display_.showOverdriveTime();
+  static_cast<__EqLcd1602 *>(display_)->showOverdriveTime();
 }
 
 template <> void EqDisplay<EQ_LCD_1602>::showFanSpeed_(const uint8_t &speed) {
-  display_.showFanSpeed(speed);
+  static_cast<__EqLcd1602 *>(display_)->showFanSpeed(speed);
 }
 
-template <> void EqDisplay<EQ_LCD_1602>::showAlert() { display_.showAlert(); }
+template <> void EqDisplay<EQ_LCD_1602>::showAlert() {
+  static_cast<__EqLcd1602 *>(display_)->showAlert();
+}
 
 template <> void EqDisplay<EQ_LCD_1602>::showCalibrating(uint8_t percents) {
-  display_.showCalibrating(percents);
+  static_cast<__EqLcd1602 *>(display_)->showCalibrating(percents);
 }
 
-#endif // __EQ_DISPLAY_LCD1602_H__
+#endif // (EQ_DISPLAY_TYPE == EQ_LCD_1602)
