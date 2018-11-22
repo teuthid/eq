@@ -1,7 +1,4 @@
 
-#ifndef __EQ_TEMP_SENSOR_H__
-#define __EQ_TEMP_SENSOR_H__
-
 #include <DallasTemperature.h>
 #include <OneWire.h>
 #include <float.h>
@@ -10,7 +7,7 @@
 
 class __EqTempSensor {
 public:
-  __EqTempSensor(const uint8_t &sensorPin = EqConfig::htSensorPin)
+  __EqTempSensor(const uint8_t &sensorPin)
       : onewire_(sensorPin), sensor_(&onewire_) {}
 
   bool init();
@@ -47,25 +44,22 @@ float __EqTempSensor::read() {
 }
 
 // specializations for DS18B20
-template <> struct __EqHtSensorObject<EQ_DS18B20> {
-  typedef __EqTempSensor Type;
-};
 
 template <>
-EqHtSensor<EQ_DS18B20, false>::EqHtSensor(const uint8_t &sensorPin)
-    : sensor_(sensorPin) {}
+EqHtSensor<EQ_DS18B20, false>::EqHtSensor(const uint8_t &sensorPin) {
+  sensor_ = new __EqTempSensor(sensorPin);
+}
+
 template <> uint16_t EqHtSensor<EQ_DS18B20, false>::samplingPeriod_() const {
   return 1000;
 }
+
 template <> bool EqHtSensor<EQ_DS18B20, false>::initHtSensor_() {
-  return sensor_.init();
+  return static_cast<__EqTempSensor *>(sensor_)->init();
 }
+
 template <>
 void EqHtSensor<EQ_DS18B20, false>::readHTSensor_(float &humidity,
                                                   float &temperature) {
-  temperature = sensor_.read();
+  temperature = static_cast<__EqTempSensor *>(sensor_)->read();
 }
-
-typedef EqHtSensor<EQ_DS18B20, false> EqTempSensor;
-
-#endif // __EQ_TEMP_SENSOR_H__

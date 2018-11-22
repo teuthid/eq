@@ -7,9 +7,13 @@
 #include <PGMWrap.h>
 #include <Wire.h>
 
-class __EqLcd1602 {
+EqDisplay<EQ_LCD_1602> eqDisplay; // preinstatiate
+
+namespace {
+
+class EqLcd1602 {
 public:
-  __EqLcd1602() : lcd_(0x27) {}
+  EqLcd1602() : lcd_(0x27) {}
   bool init();
   void turnOff();
   void turnOn() { lcd_.setBacklight(255); }
@@ -46,7 +50,7 @@ private:
 };
 
 // elements of big digits:
-const PROGMEM __EqLcd1602::Bar_ __EqLcd1602::bars_[] = {
+const PROGMEM EqLcd1602::Bar_ EqLcd1602::bars_[] = {
     {B11100, B11110, B11110, B11110, B11110, B11110, B11110, B11100},
     {B00111, B01111, B01111, B01111, B01111, B01111, B01111, B00111},
     {B11111, B11111, B00000, B00000, B00000, B00000, B11111, B11111},
@@ -56,7 +60,7 @@ const PROGMEM __EqLcd1602::Bar_ __EqLcd1602::bars_[] = {
     {B00000, B00000, B00000, B00000, B00000, B00000, B00111, B01111},
     {B11111, B11111, B00000, B00000, B00000, B00000, B00000, B00000}};
 
-const PROGMEM __EqLcd1602::Digit_ __EqLcd1602::digits_[] = {
+const PROGMEM EqLcd1602::Digit_ EqLcd1602::digits_[] = {
     {2, 8, 1, 2, 6, 1},     // 0
     {32, 32, 1, 32, 32, 1}, // 1
     {5, 3, 1, 2, 6, 6},     // 2
@@ -68,7 +72,7 @@ const PROGMEM __EqLcd1602::Digit_ __EqLcd1602::digits_[] = {
     {2, 3, 1, 2, 6, 1},     // 8
     {2, 3, 1, 7, 6, 1}};    // 9
 
-bool __EqLcd1602::init() {
+bool EqLcd1602::init() {
   Wire.beginTransmission(0x27);
   if (Wire.endTransmission() != 0) {
     EqConfig::setAlert(EqAlertType::Display);
@@ -93,19 +97,19 @@ bool __EqLcd1602::init() {
   uint8_t __bar[8];
   for (uint8_t __i = 0; __i < 8; __i++) {
     for (uint8_t __j = 0; __j < 8; __j++)
-      __bar[__j] = __EqLcd1602::bars_[__i][__j]; // uint8_p => uint8_t
+      __bar[__j] = EqLcd1602::bars_[__i][__j]; // uint8_p => uint8_t
     lcd_.createChar(__i + 1, __bar);
   }
   return true;
 }
 
-void __EqLcd1602::turnOff() {
+void EqLcd1602::turnOff() {
   lcd_.setBacklight(0);
   lcd_.clear();
   lastSpeedDots_ = 0xFF;
 }
 
-void __EqLcd1602::showHT(const float &humidity, const float &temperature) {
+void EqLcd1602::showHT(const float &humidity, const float &temperature) {
   printValue_(round(humidity), 0);
   lcd_.setCursor(6, 0);
   lcd_.print(F("% "));
@@ -114,8 +118,8 @@ void __EqLcd1602::showHT(const float &humidity, const float &temperature) {
   lcd_.write(0xDF);
 }
 
-void __EqLcd1602::showTrends(const int16_t &trendHumidity,
-                             const int16_t &trendTemperature) {
+void EqLcd1602::showTrends(const int16_t &trendHumidity,
+                           const int16_t &trendTemperature) {
   lcd_.setCursor(7, 0);
   if (trendHumidity > 0)
     lcd_.write(0x7E);
@@ -133,7 +137,7 @@ void __EqLcd1602::showTrends(const int16_t &trendHumidity,
     lcd_.write(0x20);
 }
 
-void __EqLcd1602::showOverdriveTime() {
+void EqLcd1602::showOverdriveTime() {
   lcd_.clear();
   printValue_(EqConfig::overdriveTime() / 60, 2);
   lcd_.setCursor(8, 0);
@@ -144,7 +148,7 @@ void __EqLcd1602::showOverdriveTime() {
   lastSpeedDots_ = 0xFF;
 }
 
-void __EqLcd1602::showFanSpeed(const uint8_t &speed) {
+void EqLcd1602::showFanSpeed(const uint8_t &speed) {
   uint8_t __c = min(10, speed / 10);
   if ((speed > 0) && (__c == 0))
     __c = 1;
@@ -158,7 +162,7 @@ void __EqLcd1602::showFanSpeed(const uint8_t &speed) {
   }
 }
 
-void __EqLcd1602::showAlert() {
+void EqLcd1602::showAlert() {
   /*
   0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
   A  L  E  R  T
@@ -172,59 +176,52 @@ void __EqLcd1602::showAlert() {
   lastSpeedDots_ = 0xFF;
 }
 
-void __EqLcd1602::showCalibrating(const uint8_t &percents) {
+void EqLcd1602::showCalibrating(const uint8_t &percents) {
   lcd_.clear();
   lcd_.print(F("Calibrating..."));
   showFanSpeed(percents);
 }
 
+EqLcd1602 __lcd1602;
+
+} // namespace
+
 /*
   specializations of EqDisplay
 */
 
-template <> EqDisplay<EQ_LCD_1602>::EqDisplay() {
-  display_ = new __EqLcd1602();
-}
-
 template <> bool EqDisplay<EQ_LCD_1602>::initDisplay_() {
-  return static_cast<__EqLcd1602 *>(display_)->init();
+  return __lcd1602.init();
 }
 
-template <> void EqDisplay<EQ_LCD_1602>::turnOff_() {
-  static_cast<__EqLcd1602 *>(display_)->turnOff();
-}
+template <> void EqDisplay<EQ_LCD_1602>::turnOff_() { __lcd1602.turnOff(); }
 
-template <> void EqDisplay<EQ_LCD_1602>::turnOn_() {
-  static_cast<__EqLcd1602 *>(display_)->turnOn();
-}
+template <> void EqDisplay<EQ_LCD_1602>::turnOn_() { __lcd1602.turnOn(); }
 
 template <>
 void EqDisplay<EQ_LCD_1602>::showHT_(const float &humidity,
                                      const float &temperature) {
-  static_cast<__EqLcd1602 *>(display_)->showHT(humidity, temperature);
+  __lcd1602.showHT(humidity, temperature);
 }
 
 template <>
 void EqDisplay<EQ_LCD_1602>::showTrends_(const int16_t &trendHumidity,
                                          const int16_t &trendTemperature) {
-  static_cast<__EqLcd1602 *>(display_)->showTrends(trendHumidity,
-                                                   trendTemperature);
+  __lcd1602.showTrends(trendHumidity, trendTemperature);
 }
 
 template <> void EqDisplay<EQ_LCD_1602>::showOverdriveTime_() {
-  static_cast<__EqLcd1602 *>(display_)->showOverdriveTime();
+  __lcd1602.showOverdriveTime();
 }
 
 template <> void EqDisplay<EQ_LCD_1602>::showFanSpeed_(const uint8_t &speed) {
-  static_cast<__EqLcd1602 *>(display_)->showFanSpeed(speed);
+  __lcd1602.showFanSpeed(speed);
 }
 
-template <> void EqDisplay<EQ_LCD_1602>::showAlert() {
-  static_cast<__EqLcd1602 *>(display_)->showAlert();
-}
+template <> void EqDisplay<EQ_LCD_1602>::showAlert() { __lcd1602.showAlert(); }
 
 template <> void EqDisplay<EQ_LCD_1602>::showCalibrating(uint8_t percents) {
-  static_cast<__EqLcd1602 *>(display_)->showCalibrating(percents);
+  __lcd1602.showCalibrating(percents);
 }
 
 #endif // (EQ_DISPLAY_TYPE == EQ_LCD_1602)

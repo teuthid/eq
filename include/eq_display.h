@@ -31,7 +31,6 @@ private:
 
 private:
   bool isOn_ = false;
-  void *display_ = nullptr;
 };
 
 template <uint8_t DisplayType> bool EqDisplay<DisplayType>::init() {
@@ -40,6 +39,8 @@ template <uint8_t DisplayType> bool EqDisplay<DisplayType>::init() {
 #endif
   return initDisplay_();
 }
+
+extern EqDisplay<EQ_DISPLAY_TYPE> eqDisplay;
 
 template <uint8_t DisplayType>
 void EqDisplay<DisplayType>::show(const float &humidity,

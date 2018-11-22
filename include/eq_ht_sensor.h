@@ -5,11 +5,9 @@
 #include "eq_collector.h"
 #include "eq_config.h"
 
-template <uint8_t SensorType> struct __EqHtSensorObject { typedef int Type; };
-
 template <uint8_t SensorType, bool HumidityOn = true> class EqHtSensor {
 public:
-  constexpr EqHtSensor(const uint8_t &sensorPin = EqConfig::htSensorPin) {}
+  EqHtSensor(const uint8_t &sensorPin = EqConfig::htSensorPin) {}
 
   constexpr bool humidityOn() const { return HumidityOn; }
 
@@ -38,7 +36,7 @@ public:
   uint8_t index() const;
 
 private:
-  typename __EqHtSensorObject<SensorType>::Type sensor_;
+  void* sensor_;
   EqCollector<(HumidityOn ? EqConfig::htSensorCollectorSize : 1)>
       humidityCollector_;
   EqCollector<EqConfig::htSensorCollectorSize> temperatureCollector_;
@@ -144,31 +142,13 @@ uint8_t EqHtSensor<SensorType, HumidityOn>::index() const {
   }
 }
 
+typedef EqHtSensor<EQ_DS18B20, false> EqTempSensor;
+
 /*
   sensor specializations:
 */
 
-// --- AM2320 -----------------------------------------------------------------
 #if (EQ_HT_SENSOR_TYPE == EQ_AM2320)
-#include <AM232X.h>
-
-template <> struct __EqHtSensorObject<EQ_AM2320> { typedef AM232X Type; };
-template <> uint16_t EqHtSensor<EQ_AM2320, true>::samplingPeriod_() const {
-  return 2000;
-}
-template <> bool EqHtSensor<EQ_AM2320, true>::initHtSensor_() {
-  return (sensor_.read() == AM232X_OK);
-}
-template <>
-void EqHtSensor<EQ_AM2320, true>::readHTSensor_(float &humidity,
-                                                float &temperature) {
-  if (sensor_.read() == AM232X_OK) {
-    humidity = sensor_.humidity;
-    temperature = sensor_.temperature;
-  }
-}
-
-// ----------------------------------------------------------------------------
 
 // --- DHT11 ------------------------------------------------------------------
 #elif (EQ_HT_SENSOR_TYPE == EQ_DHT11)

@@ -1,5 +1,6 @@
 
 #include <avr/sleep.h>
+#include <Wire.h>
 
 #include "eq_button.h"
 #include "eq_display.h"
@@ -8,7 +9,6 @@
 #include "eq_ht_sensor.h"
 #include "eq_led.h"
 #include "eq_light_sensor.h"
-#include "eq_temp_sensor.h"
 
 #ifdef EQ_DEBUG
 #define _TASK_DEBUG
@@ -22,10 +22,10 @@
 //sensors & actuators:
 EqLed<EqConfig::ledAlertPin> eqLedAlert;
 EqLed<EqConfig::ledHeartbeatPin> eqLedHeartbeat;
+//EqDisplay<EQ_DISPLAY_TYPE> eqDisplay;
 EqLightSensor eqLightSensor;
 EqHtSensor<EQ_HT_SENSOR_TYPE> eqHtSensor;
 EqTempSensor eqItSensor(EqConfig::itSensorPin);
-EqDisplay<EQ_DISPLAY_TYPE> eqDisplay;
 EqButton<EqConfig::buttonOverdrivePin> eqButtonOverdrive;
 EqButton<EqConfig::buttonBacklightPin> eqButtonBacklight;
 EqFanPwm eqFanPwm;
@@ -129,6 +129,7 @@ void setup() {
     eqHTMeasurement.enable();
     eqFanPwmControl.enable();
     */
+    taskHeartbeat.enable();
     eqRunner.startNow();
   } else {
     eqLedAlert.setState(true);
@@ -143,7 +144,7 @@ void setup() {
     abort();
   }
 #ifdef EQ_DEBUG
-  // printConfig();
+  //printConfig();
   Serial.println();
 #endif
 }
