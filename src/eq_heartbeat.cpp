@@ -10,7 +10,6 @@ extern EqLed<EqConfig::ledAlertPin> eqLedAlert;
 extern EqLed<EqConfig::ledHeartbeatPin> eqLedHeartbeat;
 extern EqLightSensor eqLightSensor;
 extern EqHtSensor<EQ_HT_SENSOR_TYPE> eqHtSensor;
-//extern EqDisplay<EQ_DISPLAY_TYPE> eqDisplay;
 extern EqFanPwm eqFanPwm;
 
 EqHeartbeat::EqHeartbeat(Scheduler *scheduler)
