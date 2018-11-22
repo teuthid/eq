@@ -9,25 +9,26 @@
 #if (EQ_HT_SENSOR_TYPE == EQ_AM2320)
 #include <AM232X.h>
 
-template <> EqHtSensor<EQ_AM2320, true>::EqHtSensor(const uint8_t &sensorPin) {
-  sensor_ = new AM232X;
+namespace {
+AM232X __htSensor;
 }
+
+EqHtSensor<EQ_AM2320> eqHtSensor;
 
 template <> uint16_t EqHtSensor<EQ_AM2320, true>::samplingPeriod_() const {
   return 2000;
 }
 
 template <> bool EqHtSensor<EQ_AM2320, true>::initHtSensor_() {
-  return (static_cast<AM232X *>(sensor_)->read() == AM232X_OK);
+  return (__htSensor.read() == AM232X_OK);
 }
 
 template <>
 void EqHtSensor<EQ_AM2320, true>::readHTSensor_(float &humidity,
                                                 float &temperature) {
-  if (static_cast<AM232X *>(sensor_)->read() == AM232X_OK) {
-    humidity = static_cast<AM232X *>(sensor_)->humidity;
-    temperature = static_cast<AM232X *>(sensor_)->temperature;
+  if (__htSensor.read() == AM232X_OK) {
+    humidity = __htSensor.humidity;
+    temperature = __htSensor.temperature;
   }
 }
 #endif // (EQ_HT_SENSOR_TYPE == EQ_AM2320)
-

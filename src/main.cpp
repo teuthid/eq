@@ -1,6 +1,6 @@
 
-#include <avr/sleep.h>
 #include <Wire.h>
+#include <avr/sleep.h>
 
 #include "eq_button.h"
 #include "eq_display.h"
@@ -16,16 +16,14 @@
 #endif // EQ_DEBUG
 
 #define _TASK_OO_CALLBACKS
-#include <TaskScheduler.h>
 #include "eq_tasks.h"
+#include <TaskScheduler.h>
 
-//sensors & actuators:
+// sensors & actuators:
 EqLed<EqConfig::ledAlertPin> eqLedAlert;
 EqLed<EqConfig::ledHeartbeatPin> eqLedHeartbeat;
-//EqDisplay<EQ_DISPLAY_TYPE> eqDisplay;
 EqLightSensor eqLightSensor;
-EqHtSensor<EQ_HT_SENSOR_TYPE> eqHtSensor;
-EqTempSensor eqItSensor(EqConfig::itSensorPin);
+// EqTempSensor eqItSensor(EqConfig::itSensorPin);
 EqButton<EqConfig::buttonOverdrivePin> eqButtonOverdrive;
 EqButton<EqConfig::buttonBacklightPin> eqButtonBacklight;
 EqFanPwm eqFanPwm;
@@ -67,8 +65,10 @@ bool eqInit() {
   eqLedAlert.test(200, 3);
   if (!eqLightSensor.init())
     return false;
+  /*
   if (!eqItSensor.init(true))
     return false;
+  */
   if (!eqHtSensor.init())
     return false;
   eqButtonOverdrive.init();
@@ -144,13 +144,13 @@ void setup() {
     abort();
   }
 #ifdef EQ_DEBUG
-  //printConfig();
+  // printConfig();
   Serial.println();
 #endif
 }
 
 void eqHeartbeatCallback() {
-  //eqLightSensor.read();
+  // eqLightSensor.read();
   if (EqConfig::anyAlert())
     eqLedAlert.toggle(true); // force blinking led
   else
@@ -181,6 +181,7 @@ void eqSleep() {
 }
 
 void eqITMeasurementCallback() {
+/*
   if (!eqItSensor.read())
     EqConfig::setAlert(EqAlertType::ItSensor);
   else {
@@ -193,6 +194,7 @@ void eqITMeasurementCallback() {
     } else
       EqConfig::resetAlert(EqAlertType::Overheating);
   }
+*/
 }
 
 void eqHTMeasurementCallback() {
@@ -208,8 +210,6 @@ Serial.print(F(" H="));
 Serial.print(eqHtSensor.humidity());
 Serial.print(F(" T="));
 Serial.print(eqHtSensor.temperature());
-*/
-  /*
 Serial.print(F(" HTD="));
 Serial.print(eqHtSensor.trendHumidity());
 Serial.print(F(" HTT="));
@@ -218,7 +218,6 @@ Serial.print(F(" HTI="));
 Serial.print(eqHtSensor.index());
 Serial.print(F(" OT[s]="));
 Serial.print(EqConfig::overdriveTime());
-*/
   Serial.print(F(" PWM="));
   Serial.print(eqFanPwm.dutyCycle());
   if (EqConfig::isFanTachometerEnabled()) {
@@ -229,8 +228,9 @@ Serial.print(EqConfig::overdriveTime());
   Serial.print(eqItSensor.lastTemperature(), 1);
   Serial.print(F(" FreeMem="));
   Serial.print(freeMemory());
-  //
+
   Serial.println();
+  */
 #endif
 }
 

@@ -36,7 +36,6 @@ public:
   uint8_t index() const;
 
 private:
-  void* sensor_;
   EqCollector<(HumidityOn ? EqConfig::htSensorCollectorSize : 1)>
       humidityCollector_;
   EqCollector<EqConfig::htSensorCollectorSize> temperatureCollector_;
@@ -142,7 +141,7 @@ uint8_t EqHtSensor<SensorType, HumidityOn>::index() const {
   }
 }
 
-typedef EqHtSensor<EQ_DS18B20, false> EqTempSensor;
+extern EqHtSensor<EQ_HT_SENSOR_TYPE> eqHtSensor;
 
 /*
   sensor specializations:
