@@ -5,7 +5,7 @@
 #include "eq_collector.h"
 #include "eq_config.h"
 
-template <uint8_t SensorType, bool HumidityOn = true> class EqHtSensor {
+template <uint8_t Model, bool IsInternal = false> class EqHtSensor {
 public:
   EqHtSensor(const uint8_t &sensorPin = EqConfig::htSensorPin) {}
 
@@ -147,10 +147,9 @@ extern EqHtSensor<EQ_HT_SENSOR_TYPE> eqHtSensor;
   sensor specializations:
 */
 
-#if (EQ_HT_SENSOR_TYPE == EQ_AM2320)
-
 // --- DHT11 ------------------------------------------------------------------
-#elif (EQ_HT_SENSOR_TYPE == EQ_DHT11)
+/*
+if (EQ_HT_SENSOR_TYPE == EQ_DHT11)
 #include <DHT.h>
 
 template <> struct __EqHtSensorObject<EQ_DHT11> { typedef DHT Type; };
@@ -169,9 +168,11 @@ void EqHtSensor<EQ_DHT11, true>::readHTSensor_(float &humidity,
   humidity = sensor_.readHumidity();
   temperature = sensor_.readTemperature();
 }
+*/
 // ----------------------------------------------------------------------------
 
 // --- DHT21 ------------------------------------------------------------------
+/*
 #elif (EQ_HT_SENSOR_TYPE == EQ_DHT21)
 #include <DHT.h>
 
@@ -191,9 +192,11 @@ void EqHtSensor<EQ_DHT21, true>::readHTSensor_(float &humidity,
   humidity = sensor_.readHumidity();
   temperature = sensor_.readTemperature();
 }
+*/
 // ----------------------------------------------------------------------------
 
 // --- DHT22 ------------------------------------------------------------------
+/*
 #elif (EQ_HT_SENSOR_TYPE == EQ_DHT22)
 #include <DHT.h>
 
@@ -213,9 +216,11 @@ void EqHtSensor<EQ_DHT22, true>::readHTSensor_(float &humidity,
   humidity = sensor_.readHumidity();
   temperature = sensor_.readTemperature();
 }
+*/
 // ----------------------------------------------------------------------------
 
 // --- HTU21D -----------------------------------------------------------------
+/*
 #elif (EQ_HT_SENSOR_TYPE == EQ_HTU21D)
 #include <HTU21D.h>
 #include <Wire.h>
@@ -233,10 +238,7 @@ void EqHtSensor<EQ_HTU21D, true>::readHTSensor_(float &humidity,
   humidity = sensor_.readHumidity();
   temperature = sensor_.readTemperature();
 }
+*/
 // ----------------------------------------------------------------------------
-
-#else
-#error "Unknown type of HT Sensor"
-#endif
 
 #endif // __EQ_HT_SENSOR_H__

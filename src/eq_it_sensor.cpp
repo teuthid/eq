@@ -69,5 +69,6 @@ void EqHtSensor<EQ_DS18B20, false>::readHTSensor_(float &humidity,
 
 #if (EQ_HT_SENSOR_TYPE == EQ_DS18B20)
 EqDallas __htSensor(EqConfig::htSensorPin);
-// TODO
 #endif
+
+// TO DO
