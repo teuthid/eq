@@ -4,7 +4,7 @@
 
 #include "eq_config.h"
 
-template <uint8_t DisplayType> class EqDisplay {
+template <uint8_t Model> class EqDisplay {
 public:
   EqDisplay() {}
   void show(const float &humidity, const float &temperature,
@@ -33,7 +33,7 @@ private:
   bool isOn_ = false;
 };
 
-template <uint8_t DisplayType> bool EqDisplay<DisplayType>::init() {
+template <uint8_t Model> bool EqDisplay<Model>::init() {
 #ifdef EQ_DEBUG
   Serial.print(F("[Display] "));
 #endif
@@ -42,12 +42,11 @@ template <uint8_t DisplayType> bool EqDisplay<DisplayType>::init() {
 
 extern EqDisplay<EQ_DISPLAY_TYPE> eqDisplay;
 
-template <uint8_t DisplayType>
-void EqDisplay<DisplayType>::show(const float &humidity,
-                                  const float &temperature,
-                                  const int16_t &trendHumidity,
-                                  const int16_t &trendTemperature,
-                                  const uint8_t &fanSpeed) {
+template <uint8_t Model>
+void EqDisplay<Model>::show(const float &humidity, const float &temperature,
+                            const int16_t &trendHumidity,
+                            const int16_t &trendTemperature,
+                            const uint8_t &fanSpeed) {
   if (EqConfig::backlight()) {
     backlight_();
     if (!EqConfig::anyAlert())
@@ -63,8 +62,7 @@ void EqDisplay<DisplayType>::show(const float &humidity,
     backlight_(false);
 }
 
-template <uint8_t DisplayType>
-void EqDisplay<DisplayType>::backlight_(const bool &on) {
+template <uint8_t Model> void EqDisplay<Model>::backlight_(const bool &on) {
   if (on)
     if (!isOn_) {
       turnOn_();
