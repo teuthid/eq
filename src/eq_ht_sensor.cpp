@@ -15,17 +15,17 @@ AM232X __htSensor;
 
 EqHtSensor<EQ_AM2320> eqHtSensor;
 
-template <> uint16_t EqHtSensor<EQ_AM2320, true>::samplingPeriod_() const {
+template <> uint16_t EqHtSensor<EQ_AM2320, false>::samplingPeriod_() const {
   return 2000;
 }
 
-template <> bool EqHtSensor<EQ_AM2320, true>::initHtSensor_() {
+template <> bool EqHtSensor<EQ_AM2320, false>::initHtSensor_() {
   return (__htSensor.read() == AM232X_OK);
 }
 
 template <>
-void EqHtSensor<EQ_AM2320, true>::readHTSensor_(float &humidity,
-                                                float &temperature) {
+void EqHtSensor<EQ_AM2320, false>::readHTSensor_(float &humidity,
+                                                 float &temperature) {
   if (__htSensor.read() == AM232X_OK) {
     humidity = __htSensor.humidity;
     temperature = __htSensor.temperature;

@@ -9,9 +9,9 @@ template <uint8_t Model, bool IsInternal = false> class EqHtSensor {
 public:
   EqHtSensor(const uint8_t &sensorPin = EqConfig::htSensorPin) {}
 
-  constexpr bool humidityOn() const { return HumidityOn; }
+  static constexpr bool HumidityOn = !(IsInternal || (Model == EQ_DS18B20));
 
-  bool init(const bool &isITSensor = false);
+  bool init();
   bool read();
 
   constexpr float humidity() const {
@@ -39,7 +39,6 @@ private:
   EqCollector<(HumidityOn ? EqConfig::htSensorCollectorSize : 1)>
       humidityCollector_;
   EqCollector<EqConfig::htSensorCollectorSize> temperatureCollector_;
-  bool isITSensor_ = false;
 
   uint16_t samplingPeriod_() const; // in milliseconds
   bool initHtSensor_() { return true; }
@@ -54,12 +53,11 @@ private:
   int8_t indexT_() const;
 };
 
-template <uint8_t SensorType, bool HumidityOn>
-bool EqHtSensor<SensorType, HumidityOn>::init(const bool &isITSensor) {
+template <uint8_t Model, bool IsInternal>
+bool EqHtSensor<Model, IsInternal>::init() {
 #ifdef EQ_DEBUG
   Serial.print(HumidityOn ? F("[HT Sensor] ") : F("[Temp Sensor] "));
 #endif
-  isITSensor_ = isITSensor;
   if (!initHtSensor_()) {
     setAlert();
     return false;
@@ -67,7 +65,7 @@ bool EqHtSensor<SensorType, HumidityOn>::init(const bool &isITSensor) {
   if (HumidityOn)
     humidityCollector_.setAcceptableValueRange(EqConfig::htSensorHumidityMin,
                                                EqConfig::htSensorHumidityMax);
-  if (!isITSensor_)
+  if (!IsInternal)
     temperatureCollector_.setAcceptableValueRange(
         EqConfig::htSensorTemperatureMin, EqConfig::htSensorTemperatureMax);
   uint8_t __c = 0;
@@ -83,8 +81,8 @@ bool EqHtSensor<SensorType, HumidityOn>::init(const bool &isITSensor) {
   return true;
 }
 
-template <uint8_t SensorType, bool HumidityOn>
-bool EqHtSensor<SensorType, HumidityOn>::read() {
+template <uint8_t Model, bool IsInternal>
+bool EqHtSensor<Model, IsInternal>::read() {
   float __h = 0, __t = 0;
   readHTSensor_(__h, __t);
   if ((HumidityOn && isnan(__h)) || isnan(__t))
@@ -94,14 +92,14 @@ bool EqHtSensor<SensorType, HumidityOn>::read() {
   if (HumidityOn)
     __ctrl = __ctrl &&
              (humidityCollector_.deviation() < EqConfig::sensorMaxDeviation);
-  if (!isITSensor_)
+  if (!IsInternal)
     __ctrl = __ctrl &&
              (temperatureCollector_.deviation() < EqConfig::sensorMaxDeviation);
   return __ctrl;
 }
 
-template <uint8_t SensorType, bool HumidityOn>
-int8_t EqHtSensor<SensorType, HumidityOn>::indexH_() const {
+template <uint8_t Model, bool IsInternal>
+int8_t EqHtSensor<Model, IsInternal>::indexH_() const {
   if (HumidityOn) {
     long __h = round(10 * humidity()) + trendHumidity(),
          __ht = 10L * EqConfig::htSensorHumidityThreshold();
@@ -113,8 +111,8 @@ int8_t EqHtSensor<SensorType, HumidityOn>::indexH_() const {
     return 0; // humidity measure is off
 }
 
-template <uint8_t SensorType, bool HumidityOn>
-int8_t EqHtSensor<SensorType, HumidityOn>::indexT_() const {
+template <uint8_t Model, bool IsInternal>
+int8_t EqHtSensor<Model, IsInternal>::indexT_() const {
   long __t = round(10 * temperature()) + trendTemperature(),
        __tt = 10L * EqConfig::htSensorTemperatureThreshold();
   if (__t < __tt)
@@ -123,8 +121,8 @@ int8_t EqHtSensor<SensorType, HumidityOn>::indexT_() const {
     return map(__t, __tt, 10L * EqConfig::htSensorTemperatureMax, 0, 100);
 }
 
-template <uint8_t SensorType, bool HumidityOn>
-uint8_t EqHtSensor<SensorType, HumidityOn>::index() const {
+template <uint8_t Model, bool IsInternal>
+uint8_t EqHtSensor<Model, IsInternal>::index() const {
   int8_t __h = indexH_(), __t = indexT_();
   switch (EqConfig::htIndexType()) {
   case EqHtIndexType::MoreTemperatureSensitive:

@@ -66,7 +66,7 @@ bool eqInit() {
   if (!eqLightSensor.init())
     return false;
   /*
-  if (!eqItSensor.init(true))
+  if (!eqItSensor.init())
     return false;
   */
   if (!eqHtSensor.init())
