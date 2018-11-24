@@ -5,6 +5,8 @@
 
 #include "eq_ht_sensor.h"
 
+namespace {
+
 class EqDallas {
 public:
   EqDallas(const uint8_t &sensorPin)
@@ -45,28 +47,26 @@ float EqDallas::read() {
 
 EqDallas __itSensor(EqConfig::itSensorPin);
 
-// specializations for DS18B20
-/*
-template <>
-EqHtSensor<EQ_DS18B20, false>::EqHtSensor(const uint8_t &sensorPin) {
-  sensor_ = new __EqTempSensor(sensorPin);
-}
+} // namespace
 
-template <> uint16_t EqHtSensor<EQ_DS18B20, false>::samplingPeriod_() const {
+// specializations for DS18B20 (internal sensor)
+EqHtSensor<EQ_DS18B20, true> eqItSensor;
+
+template <> uint16_t EqHtSensor<EQ_DS18B20, true>::samplingPeriod_() const {
   return 1000;
 }
 
-template <> bool EqHtSensor<EQ_DS18B20, false>::initHtSensor_() {
-  return static_cast<__EqTempSensor *>(sensor_)->init();
+template <> bool EqHtSensor<EQ_DS18B20, true>::initHtSensor_() {
+  return __itSensor.init();
 }
 
 template <>
-void EqHtSensor<EQ_DS18B20, false>::readHTSensor_(float &humidity,
-                                                  float &temperature) {
-  temperature = static_cast<__EqTempSensor *>(sensor_)->read();
+void EqHtSensor<EQ_DS18B20, true>::readHTSensor_(float &humidity,
+                                                 float &temperature) {
+  temperature = __itSensor.read();
 }
-*/
 
+// specializations for DS18B20 (external sensor)
 #if (EQ_HT_SENSOR_TYPE == EQ_DS18B20)
 EqDallas __htSensor(EqConfig::htSensorPin);
 #endif

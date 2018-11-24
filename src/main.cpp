@@ -23,7 +23,6 @@
 EqLed<EqConfig::ledAlertPin> eqLedAlert;
 EqLed<EqConfig::ledHeartbeatPin> eqLedHeartbeat;
 EqLightSensor eqLightSensor;
-// EqTempSensor eqItSensor(EqConfig::itSensorPin);
 EqButton<EqConfig::buttonOverdrivePin> eqButtonOverdrive;
 EqButton<EqConfig::buttonBacklightPin> eqButtonBacklight;
 EqFanPwm eqFanPwm;

@@ -140,6 +140,7 @@ uint8_t EqHtSensor<Model, IsInternal>::index() const {
 }
 
 extern EqHtSensor<EQ_HT_SENSOR_TYPE> eqHtSensor;
+extern EqHtSensor<EQ_DS18B20, true> eqItSensor;
 
 /*
   sensor specializations:
