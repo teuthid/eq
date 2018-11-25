@@ -1,19 +1,16 @@
 
+#include "eq_tasks.h"
 #include "eq_display.h"
 #include "eq_fan_pwm.h"
 #include "eq_ht_sensor.h"
 #include "eq_led.h"
 #include "eq_light_sensor.h"
-#include "eq_tasks.h"
 
 extern EqLed<EqConfig::ledAlertPin> eqLedAlert;
 extern EqLed<EqConfig::ledHeartbeatPin> eqLedHeartbeat;
 extern EqLightSensor eqLightSensor;
 extern EqFanPwm eqFanPwm;
 
-/*
-heartbeat
-*/
 EqHeartbeat::EqHeartbeat(Scheduler *scheduler)
     : Task(TASK_SECOND, TASK_FOREVER, scheduler, false) {}
 
