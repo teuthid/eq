@@ -10,7 +10,7 @@ public:
   EqButton() : button_(ButtonPin, EqConfig::buttonDebounceTime) {}
 
   void init();
-  void read() { button_.read(); }
+  void read();
 
 private:
   void setOnPressed_();
