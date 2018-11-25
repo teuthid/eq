@@ -24,4 +24,6 @@ private:
   static volatile uint32_t counter_;
 };
 
+extern EqFanPwm eqFanPwm;
+
 #endif // __EQ_FAN_PWM_H__

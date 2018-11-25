@@ -5,6 +5,8 @@
 #include <TimerOne.h>
 #include <util/atomic.h>
 
+EqFanPwm eqFanPwm;
+
 volatile uint32_t EqFanPwm::counter_ = 0;
 
 void EqFanPwm::init() {

@@ -6,8 +6,6 @@
 #include "eq_led.h"
 #include "eq_light_sensor.h"
 
-extern EqFanPwm eqFanPwm;
-
 EqHeartbeat::EqHeartbeat(Scheduler *scheduler)
     : Task(TASK_SECOND, TASK_FOREVER, scheduler, false) {}
 

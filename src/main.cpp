@@ -22,7 +22,6 @@
 // sensors & actuators:
 EqButton<EqConfig::buttonOverdrivePin> eqButtonOverdrive;
 EqButton<EqConfig::buttonBacklightPin> eqButtonBacklight;
-EqFanPwm eqFanPwm;
 
 // tasks:
 Scheduler eqRunner;
