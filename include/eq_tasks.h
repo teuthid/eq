@@ -11,4 +11,10 @@ public:
   bool Callback();
 };
 
+class EqButtonControl : public Task {
+public:
+  EqButtonControl(Scheduler *scheduler);
+  bool Callback();
+};
+
 #endif // __EQ_TASKS_H__

@@ -1,11 +1,13 @@
 
 #include "eq_tasks.h"
+#include "eq_button.h"
 #include "eq_display.h"
 #include "eq_fan_pwm.h"
 #include "eq_ht_sensor.h"
 #include "eq_led.h"
 #include "eq_light_sensor.h"
 
+// heartbeat
 EqHeartbeat::EqHeartbeat(Scheduler *scheduler)
     : Task(TASK_SECOND, TASK_FOREVER, scheduler, false) {}
 
@@ -21,5 +23,16 @@ bool EqHeartbeat::Callback() {
                  eqFanPwm.lastSpeed());
   EqConfig::decreaseOverdriveTime();
   EqConfig::decreaseBacklightTimeCounter();
+  return true;
+}
+
+// button control
+EqButtonControl::EqButtonControl(Scheduler *scheduler)
+    : Task(EqConfig::buttonReadInterval * TASK_MILLISECOND, TASK_FOREVER,
+           scheduler, false) {}
+
+bool EqButtonControl::Callback() {
+  eqButtonBacklight.read();
+  eqButtonOverdrive.read();
   return true;
 }

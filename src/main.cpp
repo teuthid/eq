@@ -21,6 +21,7 @@
 
 Scheduler eqRunner;
 EqHeartbeat taskHeartbeat(&eqRunner);
+EqButtonControl taskButtonControl(&eqRunner);
 
 // tasks calbacks
 void eqHeartbeatCallback();
@@ -113,13 +114,12 @@ void setup() {
 #endif
   if (eqInit()) {
     /*
-    eqHeartbeat.enable();
-    eqButtonControl.enable();
     eqITMeasurement.enable();
     eqHTMeasurement.enable();
     eqFanPwmControl.enable();
     */
     taskHeartbeat.enable();
+    taskButtonControl.enable();
     eqRunner.startNow();
   } else {
     eqLedAlert.setState(true);

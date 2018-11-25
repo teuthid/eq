@@ -13,7 +13,7 @@ public:
   void read() { button_.read(); }
 
 private:
-  void setOnPressed_() {}
+  void setOnPressed_();
   EasyButton button_;
 };
 
