@@ -9,16 +9,18 @@ template <uint8_t ButtonPin> class EqButton {
 public:
   EqButton() : button_(ButtonPin, EqConfig::buttonDebounceTime) {}
 
-  void init() {
-    button_.begin();
-    setOnPressed_();
-  }
+  void init();
   void read() { button_.read(); }
 
 private:
   void setOnPressed_() {}
   EasyButton button_;
 };
+
+template <uint8_t ButtonPin> void EqButton<ButtonPin>::init() {
+  button_.begin();
+  setOnPressed_();
+}
 
 extern EqButton<EqConfig::buttonOverdrivePin> eqButtonOverdrive;
 extern EqButton<EqConfig::buttonBacklightPin> eqButtonBacklight;
