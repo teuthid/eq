@@ -3,6 +3,8 @@
 
 #include <FastGPIO.h>
 
+EqLightSensor eqLightSensor;
+
 void EqLightSensor::collect_() {
   if (EqConfig::lightSensorIsAnalog)
     collector_.add(analogRead(EqConfig::lightSensorPin));

@@ -22,4 +22,6 @@ private:
   void determineState_();
 };
 
+extern EqLightSensor eqLightSensor;
+
 #endif // __EQ_LIGHT_SENSOR_H__

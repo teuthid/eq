@@ -8,7 +8,6 @@
 
 extern EqLed<EqConfig::ledAlertPin> eqLedAlert;
 extern EqLed<EqConfig::ledHeartbeatPin> eqLedHeartbeat;
-extern EqLightSensor eqLightSensor;
 extern EqFanPwm eqFanPwm;
 
 EqHeartbeat::EqHeartbeat(Scheduler *scheduler)
