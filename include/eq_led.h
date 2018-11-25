@@ -3,7 +3,6 @@
 #define __EQ_LED_H__
 
 #include "eq_config.h"
-
 #include <FastGPIO.h>
 
 template <uint8_t LedPin> class EqLed {
@@ -38,5 +37,8 @@ template <uint8_t LedPin> void EqLed<LedPin>::toggle(const bool &force) {
   else
     FastGPIO::Pin<LedPin>::setOutputValue(LOW);
 }
+
+extern EqLed<EqConfig::ledAlertPin> eqLedAlert;
+extern EqLed<EqConfig::ledHeartbeatPin> eqLedHeartbeat;
 
 #endif // __EQ_LED_H__

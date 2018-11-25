@@ -20,8 +20,6 @@
 #include <TaskScheduler.h>
 
 // sensors & actuators:
-EqLed<EqConfig::ledAlertPin> eqLedAlert;
-EqLed<EqConfig::ledHeartbeatPin> eqLedHeartbeat;
 EqButton<EqConfig::buttonOverdrivePin> eqButtonOverdrive;
 EqButton<EqConfig::buttonBacklightPin> eqButtonBacklight;
 EqFanPwm eqFanPwm;

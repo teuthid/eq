@@ -6,8 +6,6 @@
 #include "eq_led.h"
 #include "eq_light_sensor.h"
 
-extern EqLed<EqConfig::ledAlertPin> eqLedAlert;
-extern EqLed<EqConfig::ledHeartbeatPin> eqLedHeartbeat;
 extern EqFanPwm eqFanPwm;
 
 EqHeartbeat::EqHeartbeat(Scheduler *scheduler)
