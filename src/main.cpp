@@ -24,27 +24,17 @@ EqHeartbeat taskHeartbeat(&eqRunner);
 EqButtonControl taskButtonControl(&eqRunner);
 
 // tasks calbacks
-void eqHeartbeatCallback();
 void eqITMeasurementCallback();
 void eqHTMeasurementCallback();
 void eqFanPwmControlCallback();
 
 /*
-Task eqHeartbeat(TASK_SECOND, TASK_FOREVER, &eqHeartbeatCallback, &eqRunner,
-                 false);
 Task eqITMeasurement(TASK_SECOND, TASK_FOREVER, &eqITMeasurementCallback,
                      &eqRunner, false);
 Task eqHTMeasurement(EqConfig::htSensorInterval() * TASK_SECOND, TASK_FOREVER,
                      &eqHTMeasurementCallback, &eqRunner, false);
 Task eqFanPwmControl(EqConfig::fanPwmInterval() * TASK_SECOND, TASK_FOREVER,
                      &eqFanPwmControlCallback, &eqRunner, false);
-Task eqButtonControl(EqConfig::buttonReadInterval *TASK_MILLISECOND,
-                     TASK_FOREVER,
-                     []() {
-                       eqButtonBacklight.read();
-                       eqButtonOverdrive.read();
-                     },
-                     &eqRunner, false);
 */
 
 bool eqInit() {
@@ -66,8 +56,7 @@ bool eqInit() {
   eqButtonBacklight.init();
   eqFanPwm.init();
   if (EqConfig::isFanTachometerEnabled())
-    if (!eqFanPwm.calibrateTachometer(
-            [](uint8_t percents) { eqDisplay.showCalibrating(percents); }))
+    if (!eqFanPwm.calibrateTachometer())
       return false;
   //
   return true;
@@ -139,20 +128,6 @@ void setup() {
 #endif
 }
 
-void eqHeartbeatCallback() {
-  // eqLightSensor.read();
-  if (EqConfig::anyAlert())
-    eqLedAlert.toggle(true); // force blinking led
-  else
-    eqLedAlert.setState(false);
-  eqLedHeartbeat.toggle(true);
-  eqDisplay.show(eqHtSensor.lastHumidity(), eqHtSensor.lastTemperature(),
-                 eqHtSensor.trendHumidity(), eqHtSensor.trendTemperature(),
-                 eqFanPwm.lastSpeed());
-  EqConfig::decreaseOverdriveTime();
-  EqConfig::decreaseBacklightTimeCounter();
-}
-
 void eqSleep() {
   eqRunner.disableAll();
   if (EqConfig::isFanTachometerEnabled())
@@ -171,7 +146,7 @@ void eqSleep() {
 }
 
 void eqITMeasurementCallback() {
-/*
+  /*
   if (!eqItSensor.read())
     EqConfig::setAlert(EqAlertType::ItSensor);
   else {

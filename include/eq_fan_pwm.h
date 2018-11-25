@@ -14,7 +14,7 @@ public:
   void stop();
   bool readSpeed();
   uint8_t lastSpeed() const; // in percents!
-  bool calibrateTachometer(void (*showCalibrating)(uint8_t));
+  bool calibrateTachometer();
 
 private:
   uint8_t dutyCycle_ = 0;

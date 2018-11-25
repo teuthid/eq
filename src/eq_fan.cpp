@@ -1,5 +1,6 @@
 
 #include "eq_fan_pwm.h"
+#include "eq_display.h"
 
 #include <FastGPIO.h>
 #include <TimerOne.h>
@@ -70,12 +71,12 @@ uint8_t EqFanPwm::lastSpeed() const {
     return dutyCycle_;
 }
 
-bool EqFanPwm::calibrateTachometer(void (*showCalibrating)(uint8_t)) {
+bool EqFanPwm::calibrateTachometer() {
   dutyCycle_ = 0xFF;
   Timer1.pwm(EqConfig::fanPwmPin, 1023);
   maxSpeed_ = 0;
   for (uint8_t __i = 0; __i < 10; __i++) {
-    showCalibrating((__i + 1) * 10);
+    eqDisplay.showCalibrating((__i + 1) * 10);
     delay(1000);
     readSpeed();
     maxSpeed_ = max(lastSpeed_, maxSpeed_);
