@@ -19,11 +19,6 @@
 #include "eq_tasks.h"
 #include <TaskScheduler.h>
 
-// sensors & actuators:
-EqButton<EqConfig::buttonOverdrivePin> eqButtonOverdrive;
-EqButton<EqConfig::buttonBacklightPin> eqButtonBacklight;
-
-// tasks:
 Scheduler eqRunner;
 EqHeartbeat taskHeartbeat(&eqRunner);
 
