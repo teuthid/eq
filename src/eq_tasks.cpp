@@ -11,6 +11,9 @@ extern EqLed<EqConfig::ledHeartbeatPin> eqLedHeartbeat;
 extern EqLightSensor eqLightSensor;
 extern EqFanPwm eqFanPwm;
 
+/*
+heartbeat
+*/
 EqHeartbeat::EqHeartbeat(Scheduler *scheduler)
     : Task(TASK_SECOND, TASK_FOREVER, scheduler, false) {}
 
