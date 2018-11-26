@@ -7,9 +7,7 @@
 template <uint8_t Model> class EqDisplay {
 public:
   EqDisplay() {}
-  void show(const float &humidity, const float &temperature,
-            const int16_t &trendHumidity, const int16_t &trendTemperature,
-            const uint8_t &fanSpeed);
+  void show();
   bool init();
 
   // needs specialization:
@@ -23,11 +21,10 @@ private:
   bool initDisplay_();
   void turnOff_();
   void turnOn_();
-  void showHT_(const float &humidity, const float &temperature);
-  void showTrends_(const int16_t &trendHumidity,
-                   const int16_t &trendTemperature);
+  void showHT_();
+  void showTrends_();
   void showOverdriveTime_();
-  void showFanSpeed_(const uint8_t &speed /* 0..100% */);
+  void showFanSpeed_();
 
 private:
   bool isOn_ = false;
@@ -42,18 +39,14 @@ template <uint8_t Model> bool EqDisplay<Model>::init() {
 
 extern EqDisplay<EQ_DISPLAY_TYPE> eqDisplay;
 
-template <uint8_t Model>
-void EqDisplay<Model>::show(const float &humidity, const float &temperature,
-                            const int16_t &trendHumidity,
-                            const int16_t &trendTemperature,
-                            const uint8_t &fanSpeed) {
+template <uint8_t Model> void EqDisplay<Model>::show() {
   if (EqConfig::backlight()) {
     backlight_();
     if (!EqConfig::anyAlert())
       if (EqConfig::overdriveTime() == 0) {
-        showHT_(humidity, temperature);
-        showTrends_(trendHumidity, trendTemperature);
-        showFanSpeed_(fanSpeed);
+        showHT_();
+        showTrends_();
+        showFanSpeed_();
       } else
         showOverdriveTime_();
     else

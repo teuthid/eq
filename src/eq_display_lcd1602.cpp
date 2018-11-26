@@ -1,11 +1,13 @@
 
 #if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
 
-#include "eq_display.h"
-
 #include <LiquidCrystal_PCF8574.h>
 #include <PGMWrap.h>
 #include <Wire.h>
+
+#include "eq_display.h"
+#include "eq_fan_pwm.h"
+#include "eq_ht_sensor.h"
 
 EqDisplay<EQ_LCD_1602> eqDisplay; // preinstatiate
 
@@ -17,11 +19,10 @@ public:
   bool init();
   void turnOff();
   void turnOn() { lcd_.setBacklight(255); }
-  void showHT(const float &humidity, const float &temperature);
-  void showTrends(const int16_t &trendHumidity,
-                  const int16_t &trendTemperature);
+  void showHT();
+  void showTrends();
   void showOverdriveTime();
-  void showFanSpeed(const uint8_t &speed);
+  void showFanSpeed(bool detected = true, uint8_t percents = 0);
   void showAlert();
   void showCalibrating(const uint8_t &percents);
 
@@ -109,29 +110,30 @@ void EqLcd1602::turnOff() {
   lastSpeedDots_ = 0xFF;
 }
 
-void EqLcd1602::showHT(const float &humidity, const float &temperature) {
-  printValue_(round(humidity), 0);
+void EqLcd1602::showHT() {
+  printValue_(round(eqHtSensor.lastHumidity()), 0);
   lcd_.setCursor(6, 0);
   lcd_.print(F("% "));
   lcd_.setCursor(10, 0);
-  lcd_.print(String(temperature, 1));
+  lcd_.print(String(eqHtSensor.lastTemperature(), 1));
   lcd_.write(0xDF);
 }
 
-void EqLcd1602::showTrends(const int16_t &trendHumidity,
-                           const int16_t &trendTemperature) {
+void EqLcd1602::showTrends() {
+  int8_t __tH = eqHtSensor.trendHumidity();
+  int8_t __tT = eqHtSensor.trendTemperature();
   lcd_.setCursor(7, 0);
-  if (trendHumidity > 0)
+  if (__tH > 0)
     lcd_.write(0x7E);
-  else if (trendHumidity < 0)
+  else if (__tH < 0)
     lcd_.write(0x7F);
   else
     lcd_.write(0x20);
   lcd_.print(F("  "));
   lcd_.setCursor(15, 0);
-  if (trendTemperature > 0)
+  if (__tT > 0)
     lcd_.write(0x7E);
-  else if (trendTemperature < 0)
+  else if (__tT < 0)
     lcd_.write(0x7F);
   else
     lcd_.write(0x20);
@@ -148,9 +150,10 @@ void EqLcd1602::showOverdriveTime() {
   lastSpeedDots_ = 0xFF;
 }
 
-void EqLcd1602::showFanSpeed(const uint8_t &speed) {
-  uint8_t __c = min(10, speed / 10);
-  if ((speed > 0) && (__c == 0))
+void EqLcd1602::showFanSpeed(bool detected, uint8_t percents) {
+  uint8_t __s = detected ? eqFanPwm.lastSpeed() : percents;
+  uint8_t __c = min(10, __s / 10);
+  if ((__s > 0) && (__c == 0))
     __c = 1;
   if (lastSpeedDots_ != __c) {
     lcd_.setCursor(6, 1);
@@ -179,7 +182,7 @@ void EqLcd1602::showAlert() {
 void EqLcd1602::showCalibrating(const uint8_t &percents) {
   lcd_.clear();
   lcd_.print(F("Calibrating..."));
-  showFanSpeed(percents);
+  showFanSpeed(false, percents);
 }
 
 EqLcd1602 __lcd1602;
@@ -198,24 +201,18 @@ template <> void EqDisplay<EQ_LCD_1602>::turnOff_() { __lcd1602.turnOff(); }
 
 template <> void EqDisplay<EQ_LCD_1602>::turnOn_() { __lcd1602.turnOn(); }
 
-template <>
-void EqDisplay<EQ_LCD_1602>::showHT_(const float &humidity,
-                                     const float &temperature) {
-  __lcd1602.showHT(humidity, temperature);
-}
+template <> void EqDisplay<EQ_LCD_1602>::showHT_() { __lcd1602.showHT(); }
 
-template <>
-void EqDisplay<EQ_LCD_1602>::showTrends_(const int16_t &trendHumidity,
-                                         const int16_t &trendTemperature) {
-  __lcd1602.showTrends(trendHumidity, trendTemperature);
+template <> void EqDisplay<EQ_LCD_1602>::showTrends_() {
+  __lcd1602.showTrends();
 }
 
 template <> void EqDisplay<EQ_LCD_1602>::showOverdriveTime_() {
   __lcd1602.showOverdriveTime();
 }
 
-template <> void EqDisplay<EQ_LCD_1602>::showFanSpeed_(const uint8_t &speed) {
-  __lcd1602.showFanSpeed(speed);
+template <> void EqDisplay<EQ_LCD_1602>::showFanSpeed_() {
+  __lcd1602.showFanSpeed();
 }
 
 template <> void EqDisplay<EQ_LCD_1602>::showAlert() { __lcd1602.showAlert(); }

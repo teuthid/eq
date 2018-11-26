@@ -9,6 +9,7 @@ template <uint8_t ButtonPin> class EqButton {
 public:
   EqButton() : button_(ButtonPin, EqConfig::buttonDebounceTime) {}
 
+  // needs specialization:  
   void init();
   void read();
 
