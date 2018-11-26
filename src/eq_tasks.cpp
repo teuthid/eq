@@ -2,6 +2,7 @@
 #include "eq_tasks.h"
 #include "eq_button.h"
 #include "eq_display.h"
+#include "eq_ht_sensor.h"
 #include "eq_led.h"
 #include "eq_light_sensor.h"
 
@@ -30,5 +31,19 @@ EqButtonControl::EqButtonControl(Scheduler *scheduler)
 bool EqButtonControl::Callback() {
   eqButtonBacklight.read();
   eqButtonOverdrive.read();
+  return true;
+}
+
+// huminidity & temperature control
+EqHtSensorControl::EqHtSensorControl(Scheduler *scheduler)
+    : Task(EqConfig::htSensorInterval() * TASK_SECOND, TASK_FOREVER, scheduler,
+           false) {}
+
+bool EqHtSensorControl::Callback() {
+  if (!eqHtSensor.read())
+    EqConfig::setAlert(EqAlertType::HtSensor);
+  else
+    EqConfig::resetAlert(EqAlertType::HtSensor);
+
   return true;
 }

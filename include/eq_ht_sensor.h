@@ -40,8 +40,9 @@ private:
       humidityCollector_;
   EqCollector<EqConfig::htSensorCollectorSize> temperatureCollector_;
 
+  // needs specializations:
   uint16_t samplingPeriod_() const; // in milliseconds
-  bool initHtSensor_() { return true; }
+  bool initHtSensor_();
   void readHTSensor_(float &humidity, float &temperature);
 
   void setAlert() {

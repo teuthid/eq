@@ -17,4 +17,10 @@ public:
   bool Callback();
 };
 
+class EqHtSensorControl : public Task {
+public:
+  EqHtSensorControl(Scheduler *scheduler);
+  bool Callback();
+};
+
 #endif // __EQ_TASKS_H__
