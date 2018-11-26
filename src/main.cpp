@@ -164,7 +164,7 @@ void eqFanPwmControlCallback() {
     if (EqConfig::overdriveTime() > 0)
       eqFanPwm.setOverdrive();
     else
-      eqFanPwm.setDutyCycle(eqHtSensor.index());
+      eqFanPwm.setDutyCycle();
   else {
     eqFanPwm.stop();
   }

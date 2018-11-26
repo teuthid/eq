@@ -8,9 +8,9 @@ class EqFanPwm {
 public:
   constexpr EqFanPwm() {}
   void init();
-  void setDutyCycle(const uint8_t &duty /* in percents */);
+  void setDutyCycle();
   constexpr uint8_t dutyCycle() const { return dutyCycle_; }
-  void setOverdrive() { setDutyCycle(EqConfig::fanPwmOverdrive()); }
+  void setOverdrive();
   void stop();
   bool readSpeed();
   uint8_t lastSpeed() const; // in percents!

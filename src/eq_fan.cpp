@@ -1,6 +1,7 @@
 
-#include "eq_fan_pwm.h"
 #include "eq_display.h"
+#include "eq_fan_pwm.h"
+#include "eq_ht_sensor.h"
 
 #include <FastGPIO.h>
 #include <TimerOne.h>
@@ -30,16 +31,20 @@ void EqFanPwm::init() {
     EqConfig::increaseOverdriveTime(5); // checking fan without tachometer
 }
 
-void EqFanPwm::setDutyCycle(const uint8_t &duty) {
-  uint8_t __dc = constrain(duty, 0, EqConfig::fanPwmMax());
+void EqFanPwm::setDutyCycle() {
+  uint8_t __dc = constrain(eqHtSensor.index(), 0, EqConfig::fanPwmMax());
   if (EqConfig::isFanPwmStepModeEnabled())
     __dc = (__dc / 10) * 10 + ((__dc % 10) > 4 ? 10 : 0);
   __dc = (__dc > 0) ? max(__dc, EqConfig::fanPwmMin()) : 0;
   if (__dc != dutyCycle_) {
     dutyCycle_ = __dc;
-    uint16_t __pwm = map(dutyCycle_, 0, 100, 0, 1023);
-    Timer1.pwm(EqConfig::fanPwmPin, __pwm);
+    Timer1.pwm(EqConfig::fanPwmPin, map(dutyCycle_, 0, 100, 0, 1023));
   }
+}
+
+void EqFanPwm::setOverdrive() {
+  dutyCycle_ = EqConfig::fanPwmOverdrive();
+  Timer1.pwm(EqConfig::fanPwmPin, map(dutyCycle_, 0, 100, 0, 1023));
 }
 
 void EqFanPwm::stop() {
