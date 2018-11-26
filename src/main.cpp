@@ -15,7 +15,6 @@
 #include "MemoryFree.h"
 #endif // EQ_DEBUG
 
-#define _TASK_OO_CALLBACKS
 #include "eq_tasks.h"
 #include <TaskScheduler.h>
 
