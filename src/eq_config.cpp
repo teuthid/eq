@@ -1,8 +1,10 @@
 
 #include "eq_config.h"
 #include "eq_eeprom.h"
+#include "eq_led.h"
 
 #include <FastGPIO.h>
+#include <avr/sleep.h>
 #include <avr/wdt.h>
 
 #ifdef EQ_DEBUG
@@ -37,6 +39,22 @@ void EqConfig::reset(const bool &cleanEeprom) {
   wdt_enable(WDTO_15MS);
   while (true) {
   }
+}
+
+void EqConfig::sleep() {
+  if (EqConfig::isFanTachometerEnabled())
+    detachInterrupt(digitalPinToInterrupt(EqConfig::fanTachometerPin));
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  sleep_enable();
+  attachInterrupt(digitalPinToInterrupt(EqConfig::buttonOverdrivePin), []() {},
+                  LOW);
+  sei();
+  eqLedHeartbeat.setState(false);
+  eqLedAlert.setState(true);
+  sleep_mode();
+  // executed after the interrupt:
+  sleep_disable();
+  EqConfig::reset();
 }
 
 void EqConfig::setAlert(const EqAlertType &value) {

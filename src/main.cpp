@@ -1,6 +1,5 @@
 
 #include <Wire.h>
-#include <avr/sleep.h>
 
 #include "eq_button.h"
 #include "eq_display.h"
@@ -122,23 +121,6 @@ void setup() {
 #endif
 }
 
-void eqSleep() {
-  eqRunner.disableAll();
-  if (EqConfig::isFanTachometerEnabled())
-    detachInterrupt(digitalPinToInterrupt(EqConfig::fanTachometerPin));
-  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-  sleep_enable();
-  attachInterrupt(digitalPinToInterrupt(EqConfig::buttonOverdrivePin), []() {},
-                  LOW);
-  sei();
-  eqLedHeartbeat.setState(false);
-  eqLedAlert.setState(true);
-  sleep_mode();
-  // executed after the interrupt:
-  sleep_disable();
-  EqConfig::reset();
-}
-
 void eqITMeasurementCallback() {
   /*
   if (!eqItSensor.read())
@@ -148,8 +130,10 @@ void eqITMeasurementCallback() {
     if (eqItSensor.temperature() > EqConfig::itSensorMaxTemperature) {
       EqConfig::setAlert(EqAlertType::Overheating);
       EqConfig::registerOverheating();
-      if (EqConfig::overheating())
+      if (EqConfig::overheating()) {
+        eqRunner.disableAll();
         eqSleep();
+      }
     } else
       EqConfig::resetAlert(EqAlertType::Overheating);
   }
