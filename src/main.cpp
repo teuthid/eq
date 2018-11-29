@@ -22,16 +22,14 @@ Scheduler eqRunner;
 EqHeartbeat taskHeartbeat(&eqRunner);
 EqButtonControl taskButtonControl(&eqRunner);
 EqHtSensorControl taskHtSensorControl(&eqRunner);
+EqFanControl taskFanControl(&eqRunner);
 
 // tasks calbacks
 void eqITMeasurementCallback();
-void eqFanPwmControlCallback();
 
 /*
 Task eqITMeasurement(TASK_SECOND, TASK_FOREVER, &eqITMeasurementCallback,
                      &eqRunner, false);
-Task eqFanPwmControl(EqConfig::fanPwmInterval() * TASK_SECOND, TASK_FOREVER,
-                     &eqFanPwmControlCallback, &eqRunner, false);
 */
 
 bool eqInit() {
@@ -104,6 +102,7 @@ void setup() {
     taskHeartbeat.enable();
     taskButtonControl.enable();
     taskHtSensorControl.enable();
+    taskFanControl.enable();
     eqRunner.startNow();
   } else {
     eqLedAlert.setState(true);
@@ -155,23 +154,6 @@ void eqITMeasurementCallback() {
       EqConfig::resetAlert(EqAlertType::Overheating);
   }
 */
-}
-
-void eqFanPwmControlCallback() {
-  // setting pwm:
-  if (!EqConfig::anyAlert())
-    if (EqConfig::overdriveTime() > 0)
-      eqFanPwm.setOverdrive();
-    else
-      eqFanPwm.setDutyCycle();
-  else {
-    eqFanPwm.stop();
-  }
-  // reading fan speed:
-  if (!eqFanPwm.readSpeed())
-    EqConfig::setAlert(EqAlertType::Fan);
-  else
-    EqConfig::resetAlert(EqAlertType::Fan);
 }
 
 void loop() { eqRunner.execute(); }

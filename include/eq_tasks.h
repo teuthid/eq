@@ -23,4 +23,10 @@ public:
   bool Callback();
 };
 
+class EqFanControl : public Task {
+public:
+  EqFanControl(Scheduler *scheduler);
+  bool Callback();
+};
+
 #endif // __EQ_TASKS_H__

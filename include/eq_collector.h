@@ -79,11 +79,7 @@ template <uint8_t Size> bool EqCollector<Size>::add(const float &value) {
   deviation_ = min((__d / Size), 100);
   return true;
 }
-/*
-template <> bool EqCollector<(uint8_t)1>::add(const float &value) {
-  collector_[0] = value;
-  average_ = value;
-  return true;
-}
-*/
+
+template <> bool EqCollector<(uint8_t)1>::add(const float &value);
+
 #endif // __EQ_COLLECTOR_H__
