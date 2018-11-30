@@ -23,6 +23,15 @@ public:
   bool Callback();
 };
 
+class EqItSensorControl : public Task {
+public:
+  EqItSensorControl(Scheduler *scheduler);
+  bool Callback();
+
+private:
+  Scheduler *runner_;
+};
+
 class EqFanControl : public Task {
 public:
   EqFanControl(Scheduler *scheduler);

@@ -60,6 +60,7 @@ public:
   // non-configurable parameters
   static constexpr uint8_t sensorMaxDeviation = 30; // in percents
   static constexpr uint8_t itSensorMaxTemperature = 50;
+  static constexpr uint8_t itSensorInterval = 1; // in seconds
 
   EqConfig(const EqConfig &) = delete;
   EqConfig(EqConfig &&) = delete;

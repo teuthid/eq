@@ -49,6 +49,30 @@ bool EqHtSensorControl::Callback() {
   return true;
 }
 
+// internal temperature control
+EqItSensorControl::EqItSensorControl(Scheduler *scheduler)
+    : Task(EqConfig::itSensorInterval * TASK_SECOND, TASK_FOREVER, scheduler,
+           false),
+      runner_(scheduler) {}
+
+bool EqItSensorControl::Callback() {
+  if (!eqItSensor.read())
+    EqConfig::setAlert(EqAlertType::ItSensor);
+  else {
+    EqConfig::resetAlert(EqAlertType::ItSensor);
+    if (eqItSensor.temperature() > EqConfig::itSensorMaxTemperature) {
+      EqConfig::setAlert(EqAlertType::Overheating);
+      EqConfig::registerOverheating();
+      if (EqConfig::overheating()) {
+        runner_->disableAll();
+        EqConfig::sleep();
+      }
+    } else
+      EqConfig::resetAlert(EqAlertType::Overheating);
+  }
+  return true;
+}
+
 // fan control
 EqFanControl::EqFanControl(Scheduler *scheduler)
     : Task(EqConfig::fanPwmInterval() * TASK_SECOND, TASK_FOREVER, scheduler,

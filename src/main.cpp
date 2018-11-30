@@ -21,15 +21,8 @@ Scheduler eqRunner;
 EqHeartbeat taskHeartbeat(&eqRunner);
 EqButtonControl taskButtonControl(&eqRunner);
 EqHtSensorControl taskHtSensorControl(&eqRunner);
+EqItSensorControl taskItSensorControl(&eqRunner);
 EqFanControl taskFanControl(&eqRunner);
-
-// tasks calbacks
-void eqITMeasurementCallback();
-
-/*
-Task eqITMeasurement(TASK_SECOND, TASK_FOREVER, &eqITMeasurementCallback,
-                     &eqRunner, false);
-*/
 
 bool eqInit() {
   EqConfig::init();
@@ -94,10 +87,7 @@ void setup() {
   Serial.print(F("Initializing... "));
 #endif
   if (eqInit()) {
-    /*
-    eqITMeasurement.enable();
-    eqFanPwmControl.enable();
-    */
+    taskItSensorControl.enable();
     taskHeartbeat.enable();
     taskButtonControl.enable();
     taskHtSensorControl.enable();
@@ -119,25 +109,6 @@ void setup() {
   // printConfig();
   Serial.println();
 #endif
-}
-
-void eqITMeasurementCallback() {
-  /*
-  if (!eqItSensor.read())
-    EqConfig::setAlert(EqAlertType::ItSensor);
-  else {
-    EqConfig::resetAlert(EqAlertType::ItSensor);
-    if (eqItSensor.temperature() > EqConfig::itSensorMaxTemperature) {
-      EqConfig::setAlert(EqAlertType::Overheating);
-      EqConfig::registerOverheating();
-      if (EqConfig::overheating()) {
-        eqRunner.disableAll();
-        eqSleep();
-      }
-    } else
-      EqConfig::resetAlert(EqAlertType::Overheating);
-  }
-*/
 }
 
 void loop() { eqRunner.execute(); }
