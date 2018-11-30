@@ -72,6 +72,7 @@ void printConfig() {
                                                     : F("Disabled"));
   // TODO
   Serial.println(F("Running..."));
+  Serial.println();
 }
 #endif // EQ_DEBUG
 
@@ -104,7 +105,6 @@ void setup() {
   }
 #ifdef EQ_DEBUG
   // printConfig();
-  Serial.println();
 #endif
 }
 
