@@ -18,7 +18,7 @@
               | [ ] GND                              |
               | [ ] Vin                        7 [ ] | D7
               |                                6 [ ]~| D6 
-  lightSensor | [X] A0 reset                   5 [X]~| D5 btnBacklight
+  lightSensor | [X] A0                         5 [X]~| D5 btnBacklight/reset
 tachometerCtl | [X] A1                         4 [X] | D4 ledAlert
      itSensor | [X] A2                    INT1/3 [X]~| D3 fanTachometer
               | [ ] A3                    INT0/2 [X] | D2 btnOverdrv/hard reset
