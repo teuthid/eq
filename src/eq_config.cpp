@@ -4,6 +4,7 @@
 #include "eq_led.h"
 
 #include <FastGPIO.h>
+#include <Wire.h>
 #include <avr/sleep.h>
 #include <avr/wdt.h>
 
@@ -32,6 +33,7 @@ void EqConfig::init() {
   cancelOverheating();
   FastGPIO::Pin<fanTachometerControlPin>::setInputPulledUp();
   backlightTimeCounter_ = backlightTime();
+  Wire.begin();
 }
 
 void EqConfig::reset(const bool &cleanEeprom) {

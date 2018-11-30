@@ -1,6 +1,4 @@
 
-#include <Wire.h>
-
 #include "eq_button.h"
 #include "eq_display.h"
 #include "eq_eeprom.h"
@@ -26,7 +24,6 @@ EqFanControl taskFanControl(&eqRunner);
 
 bool eqInit() {
   EqConfig::init();
-  Wire.begin();
   if (!eqDisplay.init())
     return false;
   eqLedHeartbeat.test(200, 3);
