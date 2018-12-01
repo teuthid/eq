@@ -45,7 +45,18 @@ class EqDebugTask : public Task {
 public:
   EqDebugTask(Scheduler *scheduler);
   bool Callback();
+
+private:
+  template <typename Value>
+  void print_(const __FlashStringHelper *description, const Value &value);
 };
+
+template <typename Value>
+void EqDebugTask::print_(const __FlashStringHelper *description,
+                         const Value &value) {
+  Serial.print(description);
+  Serial.print(value);
+}
 #endif // EQ_DEBUG
 
 #endif // __EQ_TASKS_H__

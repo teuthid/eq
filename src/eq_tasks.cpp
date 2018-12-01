@@ -7,6 +7,10 @@
 #include "eq_led.h"
 #include "eq_light_sensor.h"
 
+#ifdef EQ_DEBUG
+#include "MemoryFree.h"
+#endif // EQ_DEBUG
+
 // heartbeat
 EqHeartbeat::EqHeartbeat(Scheduler *scheduler)
     : Task(TASK_SECOND, TASK_FOREVER, scheduler, false) {}
@@ -103,5 +107,14 @@ EqDebugTask::EqDebugTask(Scheduler *scheduler)
     : Task(EqConfig::debugInterval * TASK_SECOND, TASK_FOREVER, scheduler,
            false) {}
 
-bool EqDebugTask::Callback() { return true; }
+bool EqDebugTask::Callback() {
+  print_(F(" L="), eqLightSensor.intensity());
+  print_(F(" H="), eqHtSensor.lastHumidity());
+  print_(F(" T="), eqHtSensor.lastTemperature());
+  print_(F(" F="), eqFanPwm.lastSpeed());
+  print_(F(" I="), eqItSensor.lastTemperature());
+  print_(F(" M="), freeMemory());
+  Serial.println();
+  return true;
+}
 #endif // EQ_DEBUG

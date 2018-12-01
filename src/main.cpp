@@ -9,7 +9,6 @@
 
 #ifdef EQ_DEBUG
 #define _TASK_DEBUG
-#include "MemoryFree.h"
 #endif // EQ_DEBUG
 
 #include "eq_tasks.h"
@@ -43,7 +42,6 @@ bool eqInit() {
   if (EqConfig::isFanTachometerEnabled())
     if (!eqFanPwm.calibrateTachometer())
       return false;
-  //
   return true;
 }
 
@@ -73,9 +71,7 @@ void printConfig() {
   Serial.print(F("- Fan Tachometer = "));
   Serial.println(EqConfig::isFanTachometerEnabled() ? F("Enabled")
                                                     : F("Disabled"));
-  // TODO
   Serial.println(F("Running..."));
-  Serial.println();
 }
 #endif // EQ_DEBUG
 
