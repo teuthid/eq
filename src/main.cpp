@@ -21,6 +21,9 @@ EqButtonControl taskButtonControl(&eqRunner);
 EqHtSensorControl taskHtSensorControl(&eqRunner);
 EqItSensorControl taskItSensorControl(&eqRunner);
 EqFanControl taskFanControl(&eqRunner);
+#ifdef EQ_DEBUG
+EqDebugTask taskDebug(&eqRunner);
+#endif
 
 bool eqInit() {
   EqConfig::init();
@@ -90,6 +93,9 @@ void setup() {
     taskButtonControl.enable();
     taskHtSensorControl.enable();
     taskFanControl.enable();
+#ifdef EQ_DEBUG
+    taskDebug.enable();
+#endif
     eqRunner.startNow();
   } else {
     eqLedAlert.setState(true);
@@ -104,7 +110,7 @@ void setup() {
     abort();
   }
 #ifdef EQ_DEBUG
-  // printConfig();
+  printConfig();
 #endif
 }
 

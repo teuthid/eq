@@ -96,3 +96,12 @@ bool EqFanControl::Callback() {
 
   return true;
 }
+
+// debugging
+#ifdef EQ_DEBUG
+EqDebugTask::EqDebugTask(Scheduler *scheduler)
+    : Task(EqConfig::debugInterval * TASK_SECOND, TASK_FOREVER, scheduler,
+           false) {}
+
+bool EqDebugTask::Callback() { return true; }
+#endif // EQ_DEBUG

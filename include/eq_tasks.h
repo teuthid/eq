@@ -5,6 +5,8 @@
 #define _TASK_OO_CALLBACKS
 #include <TaskSchedulerDeclarations.h>
 
+#include "eq_config.h"
+
 class EqHeartbeat : public Task {
 public:
   EqHeartbeat(Scheduler *scheduler);
@@ -37,5 +39,13 @@ public:
   EqFanControl(Scheduler *scheduler);
   bool Callback();
 };
+
+#ifdef EQ_DEBUG
+class EqDebugTask : public Task {
+public:
+  EqDebugTask(Scheduler *scheduler);
+  bool Callback();
+};
+#endif // EQ_DEBUG
 
 #endif // __EQ_TASKS_H__

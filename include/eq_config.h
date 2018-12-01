@@ -61,6 +61,9 @@ public:
   static constexpr uint8_t sensorMaxDeviation = 30; // in percents
   static constexpr uint8_t itSensorMaxTemperature = 50;
   static constexpr uint8_t itSensorInterval = 1; // in seconds
+  #ifdef EQ_DEBUG
+  static constexpr uint8_t debugInterval = 3; // in seconds
+  #endif
 
   EqConfig(const EqConfig &) = delete;
   EqConfig(EqConfig &&) = delete;
