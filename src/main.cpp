@@ -99,7 +99,7 @@ void setup() {
       eqDisplay.showAlert();
 #ifdef EQ_DEBUG
     Serial.println();
-    Serial.print(F("- ALERT: "));
+    Serial.print(F("ALERT: "));
     Serial.println(EqConfig::alertAsString());
     Serial.flush();
 #endif

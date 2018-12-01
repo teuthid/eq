@@ -14,7 +14,7 @@
 void __assert(const char *__func, const char *__file, int __lineno,
               const char *__sexp) {
   Serial.println();
-  Serial.println(F("--- Assertion ---"));
+  Serial.println(F("- Assertion -"));
   Serial.println(__func);
   Serial.println(__file);
   Serial.println(__lineno, DEC);
