@@ -40,7 +40,6 @@ enum class EqAlertType : uint8_t {
   TempSensor = 5, // temperature sensor only
   ItSensor = 6,   // internal temperature sensor
   Overheating = 7
-  // TODO
 };
 
 class EqConfig final {
