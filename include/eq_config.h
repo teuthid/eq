@@ -60,9 +60,9 @@ public:
   static constexpr uint8_t sensorMaxDeviation = 30; // in percents
   static constexpr uint8_t itSensorMaxTemperature = 50;
   static constexpr uint8_t itSensorInterval = 1; // in seconds
-  #ifdef EQ_DEBUG
+#ifdef EQ_DEBUG
   static constexpr uint8_t debugInterval = 5; // in seconds
-  #endif
+#endif
 
   EqConfig(const EqConfig &) = delete;
   EqConfig(EqConfig &&) = delete;
@@ -79,7 +79,8 @@ public:
   static bool anyAlert() { return (alert_ != EqAlertType::None); }
   static bool isAlertOnZeroSpeed();
   static void setAlertOnZeroSpeed(const bool &enabled = true);
-  static String alertAsString();
+  static String alertAsString(bool detected = true,
+                              EqAlertType alert = EqAlertType::None);
 
   // overheating
   static constexpr uint8_t maxCountOverheating = 3;

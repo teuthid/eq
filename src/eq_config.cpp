@@ -77,8 +77,9 @@ void EqConfig::setAlertOnZeroSpeed(const bool &enabled) {
   EqEeprom::writeValue<bool>(EqEeprom::AlertOnZeroSpeed, enabled);
 }
 
-String EqConfig::alertAsString() {
-  switch (alert_) {
+String EqConfig::alertAsString(bool detected, EqAlertType alert) {
+  EqAlertType __alert = detected ? EqConfig::alert_ : alert;
+  switch (__alert) {
   case EqAlertType::None:
     return String(F("None"));
   case EqAlertType::Display:
