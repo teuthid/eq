@@ -96,8 +96,9 @@ char __eqStrAlertBuffer[16];
 
 const char *EqConfig::alertAsString(bool detected, EqAlertType alert) {
   EqAlertType __alert = detected ? EqConfig::alert_ : alert;
-  strcpy_P(__eqStrAlertBuffer,
-           (char *)pgm_read_word(&(__eqStrAlerts[(uint8_t)__alert])));
+  strncpy_P(__eqStrAlertBuffer,
+            (char *)pgm_read_word(&(__eqStrAlerts[(uint8_t)__alert])),
+            sizeof(__eqStrAlertBuffer));
   return __eqStrAlertBuffer;
 }
 
