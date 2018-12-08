@@ -5,6 +5,7 @@
 
 #include <FastGPIO.h>
 #include <Wire.h>
+#include <avr/pgmspace.h>
 #include <avr/sleep.h>
 #include <avr/wdt.h>
 
@@ -77,28 +78,27 @@ void EqConfig::setAlertOnZeroSpeed(const bool &enabled) {
   EqEeprom::writeValue<bool>(EqEeprom::AlertOnZeroSpeed, enabled);
 }
 
-String EqConfig::alertAsString(bool detected, EqAlertType alert) {
+namespace {
+const char __eqStrAlertNone[] PROGMEM = "None";
+const char __eqStrAlertDisplay[] PROGMEM = "Display";
+const char __eqStrAlertFan[] PROGMEM = "Fan";
+const char __eqStrAlertHtSensor[] PROGMEM = "HT Sensor";
+const char __eqStrAlertLightSensor[] PROGMEM = "Light Sensor";
+const char __eqStrAlertTempSensor[] PROGMEM = "Temp Sensor";
+const char __eqStrAlertItSensor[] PROGMEM = "IT Sensor";
+const char __eqStrAlertOverheating[] PROGMEM = "Overheating";
+const char *const __eqStrAlerts[] PROGMEM = {
+    __eqStrAlertNone,     __eqStrAlertDisplay,     __eqStrAlertFan,
+    __eqStrAlertHtSensor, __eqStrAlertLightSensor, __eqStrAlertTempSensor,
+    __eqStrAlertItSensor, __eqStrAlertOverheating};
+char __eqStrAlertBuffer[16];
+} // namespace
+
+const char *EqConfig::alertAsString(bool detected, EqAlertType alert) {
   EqAlertType __alert = detected ? EqConfig::alert_ : alert;
-  switch (__alert) {
-  case EqAlertType::None:
-    return String(F("None"));
-  case EqAlertType::Display:
-    return String(F("Display"));
-  case EqAlertType::Fan:
-    return String(F("Fan"));
-  case EqAlertType::HtSensor:
-    return String(F("HT Sensor"));
-  case EqAlertType::LightSensor:
-    return String(F("Light Sensor"));
-  case EqAlertType::TempSensor:
-    return String(F("Temp Sensor"));
-  case EqAlertType::ItSensor:
-    return String(F("IT Sensor"));
-  case EqAlertType::Overheating:
-    return String(F("Overheating"));
-  default:
-    return String(F("Unknown"));
-  }
+  strcpy_P(__eqStrAlertBuffer,
+           (char *)pgm_read_word(&(__eqStrAlerts[(uint8_t)__alert])));
+  return __eqStrAlertBuffer;
 }
 
 bool EqConfig::overheating() {

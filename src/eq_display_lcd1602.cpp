@@ -173,8 +173,8 @@ void EqLcd1602::showAlert() {
   */
   lcd_.clear();
   lcd_.print(F("ALERT"));
-  String __s = EqConfig::alertAsString();
-  lcd_.setCursor(16 - __s.length(), 1);
+  const char* __s = EqConfig::alertAsString();
+  lcd_.setCursor(16 - strlen(__s), 1);
   lcd_.print(__s);
   lastSpeedDots_ = 0xFF;
 }
