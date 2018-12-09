@@ -115,7 +115,8 @@ void EqLcd1602::showHT() {
   lcd_.setCursor(6, 0);
   lcd_.print(F("% "));
   lcd_.setCursor(10, 0);
-  lcd_.print(String(eqHtSensor.lastTemperature(), 1));
+  char __s[5];
+  lcd_.print(dtostrf(eqHtSensor.lastTemperature(), 4, 1, __s));
   lcd_.write(0xDF);
 }
 
@@ -173,7 +174,7 @@ void EqLcd1602::showAlert() {
   */
   lcd_.clear();
   lcd_.print(F("ALERT"));
-  const char* __s = EqConfig::alertAsString();
+  const char *__s = EqConfig::alertAsString();
   lcd_.setCursor(16 - strlen(__s), 1);
   lcd_.print(__s);
   lastSpeedDots_ = 0xFF;
