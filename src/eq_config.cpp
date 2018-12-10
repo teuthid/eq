@@ -85,13 +85,13 @@ const char __eqStrAlertFan[] PROGMEM = "Fan";
 const char __eqStrAlertHtSensor[] PROGMEM = "HT Sensor";
 const char __eqStrAlertLightSensor[] PROGMEM = "Light Sensor";
 const char __eqStrAlertTempSensor[] PROGMEM = "Temp Sensor";
-const char __eqStrAlertItSensor[] PROGMEM = "IT Sensor";
+const char __eqStrAlertItSensor[] PROGMEM = "Internal Sensor";
 const char __eqStrAlertOverheating[] PROGMEM = "Overheating";
 const char *const __eqStrAlerts[] PROGMEM = {
     __eqStrAlertNone,     __eqStrAlertDisplay,     __eqStrAlertFan,
     __eqStrAlertHtSensor, __eqStrAlertLightSensor, __eqStrAlertTempSensor,
     __eqStrAlertItSensor, __eqStrAlertOverheating};
-char __eqStrAlertBuffer[16];
+char __eqStrAlertBuffer[17];
 } // namespace
 
 const char *EqConfig::alertAsString(bool detected, EqAlertType alert) {

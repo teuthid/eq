@@ -4,6 +4,7 @@
 
 #include "eq_collector.h"
 #include "eq_config.h"
+#include "eq_display.h"
 
 template <uint8_t Model, bool IsInternal = false> class EqHtSensor {
 public:
@@ -46,8 +47,9 @@ private:
   void readHTSensor_(float &humidity, float &temperature);
 
   void setAlert() {
-    EqConfig::setAlert(HumidityOn ? EqAlertType::HtSensor
-                                  : EqAlertType::TempSensor);
+    EqConfig::setAlert(IsInternal ? EqAlertType::ItSensor
+                                  : (HumidityOn ? EqAlertType::HtSensor
+                                                : EqAlertType::TempSensor));
   }
 
   int8_t indexH_() const;
@@ -59,6 +61,11 @@ bool EqHtSensor<Model, IsInternal>::init() {
 #ifdef EQ_DEBUG
   Serial.print(HumidityOn ? F("[HT Sensor] ") : F("[Temp Sensor] "));
 #endif
+  eqDisplay.showMessage(
+      IsInternal ? EqConfig::alertAsString(false, EqAlertType::ItSensor)
+                 : EqConfig::alertAsString(
+                       false, HumidityOn ? EqAlertType::HtSensor
+                                         : EqAlertType::TempSensor));
   if (!initHtSensor_()) {
     setAlert();
     return false;
