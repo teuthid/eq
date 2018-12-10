@@ -86,16 +86,6 @@ bool EqLcd1602::init() {
   lcd_.noAutoscroll();
   lcd_.setBacklight(255);
   lcd_.print(F("Booting..."));
-  lcd_.setCursor(2, 1);
-  lcd_.print(F("h"));
-  lcd_.print(EqConfig::htSensorHumidityThreshold());
-  lcd_.print(F(" t"));
-  lcd_.print(EqConfig::htSensorTemperatureThreshold());
-  lcd_.print(F(" i"));
-  lcd_.print(EqConfig::htSensorInterval());
-  lcd_.print(F(" m"));
-  lcd_.print(static_cast<uint8_t>(EqConfig::htIndexType()));
-
   uint8_t __bar[8];
   for (uint8_t __i = 0; __i < 8; __i++) {
     for (uint8_t __j = 0; __j < 8; __j++)
@@ -173,11 +163,6 @@ void EqLcd1602::showMessage(const char *message) {
 }
 
 void EqLcd1602::showAlert() {
-  /*
-  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
-  A  L  E  R  T
-                                               0
-  */
   lcd_.clear();
   lcd_.print(F("ALERT"));
   showMessage(EqConfig::alertAsString());
@@ -218,6 +203,10 @@ template <> void EqDisplay<EQ_LCD_1602>::showOverdriveTime_() {
 
 template <> void EqDisplay<EQ_LCD_1602>::showFanSpeed_() {
   __lcd1602.showFanSpeed();
+}
+
+template <> void EqDisplay<EQ_LCD_1602>::showMessage(const char *message) {
+  __lcd1602.showMessage(message);
 }
 
 template <> void EqDisplay<EQ_LCD_1602>::showAlert() { __lcd1602.showAlert(); }
