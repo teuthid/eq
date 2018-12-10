@@ -1,5 +1,6 @@
 
 #include "eq_light_sensor.h"
+#include "eq_display.h"
 
 #include <FastGPIO.h>
 
@@ -32,6 +33,8 @@ bool EqLightSensor::init() {
 #ifdef EQ_DEBUG
   Serial.print(F("[Light Sensor] "));
 #endif
+  eqDisplay.showMessage(
+      EqConfig::alertAsString(false, EqAlertType::LightSensor));
   FastGPIO::Pin<EqConfig::lightSensorPin>::setInput();
   for (uint8_t __i = 0; __i < EqConfig::lightSensorCollectorSize; __i++) {
     delay(200);

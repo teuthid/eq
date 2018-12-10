@@ -158,6 +158,9 @@ void EqLcd1602::showFanSpeed(bool detected, uint8_t percents) {
 }
 
 void EqLcd1602::showMessage(const char *message) {
+  lcd_.setCursor(0, 1);
+  for (uint8_t __i = 0; __i < 16; __i++)
+    lcd_.write(0x20);
   lcd_.setCursor(16 - min(16, strlen(message)), 1);
   lcd_.print(message);
 }
