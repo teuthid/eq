@@ -1,6 +1,6 @@
 
-#include "eq_display.h"
 #include "eq_fan_pwm.h"
+#include "eq_display.h"
 #include "eq_ht_sensor.h"
 
 #include <FastGPIO.h>
@@ -15,6 +15,7 @@ void EqFanPwm::init() {
 #ifdef EQ_DEBUG
   Serial.print(F("[Fan PWM] "));
 #endif
+  eqDisplay.showMessage(EqConfig::alertAsString(false, EqAlertType::Fan));
   Timer1.initialize(EqConfig::fanPwmCycle);
   if (EqConfig::isFanTachometerEnabled()) {
     FastGPIO::Pin<EqConfig::fanTachometerPin>::setInputPulledUp();
@@ -27,8 +28,10 @@ void EqFanPwm::init() {
                     RISING);
     EqFanPwm::counter_ = 0;
     timeCount_ = micros();
-  } else
+  } else {
+    delay(500); // just for showing boot message
     EqConfig::increaseOverdriveTime(5); // checking fan without tachometer
+  }
 }
 
 void EqFanPwm::setDutyCycle() {
