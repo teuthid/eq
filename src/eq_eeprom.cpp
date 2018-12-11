@@ -30,11 +30,14 @@ void EqEeprom::init(const bool &reset) {
   }
 }
 
-void EqEeprom::show(const uint16_t &endOf) {
+void EqEeprom::show() {
+  uint16_t __size = 0;
+  for (uint8_t __i = 0; __i < sizeof(paramSizes_); __i++)
+    __size += paramSizes_[__i];
   Serial.print(F(" EEPROM: "));
-  for (uint16_t __i = startAddress; __i <= startAddress + 50; __i++) {
+  for (uint16_t __i = startAddress; __i <= startAddress + __size - 1; __i++) {
     Serial.print(EEPROM.read(__i), HEX);
-    Serial.print(F(" "));
+    Serial.write(0x20);
   }
   Serial.println();
 }
