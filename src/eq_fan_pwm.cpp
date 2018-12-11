@@ -12,10 +12,11 @@ EqFanPwm eqFanPwm;
 volatile uint32_t EqFanPwm::counter_ = 0;
 
 void EqFanPwm::init() {
+  const char *__s = EqConfig::alertAsString(false, EqAlertType::Fan);
 #ifdef EQ_DEBUG
-  Serial.print(F("[Fan PWM] "));
+  Serial.print(__s);
 #endif
-  eqDisplay.showMessage(EqConfig::alertAsString(false, EqAlertType::Fan));
+  eqDisplay.showMessage(__s);
   Timer1.initialize(EqConfig::fanPwmCycle);
   if (EqConfig::isFanTachometerEnabled()) {
     FastGPIO::Pin<EqConfig::fanTachometerPin>::setInputPulledUp();
@@ -29,7 +30,7 @@ void EqFanPwm::init() {
     EqFanPwm::counter_ = 0;
     timeCount_ = micros();
   } else {
-    delay(1000); // just for showing boot message
+    delay(1000);                        // just for showing boot message
     EqConfig::increaseOverdriveTime(5); // checking fan without tachometer
   }
 }

@@ -33,7 +33,7 @@ private:
 
 template <uint8_t Model> bool EqDisplay<Model>::init() {
 #ifdef EQ_DEBUG
-  Serial.print(F("[Display] "));
+  Serial.print(EqConfig::alertAsString(false, EqAlertType::Display));
 #endif
   return initDisplay_();
 }

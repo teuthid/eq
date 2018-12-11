@@ -30,11 +30,11 @@ void EqLightSensor::read() {
 }
 
 bool EqLightSensor::init() {
+  const char *__s = EqConfig::alertAsString(false, EqAlertType::LightSensor);
 #ifdef EQ_DEBUG
-  Serial.print(F("[Light Sensor] "));
+  Serial.print(__s);
 #endif
-  eqDisplay.showMessage(
-      EqConfig::alertAsString(false, EqAlertType::LightSensor));
+  eqDisplay.showMessage(__s);
   FastGPIO::Pin<EqConfig::lightSensorPin>::setInput();
   for (uint8_t __i = 0; __i < EqConfig::lightSensorCollectorSize; __i++) {
     delay(200);

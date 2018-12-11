@@ -58,14 +58,15 @@ private:
 
 template <uint8_t Model, bool IsInternal>
 bool EqHtSensor<Model, IsInternal>::init() {
+  const char *__s = IsInternal
+                        ? EqConfig::alertAsString(false, EqAlertType::ItSensor)
+                        : EqConfig::alertAsString(
+                              false, HumidityOn ? EqAlertType::HtSensor
+                                                : EqAlertType::TempSensor);
 #ifdef EQ_DEBUG
-  Serial.print(HumidityOn ? F("[HT Sensor] ") : F("[Temp Sensor] "));
+  Serial.print(__s);
 #endif
-  eqDisplay.showMessage(
-      IsInternal ? EqConfig::alertAsString(false, EqAlertType::ItSensor)
-                 : EqConfig::alertAsString(
-                       false, HumidityOn ? EqAlertType::HtSensor
-                                         : EqAlertType::TempSensor));
+  eqDisplay.showMessage(__s);
   if (!initHtSensor_()) {
     setAlert();
     return false;
