@@ -29,7 +29,7 @@ void EqFanPwm::init() {
     EqFanPwm::counter_ = 0;
     timeCount_ = micros();
   } else {
-    delay(500); // just for showing boot message
+    delay(1000); // just for showing boot message
     EqConfig::increaseOverdriveTime(5); // checking fan without tachometer
   }
 }

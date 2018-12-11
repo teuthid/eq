@@ -79,14 +79,14 @@ void EqConfig::setAlertOnZeroSpeed(const bool &enabled) {
 }
 
 namespace {
-const char __eqStrAlertNone[] PROGMEM = "None";
-const char __eqStrAlertDisplay[] PROGMEM = "Display";
-const char __eqStrAlertFan[] PROGMEM = "Fan Controller";
-const char __eqStrAlertHtSensor[] PROGMEM = "HT Sensor";
-const char __eqStrAlertLightSensor[] PROGMEM = "Light Sensor";
-const char __eqStrAlertTempSensor[] PROGMEM = "Temp Sensor";
-const char __eqStrAlertItSensor[] PROGMEM = "Internal Sensor";
-const char __eqStrAlertOverheating[] PROGMEM = "Overheating";
+const char __eqStrAlertNone[] PROGMEM = "None ";
+const char __eqStrAlertDisplay[] PROGMEM = "Display ";
+const char __eqStrAlertFan[] PROGMEM = "Fan Controller ";
+const char __eqStrAlertHtSensor[] PROGMEM = "HT Sensor ";
+const char __eqStrAlertLightSensor[] PROGMEM = "Light Sensor ";
+const char __eqStrAlertTempSensor[] PROGMEM = "Temp Sensor ";
+const char __eqStrAlertItSensor[] PROGMEM = "Internal Sensor ";
+const char __eqStrAlertOverheating[] PROGMEM = "Overheating ";
 const char *const __eqStrAlerts[] PROGMEM = {
     __eqStrAlertNone,     __eqStrAlertDisplay,     __eqStrAlertFan,
     __eqStrAlertHtSensor, __eqStrAlertLightSensor, __eqStrAlertTempSensor,

@@ -49,7 +49,6 @@ bool EqHtSensorControl::Callback() {
     EqConfig::setAlert(EqAlertType::HtSensor);
   else
     EqConfig::resetAlert(EqAlertType::HtSensor);
-
   return true;
 }
 
