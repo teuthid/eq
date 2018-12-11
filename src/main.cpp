@@ -47,7 +47,6 @@ bool eqInit() {
 
 #ifdef EQ_DEBUG
 void printConfig() {
-  Serial.println();
   Serial.println(F("Configuration:"));
   EqEeprom::show();
   Serial.print(F(" Light Sensor Threshold = "));
@@ -65,15 +64,11 @@ void printConfig() {
   Serial.print(F(" Fan Tachometer = "));
   Serial.println(EqConfig::isFanTachometerEnabled() ? F("Enabled")
                                                     : F("Disabled"));
-  Serial.println(F("Running..."));
 }
 #endif // EQ_DEBUG
 
 void setup() {
   Serial.begin(115200);
-  while (!Serial) {
-    delay(10);
-  }
 #ifdef EQ_DEBUG
   Serial.print(F("Initializing... "));
 #endif
@@ -100,7 +95,9 @@ void setup() {
     abort();
   }
 #ifdef EQ_DEBUG
+  Serial.println();
   printConfig();
+  Serial.println(F("Running..."));
 #endif
 }
 
