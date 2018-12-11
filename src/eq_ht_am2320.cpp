@@ -1,10 +1,6 @@
 
 #include "eq_ht_sensor.h"
 
-/*
-  sensor specializations:
-*/
-
 // --- AM2320 -----------------------------------------------------------------
 #if (EQ_HT_SENSOR_TYPE == EQ_AM2320)
 #include <AM232X.h>
