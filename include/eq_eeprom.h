@@ -14,6 +14,7 @@ public:
   EqEeprom(EqEeprom &&) = delete;
 
   static void init(const bool &reset = false);
+  static void show(const uint16_t &endOf = endAddress);
 
   enum ParameterId : uint8_t {
     LightSensorThreshold = 0,

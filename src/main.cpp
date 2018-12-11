@@ -49,13 +49,7 @@ bool eqInit() {
 void printConfig() {
   Serial.println();
   Serial.println(F("Configuration:"));
-  Serial.print(F(" EEPROM: "));
-  for (uint16_t __i = EqEeprom::startAddress;
-       __i <= EqEeprom::startAddress + 50; __i++) {
-    Serial.print(EEPROM.read(__i), HEX);
-    Serial.print(F(" "));
-  }
-  Serial.println();
+  EqEeprom::show();
   Serial.print(F(" Light Sensor Threshold = "));
   Serial.println(EqConfig::lightSensorThreshold());
   Serial.print(F(" HT Sensor Interval = "));

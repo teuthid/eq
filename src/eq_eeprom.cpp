@@ -1,5 +1,6 @@
 
 #include "eq_eeprom.h"
+#include "eq_config.h"
 
 const PROGMEM uint8_p EqEeprom::paramSizes_[] = {
     // including a size of the marker
@@ -27,6 +28,15 @@ void EqEeprom::init(const bool &reset) {
       EEPROM.update(__i, 0);
     EEPROM.update(startAddress, marker_);
   }
+}
+
+void EqEeprom::show(const uint16_t &endOf) {
+  Serial.print(F(" EEPROM: "));
+  for (uint16_t __i = startAddress; __i <= startAddress + 50; __i++) {
+    Serial.print(EEPROM.read(__i), HEX);
+    Serial.print(F(" "));
+  }
+  Serial.println();
 }
 
 uint16_t EqEeprom::paramAddress_(ParameterId id) {
