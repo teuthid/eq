@@ -76,8 +76,7 @@ void EqConfig::show() {
   Serial.print(F(" Overdrive Step = "));
   Serial.println(EqConfig::overdriveStep());
   Serial.print(F(" Fan Tachometer = "));
-  Serial.println(EqConfig::isFanTachometerEnabled() ? F("Enabled")
-                                                    : F("Disabled"));
+  Serial.println(EqConfig::isFanTachometerEnabled() ? F("On") : F("Off"));
 }
 
 void EqConfig::setAlert(const EqAlertType &value) {
