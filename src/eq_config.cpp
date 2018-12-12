@@ -60,6 +60,26 @@ void EqConfig::sleep() {
   EqConfig::reset();
 }
 
+void EqConfig::show() {
+  Serial.println(F("Configuration:"));
+  EqEeprom::show();
+  Serial.print(F(" Light Sensor Threshold = "));
+  Serial.println(EqConfig::lightSensorThreshold());
+  Serial.print(F(" HT Sensor Interval = "));
+  Serial.println(EqConfig::htSensorInterval());
+  Serial.print(F(" HT Sensor Temperature Threshold = "));
+  Serial.println(EqConfig::htSensorTemperatureThreshold(), 1);
+  Serial.print(F(" HT Sensor Humidity Threshold = "));
+  Serial.println(EqConfig::htSensorHumidityThreshold());
+  Serial.print(F(" HT Index Type = "));
+  Serial.println(static_cast<uint8_t>(EqConfig::htIndexType()));
+  Serial.print(F(" Overdrive Step = "));
+  Serial.println(EqConfig::overdriveStep());
+  Serial.print(F(" Fan Tachometer = "));
+  Serial.println(EqConfig::isFanTachometerEnabled() ? F("Enabled")
+                                                    : F("Disabled"));
+}
+
 void EqConfig::setAlert(const EqAlertType &value) {
   setBacklight(value != alert_);
   alert_ = value;

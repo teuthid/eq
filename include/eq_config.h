@@ -70,6 +70,7 @@ public:
   static void init();
   static void reset(const bool &cleanEeprom = false);
   static void sleep();
+  static void show();
 
   // alert
   static constexpr bool alertOnZeroSpeedDefault = true;
