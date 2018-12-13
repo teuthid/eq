@@ -63,19 +63,20 @@ void EqConfig::sleep() {
 void EqConfig::show() {
   Serial.println(F("Configuration:"));
   EqEeprom::show();
-  Serial.print(F(" Light Sensor Threshold = "));
-  Serial.println(EqConfig::lightSensorThreshold());
-  Serial.print(F(" HT Sensor Interval = "));
-  Serial.println(EqConfig::htSensorInterval());
-  Serial.print(F(" HT Sensor Temperature Threshold = "));
-  Serial.println(EqConfig::htSensorTemperatureThreshold(), 1);
-  Serial.print(F(" HT Sensor Humidity Threshold = "));
-  Serial.println(EqConfig::htSensorHumidityThreshold());
-  Serial.print(F(" HT Index Type = "));
+  Serial.print(EqConfig::alertAsString(false, EqAlertType::HtSensor));
+  Serial.print(F("I="));
+  Serial.print(EqConfig::htSensorInterval());
+  Serial.print(F(" H="));
+  Serial.print(EqConfig::htSensorHumidityThreshold());
+  Serial.print(F(" T="));
+  Serial.print(EqConfig::htSensorTemperatureThreshold());
+  Serial.print(F(" IDX="));
   Serial.println(static_cast<uint8_t>(EqConfig::htIndexType()));
-  Serial.print(F(" Overdrive Step = "));
-  Serial.println(EqConfig::overdriveStep());
-  Serial.print(F(" Fan Tachometer = "));
+  Serial.print(EqConfig::alertAsString(false, EqAlertType::LightSensor));
+  Serial.print(EqConfig::lightSensorThreshold());
+  Serial.print(F("  Overdrive "));
+  Serial.print(EqConfig::overdriveStep());
+  Serial.print(F("  Tacho "));
   Serial.println(EqConfig::isFanTachometerEnabled() ? F("On") : F("Off"));
 }
 

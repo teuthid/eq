@@ -107,7 +107,7 @@ EqDebugTask::EqDebugTask(Scheduler *scheduler)
            false) {}
 
 bool EqDebugTask::Callback() {
-  print_(F(" L="), eqLightSensor.intensity());
+  print_(F("L="), eqLightSensor.intensity());
   print_(F(" H="), eqHtSensor.lastHumidity());
   print_(F(" T="), eqHtSensor.lastTemperature());
   print_(F(" F="), eqFanPwm.lastSpeed());
