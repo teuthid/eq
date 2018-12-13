@@ -20,6 +20,7 @@
 #define EQ_AM2320 5
 #define EQ_HT_SENSOR_TYPE EQ_AM2320
 
+#define EQ_NO_DISPLAY 0
 #define EQ_LCD_1602 1 // with I2C only!
 #define EQ_DISPLAY_TYPE EQ_LCD_1602
 
