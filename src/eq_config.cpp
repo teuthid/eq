@@ -1,8 +1,12 @@
 
 #include "eq_config.h"
+#include "eq_button.h"
 #include "eq_display.h"
 #include "eq_eeprom.h"
+#include "eq_fan_pwm.h"
+#include "eq_ht_sensor.h"
 #include "eq_led.h"
+#include "eq_light_sensor.h"
 
 #include <FastGPIO.h>
 #include <Wire.h>
@@ -30,12 +34,29 @@ EqAlertType EqConfig::alert_ = EqAlertType::None;
 uint16_t EqConfig::overdriveTime_ = 0;
 uint16_t EqConfig::backlightTimeCounter_ = 0;
 
-void EqConfig::init() {
+bool EqConfig::init() {
   EqEeprom::init();
   cancelOverheating();
   FastGPIO::Pin<fanTachometerControlPin>::setInputPulledUp();
   backlightTimeCounter_ = backlightTime();
   Wire.begin();
+  if (!eqDisplay.init())
+    return false;
+  eqLedHeartbeat.test(200, 3);
+  eqLedAlert.test(200, 3);
+  if (!eqLightSensor.init())
+    return false;
+  if (!eqItSensor.init())
+    return false;
+  if (!eqHtSensor.init())
+    return false;
+  eqButtonOverdrive.init();
+  eqButtonBacklight.init();
+  eqFanPwm.init();
+  if (EqConfig::isFanTachometerEnabled())
+    if (!eqFanPwm.calibrateTachometer())
+      return false;
+  return true;
 }
 
 void EqConfig::reset(const bool &cleanEeprom) {

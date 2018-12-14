@@ -1,11 +1,4 @@
 
-#include "eq_button.h"
-#include "eq_display.h"
-#include "eq_fan_pwm.h"
-#include "eq_ht_sensor.h"
-#include "eq_led.h"
-#include "eq_light_sensor.h"
-
 #ifdef EQ_DEBUG
 #define _TASK_DEBUG
 #endif
@@ -23,33 +16,12 @@ EqFanControl taskFanControl(&eqRunner);
 EqDebugTask taskDebug(&eqRunner);
 #endif
 
-bool eqInit() {
-  EqConfig::init();
-  if (!eqDisplay.init())
-    return false;
-  eqLedHeartbeat.test(200, 3);
-  eqLedAlert.test(200, 3);
-  if (!eqLightSensor.init())
-    return false;
-  if (!eqItSensor.init())
-    return false;
-  if (!eqHtSensor.init())
-    return false;
-  eqButtonOverdrive.init();
-  eqButtonBacklight.init();
-  eqFanPwm.init();
-  if (EqConfig::isFanTachometerEnabled())
-    if (!eqFanPwm.calibrateTachometer())
-      return false;
-  return true;
-}
-
 void setup() {
   Serial.begin(115200);
 #ifdef EQ_DEBUG
   Serial.print(F("Initializing... "));
 #endif
-  if (eqInit()) {
+  if (EqConfig::init()) {
     taskItSensorControl.enable();
     taskHeartbeat.enable();
     taskButtonControl.enable();

@@ -68,7 +68,7 @@ public:
   EqConfig(const EqConfig &) = delete;
   EqConfig(EqConfig &&) = delete;
 
-  static void init();
+  static bool init();
   static void reset(const bool &cleanEeprom = false);
   static void sleep();
   static void show();
