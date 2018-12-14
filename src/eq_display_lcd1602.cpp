@@ -24,7 +24,7 @@ public:
   void showOverdriveTime();
   void showFanSpeed(bool detected = true, uint8_t percents = 0);
   void showMessage(const char *message); // second line
-  void showAlert();
+  void showAlert(const EqAlertType &alert);
   void showCalibrating(const uint8_t &percents);
 
 private:
@@ -165,10 +165,10 @@ void EqLcd1602::showMessage(const char *message) {
   lcd_.print(message);
 }
 
-void EqLcd1602::showAlert() {
+void EqLcd1602::showAlert(const EqAlertType &alert) {
   lcd_.clear();
   lcd_.print(F("ALERT"));
-  showMessage(EqConfig::alertAsString(EqConfig::alert()));
+  showMessage(EqConfig::alertAsString(alert));
   lastSpeedDots_ = 0xFF;
 }
 
@@ -212,7 +212,9 @@ template <> void EqDisplay<EQ_LCD_1602>::showMessage(const char *message) {
   __lcd1602.showMessage(message);
 }
 
-template <> void EqDisplay<EQ_LCD_1602>::showAlert() { __lcd1602.showAlert(); }
+template <> void EqDisplay<EQ_LCD_1602>::showAlert(const EqAlertType &alert) {
+  __lcd1602.showAlert(alert);
+}
 
 template <> void EqDisplay<EQ_LCD_1602>::showCalibrating(uint8_t percents) {
   __lcd1602.showCalibrating(percents);

@@ -12,7 +12,7 @@ public:
 
   // needs specialization:
   void showMessage(const char *message);
-  void showAlert();
+  void showAlert(const EqAlertType& alert);
   void showCalibrating(uint8_t percents);
 
 private:
@@ -51,7 +51,7 @@ template <uint8_t Model> void EqDisplay<Model>::show() {
       } else
         showOverdriveTime_();
     else
-      showAlert();
+      showAlert(EqConfig::alert());
   } else
     backlight_(false);
 }
