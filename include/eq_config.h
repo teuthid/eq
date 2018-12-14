@@ -81,8 +81,7 @@ public:
   static bool anyAlert() { return (alert_ != EqAlertType::None); }
   static bool isAlertOnZeroSpeed();
   static void setAlertOnZeroSpeed(const bool &enabled = true);
-  static const char *alertAsString(bool detected = true,
-                                   EqAlertType alert = EqAlertType::None);
+  static const char *alertAsString(EqAlertType alert);
 
   // overheating
   static constexpr uint8_t maxCountOverheating = 3;

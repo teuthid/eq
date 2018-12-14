@@ -12,7 +12,7 @@ EqFanPwm eqFanPwm;
 volatile uint32_t EqFanPwm::counter_ = 0;
 
 void EqFanPwm::init() {
-  const char *__s = EqConfig::alertAsString(false, EqAlertType::Fan);
+  const char *__s = EqConfig::alertAsString(EqAlertType::Fan);
 #ifdef EQ_DEBUG
   Serial.print(__s);
 #endif

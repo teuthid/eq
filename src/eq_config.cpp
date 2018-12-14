@@ -63,7 +63,7 @@ void EqConfig::sleep() {
 void EqConfig::show() {
   Serial.println(F("Configuration:"));
   EqEeprom::show();
-  Serial.print(EqConfig::alertAsString(false, EqAlertType::HtSensor));
+  Serial.print(EqConfig::alertAsString(EqAlertType::HtSensor));
   Serial.print(F("I="));
   Serial.print(EqConfig::htSensorInterval());
   Serial.print(F(" H="));
@@ -72,7 +72,7 @@ void EqConfig::show() {
   Serial.print(EqConfig::htSensorTemperatureThreshold());
   Serial.print(F(" IDX="));
   Serial.println(static_cast<uint8_t>(EqConfig::htIndexType()));
-  Serial.print(EqConfig::alertAsString(false, EqAlertType::LightSensor));
+  Serial.print(EqConfig::alertAsString(EqAlertType::LightSensor));
   Serial.print(EqConfig::lightSensorThreshold());
   Serial.print(F("  Overdrive "));
   Serial.print(EqConfig::overdriveStep());
@@ -114,10 +114,9 @@ const char *const __eqStrAlerts[] PROGMEM = {
 char __eqStrAlertBuffer[17];
 } // namespace
 
-const char *EqConfig::alertAsString(bool detected, EqAlertType alert) {
-  EqAlertType __alert = detected ? EqConfig::alert_ : alert;
+const char *EqConfig::alertAsString(EqAlertType alert) {
   return strncpy_P(__eqStrAlertBuffer,
-                   (char *)pgm_read_word(&(__eqStrAlerts[(uint8_t)__alert])),
+                   (char *)pgm_read_word(&(__eqStrAlerts[(uint8_t)alert])),
                    sizeof(__eqStrAlertBuffer));
 }
 

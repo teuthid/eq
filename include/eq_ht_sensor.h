@@ -58,11 +58,11 @@ private:
 
 template <uint8_t Model, bool IsInternal>
 bool EqHtSensor<Model, IsInternal>::init() {
-  const char *__s = IsInternal
-                        ? EqConfig::alertAsString(false, EqAlertType::ItSensor)
-                        : EqConfig::alertAsString(
-                              false, HumidityOn ? EqAlertType::HtSensor
-                                                : EqAlertType::TempSensor);
+  const char *__s =
+      IsInternal
+          ? EqConfig::alertAsString(EqAlertType::ItSensor)
+          : EqConfig::alertAsString(HumidityOn ? EqAlertType::HtSensor
+                                               : EqAlertType::TempSensor);
 #ifdef EQ_DEBUG
   Serial.print(__s);
 #endif

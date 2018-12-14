@@ -66,7 +66,7 @@ void setup() {
 #ifdef EQ_DEBUG
     Serial.println();
     Serial.print(F("ALERT: "));
-    Serial.println(EqConfig::alertAsString());
+    Serial.println(EqConfig::alertAsString(EqConfig::alert()));
     Serial.flush();
 #endif
     abort();
