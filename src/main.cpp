@@ -60,15 +60,7 @@ void setup() {
 #endif
     eqRunner.startNow();
   } else {
-    eqLedAlert.setState(true);
-    if (EqConfig::alert() != EqAlertType::Display)
-      eqDisplay.showAlert();
-#ifdef EQ_DEBUG
-    Serial.println();
-    Serial.print(F("ALERT: "));
-    Serial.println(EqConfig::alertAsString(EqConfig::alert()));
-    Serial.flush();
-#endif
+    EqConfig::showAlert(EqConfig::alert());
     abort();
   }
 #ifdef EQ_DEBUG

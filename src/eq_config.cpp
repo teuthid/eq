@@ -1,5 +1,6 @@
 
 #include "eq_config.h"
+#include "eq_display.h"
 #include "eq_eeprom.h"
 #include "eq_led.h"
 
@@ -114,10 +115,21 @@ const char *const __eqStrAlerts[] PROGMEM = {
 char __eqStrAlertBuffer[17];
 } // namespace
 
-const char *EqConfig::alertAsString(EqAlertType alert) {
+const char *EqConfig::alertAsString(const EqAlertType &alert) {
   return strncpy_P(__eqStrAlertBuffer,
                    (char *)pgm_read_word(&(__eqStrAlerts[(uint8_t)alert])),
                    sizeof(__eqStrAlertBuffer));
+}
+
+void EqConfig::showAlert(const EqAlertType &alert) {
+  eqLedAlert.setState(true);
+  if (alert != EqAlertType::Display)
+    eqDisplay.showAlert();
+#ifdef EQ_DEBUG
+  Serial.println();
+  Serial.print(F("ALERT: "));
+  Serial.println(EqConfig::alertAsString(alert));
+#endif
 }
 
 bool EqConfig::overheating() {
