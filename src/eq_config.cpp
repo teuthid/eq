@@ -52,10 +52,8 @@ bool EqConfig::init() {
     return false;
   eqButtonOverdrive.init();
   eqButtonBacklight.init();
-  eqFanPwm.init();
-  if (EqConfig::isFanTachometerEnabled())
-    if (!eqFanPwm.calibrateTachometer())
-      return false;
+  if(!eqFanPwm.init())
+    return false;
   return true;
 }
 

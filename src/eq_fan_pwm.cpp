@@ -11,7 +11,7 @@ EqFanPwm eqFanPwm;
 
 volatile uint32_t EqFanPwm::counter_ = 0;
 
-void EqFanPwm::init() {
+bool EqFanPwm::init() {
   const char *__s = EqConfig::alertAsString(EqAlertType::Fan);
 #ifdef EQ_DEBUG
   Serial.print(__s);
@@ -29,9 +29,11 @@ void EqFanPwm::init() {
                     RISING);
     EqFanPwm::counter_ = 0;
     timeCount_ = micros();
+    return calibrate_();
   } else {
     delay(1000);                        // just for showing boot message
     EqConfig::increaseOverdriveTime(5); // checking fan without tachometer
+    return true;
   }
 }
 
@@ -80,7 +82,7 @@ uint8_t EqFanPwm::lastSpeed() const {
     return dutyCycle_;
 }
 
-bool EqFanPwm::calibrateTachometer() {
+bool EqFanPwm::calibrate_() {
   dutyCycle_ = 0xFF;
   Timer1.pwm(EqConfig::fanPwmPin, 1023);
   maxSpeed_ = 0;
