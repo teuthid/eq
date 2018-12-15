@@ -1,5 +1,5 @@
 
-#include "eq_config.h"
+#include "eq_display.h"
 
 #if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
 
@@ -7,7 +7,6 @@
 #include <PGMWrap.h>
 #include <Wire.h>
 
-#include "eq_display.h"
 #include "eq_fan_pwm.h"
 #include "eq_ht_sensor.h"
 

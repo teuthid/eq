@@ -1,9 +1,7 @@
 
-#include "eq_config.h"
+#include "eq_display.h"
 
 #if (EQ_DISPLAY_TYPE == EQ_NO_DISPLAY)
-
-#include "eq_display.h"
 
 EqDisplay<EQ_NO_DISPLAY> eqDisplay; // preinstatiate
 
