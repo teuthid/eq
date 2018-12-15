@@ -1,4 +1,6 @@
 
+#include "eq_config.h"
+
 #if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
 
 #include <LiquidCrystal_PCF8574.h>

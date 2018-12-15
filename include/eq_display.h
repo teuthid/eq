@@ -12,7 +12,7 @@ public:
 
   // needs specialization:
   void showMessage(const char *message);
-  void showAlert(const EqAlertType& alert);
+  void showAlert(const EqAlertType &alert);
   void showCalibrating(uint8_t percents);
 
 private:
