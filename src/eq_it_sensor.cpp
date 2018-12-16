@@ -13,17 +13,17 @@ public:
       : onewire_(sensorPin), sensor_(&onewire_) {}
 
   bool init();
-  float read();
+  fixed_t read();
 
 private:
   OneWire onewire_;
   DallasTemperature sensor_;
   DeviceAddress address_;
-  bool isCorrect_(float temp) const;
+  bool isCorrect_(const fixed_t &temp) const;
 };
 
-bool EqDallas::isCorrect_(float temp) const {
-  return (fabs(temp + 127.0) >= FLT_EPSILON);
+bool EqDallas::isCorrect_(const fixed_t &temp) const {
+  return fixed_to_int(temp) != 127;
 }
 
 bool EqDallas::init() {
@@ -34,8 +34,8 @@ bool EqDallas::init() {
   return true;
 }
 
-float EqDallas::read() {
-  float __t;
+fixed_t EqDallas::read() {
+  fixed_t __t;
   do {
     noInterrupts();
     sensor_.requestTemperatures();
@@ -61,8 +61,8 @@ template <> bool EqHtSensor<EQ_DS18B20, true>::initHtSensor_() {
 }
 
 template <>
-void EqHtSensor<EQ_DS18B20, true>::readHTSensor_(float &humidity,
-                                                 float &temperature) {
+void EqHtSensor<EQ_DS18B20, true>::readHTSensor_(fixed_t &humidity,
+                                                 fixed_t &temperature) {
   temperature = __itSensor.read();
 }
 

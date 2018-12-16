@@ -103,12 +103,12 @@ void EqLcd1602::turnOff() {
 }
 
 void EqLcd1602::showHT() {
-  printValue_(round(eqHtSensor.lastHumidity()), 0);
+  printValue_(fixed_to_int(eqHtSensor.lastHumidity()), 0);
   lcd_.setCursor(6, 0);
   lcd_.print(F("% "));
   lcd_.setCursor(10, 0);
   char __s[5];
-  lcd_.print(dtostrf(eqHtSensor.lastTemperature(), 4, 1, __s));
+  lcd_.print(dtostrf(fixed_to_float(eqHtSensor.lastTemperature()), 4, 1, __s));
   lcd_.write(0xDF);
 }
 

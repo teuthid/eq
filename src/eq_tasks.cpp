@@ -108,10 +108,10 @@ EqDebugTask::EqDebugTask(Scheduler *scheduler)
 
 bool EqDebugTask::Callback() {
   print_(F("L="), eqLightSensor.intensity());
-  print_(F(" H="), eqHtSensor.lastHumidity());
-  print_(F(" T="), eqHtSensor.lastTemperature());
+  print_(F(" H="), fixed_to_float(eqHtSensor.lastHumidity()));
+  print_(F(" T="), fixed_to_float(eqHtSensor.lastTemperature()));
   print_(F(" F="), eqFanPwm.lastSpeed());
-  print_(F(" I="), eqItSensor.lastTemperature());
+  print_(F(" I="), fixed_to_float(eqItSensor.lastTemperature()));
   print_(F(" M="), freeMemory());
   Serial.println();
   return true;

@@ -20,8 +20,8 @@ template <> bool EqHtSensor<EQ_AM2320, false>::initHtSensor_() {
 }
 
 template <>
-void EqHtSensor<EQ_AM2320, false>::readHTSensor_(float &humidity,
-                                                 float &temperature) {
+void EqHtSensor<EQ_AM2320, false>::readHTSensor_(fixed_t &humidity,
+                                                 fixed_t &temperature) {
   if (__htSensor.read() == AM232X_OK) {
     humidity = __htSensor.humidity;
     temperature = __htSensor.temperature;

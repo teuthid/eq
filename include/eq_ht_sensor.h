@@ -15,16 +15,16 @@ public:
   bool init();
   bool read();
 
-  constexpr float humidity() const {
+  constexpr fixed_t humidity() const {
     return HumidityOn ? humidityCollector_.average() : 0;
   }
-  constexpr float temperature() const {
+  constexpr fixed_t temperature() const {
     return temperatureCollector_.average();
   }
-  constexpr float lastHumidity() const {
+  constexpr fixed_t lastHumidity() const {
     return HumidityOn ? humidityCollector_.last() : 0;
   }
-  constexpr float lastTemperature() const {
+  constexpr fixed_t lastTemperature() const {
     return temperatureCollector_.last();
   }
   constexpr int8_t trendHumidity() const {
@@ -44,7 +44,7 @@ private:
   // needs specializations:
   uint16_t samplingPeriod_() const; // in milliseconds
   bool initHtSensor_();
-  void readHTSensor_(float &humidity, float &temperature);
+  void readHTSensor_(fixed_t &humidity, fixed_t &temperature);
 
   void setAlert() {
     EqConfig::setAlert(IsInternal ? EqAlertType::ItSensor
@@ -92,10 +92,8 @@ bool EqHtSensor<Model, IsInternal>::init() {
 
 template <uint8_t Model, bool IsInternal>
 bool EqHtSensor<Model, IsInternal>::read() {
-  float __h = 0, __t = 0;
+  fixed_t __h = 0, __t = 0;
   readHTSensor_(__h, __t);
-  if ((HumidityOn && isnan(__h)) || isnan(__t))
-    return false;
   bool __ctrl = HumidityOn ? humidityCollector_.add(__h) : true;
   __ctrl = __ctrl && temperatureCollector_.add(__t);
   if (HumidityOn)
@@ -110,7 +108,7 @@ bool EqHtSensor<Model, IsInternal>::read() {
 template <uint8_t Model, bool IsInternal>
 int8_t EqHtSensor<Model, IsInternal>::indexH_() const {
   if (HumidityOn) {
-    long __h = round(10 * humidity()) + trendHumidity(),
+    long __h = fixed_to_long(10 * humidity()) + trendHumidity(),
          __ht = 10L * EqConfig::htSensorHumidityThreshold();
     if (__h < __ht)
       return map(__h, 10L * EqConfig::htSensorHumidityMin, __ht, -100, 0);
@@ -122,7 +120,7 @@ int8_t EqHtSensor<Model, IsInternal>::indexH_() const {
 
 template <uint8_t Model, bool IsInternal>
 int8_t EqHtSensor<Model, IsInternal>::indexT_() const {
-  long __t = round(10 * temperature()) + trendTemperature(),
+  long __t = fixed_to_long(10 * temperature()) + trendTemperature(),
        __tt = 10L * EqConfig::htSensorTemperatureThreshold();
   if (__t < __tt)
     return map(__t, 10L * EqConfig::htSensorTemperatureMin, __tt, -100, 0);
