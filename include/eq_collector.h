@@ -2,9 +2,7 @@
 #ifndef __EQ_COLLECTOR_H__
 #define __EQ_COLLECTOR_H__
 
-#define FIXED_POINTS_USE_NAMESPACE
-#include <FixedPoints.h>
-#include <FixedPointsCommon.h>
+#include "fixedpoints.h"
 
 template <uint8_t Size> class EqCollector {
   static_assert(Size > 0, "The size of EqCollector should be greater than 0");
