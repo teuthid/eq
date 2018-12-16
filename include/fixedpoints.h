@@ -25,4 +25,6 @@ inline constexpr bool fixed_signbit(fixed_t &value) {
   return FixedPoints::signbitFixed(value);
 }
 
-inline constexpr int fixed_to_int(fixed_t &value) { return value.getInteger(); }
+inline constexpr fixed_t fixed_trunc(fixed_t &value) {
+  return FixedPoints::truncFixed(value);
+}
