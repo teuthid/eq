@@ -1,4 +1,7 @@
 
+#ifndef __EQ_FIXEDPOINTS_H__
+#define __EQ_FIXEDPOINTS_H__
+
 #define FIXED_POINTS_USE_NAMESPACE
 #include <FixedPoints.h>
 #include <FixedPointsCommon.h>
@@ -28,3 +31,5 @@ inline constexpr bool fixed_signbit(fixed_t &value) {
 inline constexpr fixed_t fixed_trunc(fixed_t &value) {
   return FixedPoints::truncFixed(value);
 }
+
+#endif // __EQ_FIXEDPOINTS_H__
