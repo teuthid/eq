@@ -6,6 +6,7 @@
 #include <TaskSchedulerDeclarations.h>
 
 #include "eq_config.h"
+#include "eq_fixedpoints.h"
 
 class EqHeartbeat : public Task {
 public:
@@ -57,6 +58,11 @@ void EqDebugTask::print_(const __FlashStringHelper *description,
   Serial.print(description);
   Serial.print(value);
 }
+
+template <>
+void EqDebugTask::print_(const __FlashStringHelper *description,
+                         const fixed_t &value);
+
 #endif // EQ_DEBUG
 
 #endif // __EQ_TASKS_H__
