@@ -2,8 +2,8 @@
 #include "eq_fan_pwm.h"
 #include "eq_display.h"
 #include "eq_ht_sensor.h"
+#include "eq_dpin.h"
 
-#include <FastGPIO.h>
 #include <TimerOne.h>
 #include <util/atomic.h>
 

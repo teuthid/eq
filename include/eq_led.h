@@ -3,7 +3,7 @@
 #define __EQ_LED_H__
 
 #include "eq_config.h"
-#include <FastGPIO.h>
+#include "eq_dpin.h"
 
 template <uint8_t LedPin> class EqLed {
 public:

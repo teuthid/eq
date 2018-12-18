@@ -1,8 +1,7 @@
 
 #include "eq_light_sensor.h"
 #include "eq_display.h"
-
-#include <FastGPIO.h>
+#include "eq_dpin.h"
 
 EqLightSensor eqLightSensor;
 

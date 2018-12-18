@@ -2,13 +2,13 @@
 #include "eq_config.h"
 #include "eq_button.h"
 #include "eq_display.h"
+#include "eq_dpin.h"
 #include "eq_eeprom.h"
 #include "eq_fan_pwm.h"
 #include "eq_ht_sensor.h"
 #include "eq_led.h"
 #include "eq_light_sensor.h"
 
-#include <FastGPIO.h>
 #include <Wire.h>
 #include <avr/pgmspace.h>
 #include <avr/sleep.h>
@@ -52,7 +52,7 @@ bool EqConfig::init() {
     return false;
   eqButtonOverdrive.init();
   eqButtonBacklight.init();
-  if(!eqFanPwm.init())
+  if (!eqFanPwm.init())
     return false;
   return true;
 }
