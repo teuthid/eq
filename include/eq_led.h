@@ -15,27 +15,27 @@ public:
 };
 
 template <uint8_t LedPin> EqLed<LedPin>::EqLed() {
-  FastGPIO::Pin<LedPin>::setOutputLow();
+  EqDPin<LedPin>::setOutputLow();
 }
 
 template <uint8_t LedPin> void EqLed<LedPin>::setState(const bool &state) {
-  FastGPIO::Pin<LedPin>::setOutputValue(state ? HIGH : LOW);
+  EqDPin<LedPin>::setOutputValue(state);
 }
 
 template <uint8_t LedPin>
 void EqLed<LedPin>::test(const uint32_t &interval, const uint8_t &iterations) {
   if (iterations > 0)
     for (uint16_t __i = 0; __i < (2 * iterations); __i++) {
-      FastGPIO::Pin<LedPin>::setOutputValueToggle();
+      EqDPin<LedPin>::setOutputValueToggle();
       delay(interval);
     }
 }
 
 template <uint8_t LedPin> void EqLed<LedPin>::toggle(const bool &force) {
   if (force || EqConfig::backlight())
-    FastGPIO::Pin<LedPin>::setOutputValueToggle();
+    EqDPin<LedPin>::setOutputValueToggle();
   else
-    FastGPIO::Pin<LedPin>::setOutputValue(LOW);
+    EqDPin<LedPin>::setOutputValue(LOW);
 }
 
 extern EqLed<EqConfig::ledAlertPin> eqLedAlert;
