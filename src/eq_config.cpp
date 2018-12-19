@@ -37,7 +37,7 @@ uint16_t EqConfig::backlightTimeCounter_ = 0;
 bool EqConfig::init() {
   EqEeprom::init();
   cancelOverheating();
-  FastGPIO::Pin<fanTachometerControlPin>::setInputPulledUp();
+  EqDPin<fanTachometerControlPin>::setInputPulledUp();
   backlightTimeCounter_ = backlightTime();
   Wire.begin();
   if (!eqDisplay.init())
@@ -298,7 +298,7 @@ void EqConfig::setFanPwmStepMode(const bool &enabled) {
 }
 
 bool EqConfig::isFanTachometerEnabled() {
-  return FastGPIO::Pin<EqConfig::fanTachometerControlPin>::isInputHigh();
+  return EqDPin<EqConfig::fanTachometerControlPin>::isInputHigh();
 }
 
 uint16_t EqConfig::backlightTime() {
