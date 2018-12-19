@@ -9,8 +9,7 @@ void EqLightSensor::collect_() {
   if (EqConfig::lightSensorIsAnalog)
     collector_.add(analogRead(EqConfig::lightSensorPin));
   else
-    collector_.add(FastGPIO::Pin<EqConfig::lightSensorPin>::isInputHigh() ? 1023
-                                                                          : 0);
+    collector_.add(EqDPin<EqConfig::lightSensorPin>::isInputHigh() ? 1023 : 0);
 }
 
 void EqLightSensor::determineState_() {
@@ -34,7 +33,7 @@ bool EqLightSensor::init() {
   Serial.print(__s);
 #endif
   eqDisplay.showMessage(__s);
-  FastGPIO::Pin<EqConfig::lightSensorPin>::setInput();
+  EqDPin<EqConfig::lightSensorPin>::setInput();
   for (uint8_t __i = 0; __i < EqConfig::lightSensorCollectorSize; __i++) {
     delay(200);
     collect_();
