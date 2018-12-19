@@ -19,7 +19,7 @@ bool EqFanPwm::init() {
   eqDisplay.showMessage(__s);
   Timer1.initialize(EqConfig::fanPwmCycle);
   if (EqConfig::isFanTachometerEnabled()) {
-    FastGPIO::Pin<EqConfig::fanTachometerPin>::setInputPulledUp();
+    EqDPin<EqConfig::fanTachometerPin>::setInputPulledUp();
     attachInterrupt(digitalPinToInterrupt(EqConfig::fanTachometerPin),
                     []() {
                       ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
