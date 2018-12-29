@@ -217,7 +217,8 @@ template <> void EqDisplay<EQ_LCD_1602>::showAlert(const EqAlertType &alert) {
   __lcd1602.showAlert(alert);
 }
 
-template <> void EqDisplay<EQ_LCD_1602>::showCalibrating(uint8_t percents) {
+template <>
+void EqDisplay<EQ_LCD_1602>::showCalibrating(const uint8_t &percents) {
   __lcd1602.showCalibrating(percents);
 }
 

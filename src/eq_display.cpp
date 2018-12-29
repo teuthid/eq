@@ -24,6 +24,7 @@ template <> void EqDisplay<EQ_NO_DISPLAY>::showMessage(const char *message) {}
 template <>
 void EqDisplay<EQ_NO_DISPLAY>::showAlert(const EqAlertType &alert) {}
 
-template <> void EqDisplay<EQ_NO_DISPLAY>::showCalibrating(uint8_t percents) {}
+template <>
+void EqDisplay<EQ_NO_DISPLAY>::showCalibrating(const uint8_t &percents) {}
 
 #endif // (EQ_DISPLAY_TYPE == EQ_NO_DISPLAY)
