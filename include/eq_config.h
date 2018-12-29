@@ -48,6 +48,7 @@ public:
   // hardware configuration
   static constexpr uint8_t ledHeartbeatPin = 13;
   static constexpr uint8_t ledAlertPin = 4;
+  static constexpr uint8_t lcdI2CAddress = 0x27;
   static constexpr uint8_t lightSensorPin = A0;
   static constexpr uint8_t htSensorPin = 8; // if I2C is not used
   static constexpr uint8_t buttonOverdrivePin = 2;
