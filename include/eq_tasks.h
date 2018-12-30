@@ -3,6 +3,7 @@
 #define __EQ_TASKS_H__
 
 #define _TASK_OO_CALLBACKS
+#define _TASK_WDT_IDS
 #include <TaskSchedulerDeclarations.h>
 
 #include "eq_config.h"
