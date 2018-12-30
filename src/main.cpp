@@ -22,8 +22,8 @@ void setup() {
   Serial.print(F("Initializing... "));
 #endif
   if (EqConfig::init()) {
-    taskItSensorControl.enable();
     taskHeartbeat.enable();
+    taskItSensorControl.enable();
     taskButtonControl.enable();
     taskHtSensorControl.enable();
     taskFanControl.enable();
