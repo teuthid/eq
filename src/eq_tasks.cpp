@@ -11,9 +11,13 @@
 #include "MemoryFree.h"
 #endif // EQ_DEBUG
 
+EqHeartbeat taskHeartbeat(EqTaskId::Heartbeat);
+
 // heartbeat
-EqHeartbeat::EqHeartbeat(Scheduler *scheduler)
-    : Task(TASK_SECOND, TASK_FOREVER, scheduler, false) {}
+EqHeartbeat::EqHeartbeat(const EqTaskId &id)
+    : Task(TASK_SECOND, TASK_FOREVER, nullptr, false) {
+  setId(static_cast<unsigned int>(id));
+}
 
 bool EqHeartbeat::Callback() {
   eqLightSensor.read();

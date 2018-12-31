@@ -7,7 +7,6 @@
 #include <TaskScheduler.h>
 
 Scheduler eqRunner;
-EqHeartbeat taskHeartbeat(&eqRunner);
 EqButtonControl taskButtonControl(&eqRunner);
 EqHtSensorControl taskHtSensorControl(&eqRunner);
 EqItSensorControl taskItSensorControl(&eqRunner);
@@ -22,7 +21,7 @@ void setup() {
   Serial.print(F("Initializing... "));
 #endif
   if (EqConfig::init()) {
-    // taskHeartbeat.enable();
+    eqRunner.addTask(taskHeartbeat);
     // taskItSensorControl.enable();
     // taskButtonControl.enable();
     // taskHtSensorControl.enable();

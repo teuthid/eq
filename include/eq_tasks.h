@@ -9,11 +9,14 @@
 #include "eq_config.h"
 #include "eq_fixedpoints.h"
 
+enum class EqTaskId : uint8_t { Heartbeat = 0 };
+
 class EqHeartbeat : public Task {
 public:
-  EqHeartbeat(Scheduler *scheduler);
+  EqHeartbeat(const EqTaskId &id);
   bool Callback();
 };
+extern EqHeartbeat taskHeartbeat;
 
 class EqButtonControl : public Task {
 public:
