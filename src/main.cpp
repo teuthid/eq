@@ -22,24 +22,25 @@ void setup() {
   Serial.print(F("Initializing... "));
 #endif
   if (EqConfig::init()) {
-    taskHeartbeat.enable();
-    taskItSensorControl.enable();
-    taskButtonControl.enable();
-    taskHtSensorControl.enable();
-    taskFanControl.enable();
+    // taskHeartbeat.enable();
+    // taskItSensorControl.enable();
+    // taskButtonControl.enable();
+    // taskHtSensorControl.enable();
+    // taskFanControl.enable();
 #ifdef EQ_DEBUG
-    taskDebug.enable();
+    // taskDebug.enable();
+#endif
+    eqRunner.enableAll();
+#ifdef EQ_DEBUG
+    Serial.println();
+    EqConfig::show();
+    Serial.println(F("Running..."));
 #endif
     eqRunner.startNow();
   } else {
     EqConfig::showAlert(EqConfig::alert());
     abort();
   }
-#ifdef EQ_DEBUG
-  Serial.println();
-  EqConfig::show();
-  Serial.println(F("Running..."));
-#endif
 }
 
 void loop() { eqRunner.execute(); }
