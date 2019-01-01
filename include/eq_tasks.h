@@ -25,6 +25,7 @@ public:
     return instance;
   }
   EqTask(const EqTask &) = delete;
+  EqTask(EqTask &&) = delete;
   void operator=(const EqTask &) = delete;
 
 private:

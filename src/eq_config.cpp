@@ -80,24 +80,35 @@ void EqConfig::sleep() {
   EqConfig::reset();
 }
 
+template <typename T>
+void EqConfig::printValue(const __FlashStringHelper *description,
+                          const T &value) {
+  Serial.print(description);
+  Serial.print(value);
+}
+
+template <>
+void EqConfig::printValue(const __FlashStringHelper *description,
+                          const fixed_t &value) {
+  Serial.print(description);
+  Serial.print(fixed_to_float(value));
+}
+
 void EqConfig::show() {
   Serial.println(F("Configuration:"));
   EqEeprom::show();
   Serial.print(EqConfig::alertAsString(EqAlertType::HtSensor));
-  Serial.print(F("I="));
-  Serial.print(EqConfig::htSensorInterval());
-  Serial.print(F(" H="));
-  Serial.print(EqConfig::htSensorHumidityThreshold());
-  Serial.print(F(" T="));
-  Serial.print(EqConfig::htSensorTemperatureThreshold());
-  Serial.print(F(" IDX="));
-  Serial.println(static_cast<uint8_t>(EqConfig::htIndexType()));
+  printValue(F("I="), EqConfig::htSensorInterval());
+  printValue(F(" H="), EqConfig::htSensorHumidityThreshold());
+  printValue(F(" T="), EqConfig::htSensorTemperatureThreshold());
+  printValue(F(" IDX="), static_cast<uint8_t>(EqConfig::htIndexType()));
+  Serial.println();
   Serial.print(EqConfig::alertAsString(EqAlertType::LightSensor));
   Serial.print(EqConfig::lightSensorThreshold());
-  Serial.print(F("  Overdrive "));
-  Serial.print(EqConfig::overdriveStep());
-  Serial.print(F("  Tacho "));
-  Serial.println(EqConfig::isFanTachometerEnabled() ? F("On") : F("Off"));
+  printValue(F("  Overdrive "), EqConfig::overdriveStep());
+  printValue(F("  Tacho "),
+             EqConfig::isFanTachometerEnabled() ? F("On") : F("Off"));
+  Serial.println();
 }
 
 void EqConfig::setAlert(const EqAlertType &value) {
