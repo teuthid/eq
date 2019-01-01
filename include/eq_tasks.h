@@ -7,9 +7,6 @@
 #define _TASK_WDT_IDS
 #include <TaskSchedulerDeclarations.h>
 
-#include "eq_config.h"
-#include "eq_fixedpoints.h"
-
 enum class EqTaskId : uint8_t {
   Heartbeat = 0x00,
   ItSensorControl = 0x10,
