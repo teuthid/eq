@@ -6,13 +6,12 @@
 #include "eq_tasks.h"
 #include <TaskScheduler.h>
 
-Scheduler eqRunner;
-EqButtonControl taskButtonControl(&eqRunner);
-EqHtSensorControl taskHtSensorControl(&eqRunner);
-EqItSensorControl taskItSensorControl(&eqRunner);
-EqFanControl taskFanControl(&eqRunner);
+Scheduler eqController;
+EqButtonControl taskButtonControl(&eqController);
+EqHtSensorControl taskHtSensorControl(&eqController);
+EqFanControl taskFanControl(&eqController);
 #ifdef EQ_DEBUG
-EqDebugTask taskDebug(&eqRunner);
+EqDebugTask taskDebug(&eqController);
 #endif
 
 void setup() {
@@ -21,25 +20,25 @@ void setup() {
   Serial.print(F("Initializing... "));
 #endif
   if (EqConfig::init()) {
-    eqRunner.addTask(EqTask<EqTaskId::Heartbeat>::instance());
-    // taskItSensorControl.enable();
+    eqController.addTask(EqTask<EqTaskId::Heartbeat>::instance());
+    eqController.addTask(EqTask<EqTaskId::ItSensorControl>::instance());
     // taskButtonControl.enable();
     // taskHtSensorControl.enable();
     // taskFanControl.enable();
 #ifdef EQ_DEBUG
     // taskDebug.enable();
 #endif
-    eqRunner.enableAll();
+    eqController.enableAll();
 #ifdef EQ_DEBUG
     Serial.println();
     EqConfig::show();
     Serial.println(F("Running..."));
 #endif
-    eqRunner.startNow();
+    eqController.startNow();
   } else {
     EqConfig::showAlert(EqConfig::alert());
     abort();
   }
 }
 
-void loop() { eqRunner.execute(); }
+void loop() { eqController.execute(); }

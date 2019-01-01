@@ -31,6 +31,32 @@ template <> bool EqTask<EqTaskId::Heartbeat>::Callback() {
   return true;
 }
 
+// internal temperature control
+template <>
+EqTask<EqTaskId::ItSensorControl>::EqTask()
+    : Task(EqConfig::itSensorInterval * TASK_SECOND, TASK_FOREVER, nullptr,
+           false) {
+  setId(static_cast<unsigned int>(EqTaskId::ItSensorControl));
+}
+
+template <> bool EqTask<EqTaskId::ItSensorControl>::Callback() {
+  if (!eqItSensor.read())
+    EqConfig::setAlert(EqAlertType::ItSensor);
+  else {
+    EqConfig::resetAlert(EqAlertType::ItSensor);
+    if (eqItSensor.temperature() > EqConfig::itSensorMaxTemperature) {
+      EqConfig::setAlert(EqAlertType::Overheating);
+      EqConfig::registerOverheating();
+      if (EqConfig::overheating()) {
+        //runner_->disableAll();
+        EqConfig::sleep();
+      }
+    } else
+      EqConfig::resetAlert(EqAlertType::Overheating);
+  }
+  return true;
+}
+
 // button control
 EqButtonControl::EqButtonControl(Scheduler *scheduler)
     : Task(EqConfig::buttonReadInterval * TASK_MILLISECOND, TASK_FOREVER,
@@ -52,30 +78,6 @@ bool EqHtSensorControl::Callback() {
     EqConfig::setAlert(EqAlertType::HtSensor);
   else
     EqConfig::resetAlert(EqAlertType::HtSensor);
-  return true;
-}
-
-// internal temperature control
-EqItSensorControl::EqItSensorControl(Scheduler *scheduler)
-    : Task(EqConfig::itSensorInterval * TASK_SECOND, TASK_FOREVER, scheduler,
-           false),
-      runner_(scheduler) {}
-
-bool EqItSensorControl::Callback() {
-  if (!eqItSensor.read())
-    EqConfig::setAlert(EqAlertType::ItSensor);
-  else {
-    EqConfig::resetAlert(EqAlertType::ItSensor);
-    if (eqItSensor.temperature() > EqConfig::itSensorMaxTemperature) {
-      EqConfig::setAlert(EqAlertType::Overheating);
-      EqConfig::registerOverheating();
-      if (EqConfig::overheating()) {
-        runner_->disableAll();
-        EqConfig::sleep();
-      }
-    } else
-      EqConfig::resetAlert(EqAlertType::Overheating);
-  }
   return true;
 }
 

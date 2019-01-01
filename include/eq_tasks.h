@@ -9,7 +9,7 @@
 #include "eq_config.h"
 #include "eq_fixedpoints.h"
 
-enum class EqTaskId : uint8_t { Heartbeat = 0x00 };
+enum class EqTaskId : uint8_t { Heartbeat = 0x00, ItSensorControl = 0x10 };
 
 template <EqTaskId Id> class EqTask : public Task {
 public:
@@ -35,15 +35,6 @@ class EqHtSensorControl : public Task {
 public:
   EqHtSensorControl(Scheduler *scheduler);
   bool Callback();
-};
-
-class EqItSensorControl : public Task {
-public:
-  EqItSensorControl(Scheduler *scheduler);
-  bool Callback();
-
-private:
-  Scheduler *runner_;
 };
 
 class EqFanControl : public Task {
