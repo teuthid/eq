@@ -48,7 +48,7 @@ template <> bool EqTask<EqTaskId::ItSensorControl>::Callback() {
       EqConfig::setAlert(EqAlertType::Overheating);
       EqConfig::registerOverheating();
       if (EqConfig::overheating()) {
-        //runner_->disableAll();
+        Scheduler::currentScheduler().disableAll();
         EqConfig::sleep();
       }
     } else
