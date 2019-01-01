@@ -15,7 +15,8 @@ enum class EqTaskId : uint8_t {
   ItSensorControl = 0x10,
   HtSensorControl = 0x20,
   FanControl = 0x30,
-  ButtonControl = 0x40
+  ButtonControl = 0x40,
+  Debug = 0xFF
 };
 
 template <EqTaskId Id> class EqTask : public Task {
@@ -32,29 +33,5 @@ private:
   EqTask();
   bool Callback();
 };
-
-#ifdef EQ_DEBUG
-class EqDebugTask : public Task {
-public:
-  EqDebugTask(Scheduler *scheduler);
-  bool Callback();
-
-private:
-  template <typename Value>
-  void print_(const __FlashStringHelper *description, const Value &value);
-};
-
-template <typename Value>
-void EqDebugTask::print_(const __FlashStringHelper *description,
-                         const Value &value) {
-  Serial.print(description);
-  Serial.print(value);
-}
-
-template <>
-void EqDebugTask::print_(const __FlashStringHelper *description,
-                         const fixed_t &value);
-
-#endif // EQ_DEBUG
 
 #endif // __EQ_TASKS_H__

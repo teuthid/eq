@@ -74,7 +74,10 @@ public:
   static void sleep();
   template <typename T>
   static void printValue(const __FlashStringHelper *description,
-                         const T &value);
+                         const T &value) {
+    Serial.print(description);
+    Serial.print(value);
+  }
   static void show();
 
   // alert

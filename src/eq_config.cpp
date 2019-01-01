@@ -80,20 +80,6 @@ void EqConfig::sleep() {
   EqConfig::reset();
 }
 
-template <typename T>
-void EqConfig::printValue(const __FlashStringHelper *description,
-                          const T &value) {
-  Serial.print(description);
-  Serial.print(value);
-}
-
-template <>
-void EqConfig::printValue(const __FlashStringHelper *description,
-                          const fixed_t &value) {
-  Serial.print(description);
-  Serial.print(fixed_to_float(value));
-}
-
 void EqConfig::show() {
   Serial.println(F("Configuration:"));
   EqEeprom::show();

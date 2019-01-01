@@ -7,9 +7,6 @@
 #include <TaskScheduler.h>
 
 Scheduler eqController;
-#ifdef EQ_DEBUG
-EqDebugTask taskDebug(&eqController);
-#endif
 
 void setup() {
   Serial.begin(115200);
@@ -23,7 +20,7 @@ void setup() {
     eqController.addTask(EqTask<EqTaskId::FanControl>::instance());
     eqController.addTask(EqTask<EqTaskId::ButtonControl>::instance());
 #ifdef EQ_DEBUG
-    // taskDebug.enable();
+    eqController.addTask(EqTask<EqTaskId::Debug>::instance());
 #endif
     eqController.enableAll();
 #ifdef EQ_DEBUG

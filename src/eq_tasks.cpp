@@ -7,10 +7,6 @@
 #include "eq_led.h"
 #include "eq_light_sensor.h"
 
-#ifdef EQ_DEBUG
-#include "MemoryFree.h"
-#endif // EQ_DEBUG
-
 // heartbeat
 template <>
 EqTask<EqTaskId::Heartbeat>::EqTask()
@@ -116,24 +112,21 @@ template <> bool EqTask<EqTaskId::ButtonControl>::Callback() {
 
 // debugging
 #ifdef EQ_DEBUG
-EqDebugTask::EqDebugTask(Scheduler *scheduler)
-    : Task(EqConfig::debugInterval * TASK_SECOND, TASK_FOREVER, scheduler,
-           false) {}
-
+#include "MemoryFree.h"
 template <>
-void EqDebugTask::print_(const __FlashStringHelper *description,
-                         const fixed_t &value) {
-  Serial.print(description);
-  Serial.print(fixed_to_float(value));
+EqTask<EqTaskId::Debug>::EqTask()
+    : Task(EqConfig::debugInterval * TASK_SECOND, TASK_FOREVER, nullptr,
+           false) {
+  setId(static_cast<unsigned int>(EqTaskId::Debug));
 }
 
-bool EqDebugTask::Callback() {
-  print_(F("L="), eqLightSensor.intensity());
-  print_(F(" H="), eqHtSensor.lastHumidity());
-  print_(F(" T="), eqHtSensor.lastTemperature());
-  print_(F(" F="), eqFanPwm.lastSpeed());
-  print_(F(" I="), eqItSensor.lastTemperature());
-  print_(F(" M="), freeMemory());
+template <> bool EqTask<EqTaskId::Debug>::Callback() {
+  EqConfig::printValue(F("L="), eqLightSensor.intensity());
+  EqConfig::printValue(F(" H="), fixed_to_float(eqHtSensor.lastHumidity()));
+  EqConfig::printValue(F(" T="), fixed_to_float(eqHtSensor.lastTemperature()));
+  EqConfig::printValue(F(" F="), eqFanPwm.lastSpeed());
+  EqConfig::printValue(F(" I="), fixed_to_float(eqItSensor.lastTemperature()));
+  EqConfig::printValue(F(" M="), freeMemory());
   Serial.println();
   return true;
 }
