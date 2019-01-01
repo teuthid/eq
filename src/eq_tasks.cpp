@@ -73,23 +73,15 @@ template <> bool EqTask<EqTaskId::HtSensorControl>::Callback() {
   return true;
 }
 
-// button control
-EqButtonControl::EqButtonControl(Scheduler *scheduler)
-    : Task(EqConfig::buttonReadInterval * TASK_MILLISECOND, TASK_FOREVER,
-           scheduler, false) {}
-
-bool EqButtonControl::Callback() {
-  eqButtonBacklight.read();
-  eqButtonOverdrive.read();
-  return true;
+// fan control
+template <>
+EqTask<EqTaskId::FanControl>::EqTask()
+    : Task(EqConfig::fanPwmInterval() * TASK_SECOND, TASK_FOREVER, nullptr,
+           false) {
+  setId(static_cast<unsigned int>(EqTaskId::FanControl));
 }
 
-// fan control
-EqFanControl::EqFanControl(Scheduler *scheduler)
-    : Task(EqConfig::fanPwmInterval() * TASK_SECOND, TASK_FOREVER, scheduler,
-           false) {}
-
-bool EqFanControl::Callback() {
+template <> bool EqTask<EqTaskId::FanControl>::Callback() {
   // setting pwm:
   if (!EqConfig::anyAlert())
     if (EqConfig::overdriveTime() > 0)
@@ -105,6 +97,17 @@ bool EqFanControl::Callback() {
   else
     EqConfig::resetAlert(EqAlertType::Fan);
 
+  return true;
+}
+
+// button control
+EqButtonControl::EqButtonControl(Scheduler *scheduler)
+    : Task(EqConfig::buttonReadInterval * TASK_MILLISECOND, TASK_FOREVER,
+           scheduler, false) {}
+
+bool EqButtonControl::Callback() {
+  eqButtonBacklight.read();
+  eqButtonOverdrive.read();
   return true;
 }
 
