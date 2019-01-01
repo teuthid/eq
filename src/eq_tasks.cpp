@@ -57,6 +57,22 @@ template <> bool EqTask<EqTaskId::ItSensorControl>::Callback() {
   return true;
 }
 
+// huminidity & temperature control
+template <>
+EqTask<EqTaskId::HtSensorControl>::EqTask()
+    : Task(EqConfig::htSensorInterval() * TASK_SECOND, TASK_FOREVER, nullptr,
+           false) {
+  setId(static_cast<unsigned int>(EqTaskId::HtSensorControl));
+}
+
+template <> bool EqTask<EqTaskId::HtSensorControl>::Callback() {
+  if (!eqHtSensor.read())
+    EqConfig::setAlert(EqAlertType::HtSensor);
+  else
+    EqConfig::resetAlert(EqAlertType::HtSensor);
+  return true;
+}
+
 // button control
 EqButtonControl::EqButtonControl(Scheduler *scheduler)
     : Task(EqConfig::buttonReadInterval * TASK_MILLISECOND, TASK_FOREVER,
@@ -65,19 +81,6 @@ EqButtonControl::EqButtonControl(Scheduler *scheduler)
 bool EqButtonControl::Callback() {
   eqButtonBacklight.read();
   eqButtonOverdrive.read();
-  return true;
-}
-
-// huminidity & temperature control
-EqHtSensorControl::EqHtSensorControl(Scheduler *scheduler)
-    : Task(EqConfig::htSensorInterval() * TASK_SECOND, TASK_FOREVER, scheduler,
-           false) {}
-
-bool EqHtSensorControl::Callback() {
-  if (!eqHtSensor.read())
-    EqConfig::setAlert(EqAlertType::HtSensor);
-  else
-    EqConfig::resetAlert(EqAlertType::HtSensor);
   return true;
 }
 

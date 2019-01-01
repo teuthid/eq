@@ -8,7 +8,6 @@
 
 Scheduler eqController;
 EqButtonControl taskButtonControl(&eqController);
-EqHtSensorControl taskHtSensorControl(&eqController);
 EqFanControl taskFanControl(&eqController);
 #ifdef EQ_DEBUG
 EqDebugTask taskDebug(&eqController);
@@ -22,8 +21,8 @@ void setup() {
   if (EqConfig::init()) {
     eqController.addTask(EqTask<EqTaskId::Heartbeat>::instance());
     eqController.addTask(EqTask<EqTaskId::ItSensorControl>::instance());
+    eqController.addTask(EqTask<EqTaskId::HtSensorControl>::instance());
     // taskButtonControl.enable();
-    // taskHtSensorControl.enable();
     // taskFanControl.enable();
 #ifdef EQ_DEBUG
     // taskDebug.enable();
