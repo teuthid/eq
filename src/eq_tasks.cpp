@@ -11,15 +11,14 @@
 #include "MemoryFree.h"
 #endif // EQ_DEBUG
 
-EqHeartbeat taskHeartbeat(EqTaskId::Heartbeat);
-
 // heartbeat
-EqHeartbeat::EqHeartbeat(const EqTaskId &id)
+template <>
+EqTask<EqTaskId::Heartbeat>::EqTask()
     : Task(TASK_SECOND, TASK_FOREVER, nullptr, false) {
-  setId(static_cast<unsigned int>(id));
+  setId(static_cast<unsigned int>(EqTaskId::Heartbeat));
 }
 
-bool EqHeartbeat::Callback() {
+template <> bool EqTask<EqTaskId::Heartbeat>::Callback() {
   eqLightSensor.read();
   if (EqConfig::anyAlert())
     eqLedAlert.toggle(true); // force blinking led

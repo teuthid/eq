@@ -21,7 +21,7 @@ void setup() {
   Serial.print(F("Initializing... "));
 #endif
   if (EqConfig::init()) {
-    eqRunner.addTask(taskHeartbeat);
+    eqRunner.addTask(EqTask<EqTaskId::Heartbeat>::instance());
     // taskItSensorControl.enable();
     // taskButtonControl.enable();
     // taskHtSensorControl.enable();

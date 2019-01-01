@@ -9,14 +9,21 @@
 #include "eq_config.h"
 #include "eq_fixedpoints.h"
 
-enum class EqTaskId : uint8_t { Heartbeat = 0 };
+enum class EqTaskId : uint8_t { Heartbeat = 0x00 };
 
-class EqHeartbeat : public Task {
+template <EqTaskId Id> class EqTask : public Task {
 public:
-  EqHeartbeat(const EqTaskId &id);
+  static EqTask &instance() {
+    static EqTask instance;
+    return instance;
+  }
+  EqTask(const EqTask &) = delete;
+  void operator=(const EqTask &) = delete;
+
+private:
+  EqTask();
   bool Callback();
 };
-extern EqHeartbeat taskHeartbeat;
 
 class EqButtonControl : public Task {
 public:
