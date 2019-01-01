@@ -101,11 +101,14 @@ template <> bool EqTask<EqTaskId::FanControl>::Callback() {
 }
 
 // button control
-EqButtonControl::EqButtonControl(Scheduler *scheduler)
+template <>
+EqTask<EqTaskId::ButtonControl>::EqTask()
     : Task(EqConfig::buttonReadInterval * TASK_MILLISECOND, TASK_FOREVER,
-           scheduler, false) {}
+           nullptr, false) {
+  setId(static_cast<unsigned int>(EqTaskId::ButtonControl));
+}
 
-bool EqButtonControl::Callback() {
+template <> bool EqTask<EqTaskId::ButtonControl>::Callback() {
   eqButtonBacklight.read();
   eqButtonOverdrive.read();
   return true;

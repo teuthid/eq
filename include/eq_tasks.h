@@ -14,7 +14,8 @@ enum class EqTaskId : uint8_t {
   Heartbeat = 0x00,
   ItSensorControl = 0x10,
   HtSensorControl = 0x20,
-  FanControl = 0x30
+  FanControl = 0x30,
+  ButtonControl = 0x40
 };
 
 template <EqTaskId Id> class EqTask : public Task {
@@ -28,12 +29,6 @@ public:
 
 private:
   EqTask();
-  bool Callback();
-};
-
-class EqButtonControl : public Task {
-public:
-  EqButtonControl(Scheduler *scheduler);
   bool Callback();
 };
 

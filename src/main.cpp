@@ -7,7 +7,6 @@
 #include <TaskScheduler.h>
 
 Scheduler eqController;
-EqButtonControl taskButtonControl(&eqController);
 #ifdef EQ_DEBUG
 EqDebugTask taskDebug(&eqController);
 #endif
@@ -22,7 +21,7 @@ void setup() {
     eqController.addTask(EqTask<EqTaskId::ItSensorControl>::instance());
     eqController.addTask(EqTask<EqTaskId::HtSensorControl>::instance());
     eqController.addTask(EqTask<EqTaskId::FanControl>::instance());
-    // taskButtonControl.enable();
+    eqController.addTask(EqTask<EqTaskId::ButtonControl>::instance());
 #ifdef EQ_DEBUG
     // taskDebug.enable();
 #endif
