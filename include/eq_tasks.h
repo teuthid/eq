@@ -7,9 +7,6 @@
 #define _TASK_OO_CALLBACKS
 #define _TASK_PRIORITY
 #define _TASK_WDT_IDS
-#ifdef EQ_DEBUG
-#define _TASK_DEBUG
-#endif
 #include <TaskSchedulerDeclarations.h>
 
 enum class EqTaskId : uint8_t {
