@@ -3,7 +3,6 @@
 #define _TASK_DEBUG
 #endif
 
-#include "eq_config.h"
 #include "eq_tasks.h"
 #include <TaskScheduler.h>
 

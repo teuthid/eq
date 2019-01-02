@@ -7,6 +7,8 @@
 #define _TASK_WDT_IDS
 #include <TaskSchedulerDeclarations.h>
 
+#include "eq_config.h"
+
 enum class EqTaskId : uint8_t {
   Heartbeat = 10,
   ItSensorControl = 20,
@@ -18,6 +20,7 @@ enum class EqTaskId : uint8_t {
 
 template <EqTaskId Id> class EqTask : public Task {
 public:
+  void setWdPoint(uint8_t point);
   static EqTask &instance() {
     static EqTask instance;
     return instance;
@@ -30,5 +33,11 @@ private:
   EqTask();
   bool Callback();
 };
+
+template <EqTaskId Id> void EqTask<Id>::setWdPoint(uint8_t point) {
+#ifdef EQ_DEBUG
+  setControlPoint(static_cast<unsigned int>(Id) + point);
+#endif
+}
 
 #endif // __EQ_TASKS_H__

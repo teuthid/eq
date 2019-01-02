@@ -16,12 +16,14 @@ EqTask<EqTaskId::Heartbeat>::EqTask()
 
 template <> bool EqTask<EqTaskId::Heartbeat>::Callback() {
   eqLightSensor.read();
+  setWdPoint(1);
   if (EqConfig::anyAlert())
     eqLedAlert.toggle(true); // force blinking led
   else
     eqLedAlert.setState(false);
   eqLedHeartbeat.toggle(true);
   eqDisplay.show();
+  setWdPoint(2);
   EqConfig::decreaseOverdriveTime();
   EqConfig::decreaseBacklightTimeCounter();
   return true;
@@ -39,16 +41,20 @@ template <> bool EqTask<EqTaskId::ItSensorControl>::Callback() {
   if (!eqItSensor.read())
     EqConfig::setAlert(EqAlertType::ItSensor);
   else {
+    setWdPoint(1);
     EqConfig::resetAlert(EqAlertType::ItSensor);
     if (eqItSensor.temperature() > EqConfig::itSensorMaxTemperature) {
       EqConfig::setAlert(EqAlertType::Overheating);
       EqConfig::registerOverheating();
+      setWdPoint(2);
       if (EqConfig::overheating()) {
         Scheduler::currentScheduler().disableAll();
         EqConfig::sleep();
       }
-    } else
+    } else {
+      setWdPoint(3);
       EqConfig::resetAlert(EqAlertType::Overheating);
+    }
   }
   return true;
 }
@@ -62,10 +68,13 @@ EqTask<EqTaskId::HtSensorControl>::EqTask()
 }
 
 template <> bool EqTask<EqTaskId::HtSensorControl>::Callback() {
-  if (!eqHtSensor.read())
+  if (!eqHtSensor.read()) {
+    setWdPoint(1);
     EqConfig::setAlert(EqAlertType::HtSensor);
-  else
+  } else {
+    setWdPoint(2);
     EqConfig::resetAlert(EqAlertType::HtSensor);
+  }
   return true;
 }
 
@@ -80,19 +89,25 @@ EqTask<EqTaskId::FanControl>::EqTask()
 template <> bool EqTask<EqTaskId::FanControl>::Callback() {
   // setting pwm:
   if (!EqConfig::anyAlert())
-    if (EqConfig::overdriveTime() > 0)
+    if (EqConfig::overdriveTime() > 0) {
+      setWdPoint(1);
       eqFanPwm.setOverdrive();
-    else
+    } else {
+      setWdPoint(2);
       eqFanPwm.setDutyCycle();
+    }
   else {
+    setWdPoint(3);
     eqFanPwm.stop();
   }
   // reading fan speed:
-  if (!eqFanPwm.readSpeed())
+  if (!eqFanPwm.readSpeed()) {
+    setWdPoint(4);
     EqConfig::setAlert(EqAlertType::Fan);
-  else
+  } else {
+    setWdPoint(5);
     EqConfig::resetAlert(EqAlertType::Fan);
-
+  }
   return true;
 }
 
@@ -106,6 +121,7 @@ EqTask<EqTaskId::ButtonControl>::EqTask()
 
 template <> bool EqTask<EqTaskId::ButtonControl>::Callback() {
   eqButtonBacklight.read();
+  setWdPoint(1);
   eqButtonOverdrive.read();
   return true;
 }
