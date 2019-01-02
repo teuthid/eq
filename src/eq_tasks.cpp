@@ -18,10 +18,10 @@ template <> bool EqTask<EqTaskId::Heartbeat>::Callback() {
   EqLightSensor::instance().read();
   setWdPoint(1);
   if (EqConfig::anyAlert())
-    eqLedAlert.toggle(true); // force blinking led
+    EqLedAlert::instance().toggle(true); // force blinking led
   else
-    eqLedAlert.setState(false);
-  eqLedHeartbeat.toggle(true);
+    EqLedAlert::instance().setState(false);
+  EqLedHeartbeat::instance().toggle(true);
   eqDisplay.show();
   setWdPoint(2);
   EqConfig::decreaseOverdriveTime();

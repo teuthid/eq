@@ -23,11 +23,11 @@ enum class EqTaskId : uint8_t {
 
 template <EqTaskId Id> class EqTask : public Task {
 public:
-  void setWdPoint(uint8_t point);
   static EqTask &instance() {
     static EqTask instance;
     return instance;
   }
+  void setWdPoint(uint8_t point);
   EqTask(const EqTask &) = delete;
   EqTask(EqTask &&) = delete;
   void operator=(const EqTask &) = delete;

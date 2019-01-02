@@ -7,11 +7,20 @@
 
 template <uint8_t LedPin> class EqLed {
 public:
-  EqLed();
+  static EqLed &instance() {
+    static EqLed instance;
+    return instance;
+  }
   void setState(const bool &newState);
   void test(const uint32_t &interval /* in milliseconds */,
             const uint8_t &iterations);
   void toggle(const bool &force = false);
+  EqLed(const EqLed &) = delete;
+  EqLed(EqLed &&) = delete;
+  void operator=(const EqLed &) = delete;
+
+private:
+  EqLed();
 };
 
 template <uint8_t LedPin> EqLed<LedPin>::EqLed() {
@@ -38,7 +47,7 @@ template <uint8_t LedPin> void EqLed<LedPin>::toggle(const bool &force) {
     EqDPin<LedPin>::setOutputValue(LOW);
 }
 
-extern EqLed<EqConfig::ledAlertPin> eqLedAlert;
-extern EqLed<EqConfig::ledHeartbeatPin> eqLedHeartbeat;
+using EqLedAlert = EqLed<EqConfig::ledAlertPin>;
+using EqLedHeartbeat = EqLed<EqConfig::ledHeartbeatPin>;
 
 #endif // __EQ_LED_H__
