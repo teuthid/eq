@@ -1,8 +1,4 @@
 
-#ifdef EQ_DEBUG
-#define _TASK_DEBUG
-#endif
-
 #include "eq_tasks.h"
 #include <TaskScheduler.h>
 

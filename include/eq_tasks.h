@@ -2,12 +2,15 @@
 #ifndef __EQ_TASKS_H__
 #define __EQ_TASKS_H__
 
+#include "eq_config.h"
+
 #define _TASK_OO_CALLBACKS
 #define _TASK_PRIORITY
 #define _TASK_WDT_IDS
+#ifdef EQ_DEBUG
+#define _TASK_DEBUG
+#endif
 #include <TaskSchedulerDeclarations.h>
-
-#include "eq_config.h"
 
 enum class EqTaskId : uint8_t {
   Heartbeat = 10,
