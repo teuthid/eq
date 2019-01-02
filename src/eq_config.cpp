@@ -44,7 +44,7 @@ bool EqConfig::init() {
     return false;
   eqLedHeartbeat.test(200, 3);
   eqLedAlert.test(200, 3);
-  if (!eqLightSensor.init())
+  if (!EqLightSensor::instance().init())
     return false;
   if (!eqItSensor.init())
     return false;
