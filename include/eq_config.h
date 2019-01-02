@@ -6,12 +6,6 @@
 
 #define EQ_DEBUG
 
-#ifdef EQ_DEBUG
-#define EQ_ASSERT(x) assert((x))
-#else
-#define EQ_ASSERT(x)
-#endif // EQ_DEBUG
-
 #define EQ_DS18B20 0
 #define EQ_DHT11 1
 #define EQ_DHT21 2 // AM2301

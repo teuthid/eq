@@ -14,22 +14,6 @@
 #include <avr/sleep.h>
 #include <avr/wdt.h>
 
-#ifdef EQ_DEBUG
-#define __ASSERT_USE_STDERR
-#include <assert.h>
-void __assert(const char *__func, const char *__file, int __lineno,
-              const char *__sexp) {
-  Serial.println();
-  Serial.println(F("- Assertion -"));
-  Serial.println(__func);
-  Serial.println(__file);
-  Serial.println(__lineno, DEC);
-  Serial.println(__sexp);
-  Serial.flush();
-  abort();
-}
-#endif // EQ_DEBUG
-
 EqAlertType EqConfig::alert_ = EqAlertType::None;
 uint16_t EqConfig::overdriveTime_ = 0;
 uint16_t EqConfig::backlightTimeCounter_ = 0;
