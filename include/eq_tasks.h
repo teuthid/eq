@@ -8,12 +8,12 @@
 #include <TaskSchedulerDeclarations.h>
 
 enum class EqTaskId : uint8_t {
-  Heartbeat = 0x00,
-  ItSensorControl = 0x10,
-  HtSensorControl = 0x20,
-  FanControl = 0x30,
-  ButtonControl = 0x40,
-  Debug = 0xFF
+  Heartbeat = 10,
+  ItSensorControl = 20,
+  HtSensorControl = 30,
+  FanControl = 40,
+  ButtonControl = 50,
+  Debug = 255
 };
 
 template <EqTaskId Id> class EqTask : public Task {
