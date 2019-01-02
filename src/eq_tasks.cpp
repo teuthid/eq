@@ -48,11 +48,12 @@ template <> bool EqTask<EqTaskId::ItSensorControl>::Callback() {
       EqConfig::registerOverheating();
       setWdPoint(2);
       if (EqConfig::overheating()) {
+        setWdPoint(3);
         Scheduler::currentScheduler().disableAll();
         EqConfig::sleep();
       }
     } else {
-      setWdPoint(3);
+      setWdPoint(4);
       EqConfig::resetAlert(EqAlertType::Overheating);
     }
   }
