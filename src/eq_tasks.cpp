@@ -9,12 +9,11 @@
 
 // heartbeat
 template <>
-EqTask<EqTaskId::Heartbeat>::EqTask()
-    : Task(TASK_SECOND, TASK_FOREVER, nullptr, false) {
+EqTaskHeartbeat::EqTask() : Task(TASK_SECOND, TASK_FOREVER, nullptr, false) {
   setId(static_cast<unsigned int>(EqTaskId::Heartbeat));
 }
 
-template <> bool EqTask<EqTaskId::Heartbeat>::Callback() {
+template <> bool EqTaskHeartbeat::Callback() {
   EqLightSensor::instance().read();
   setWdPoint(1);
   if (EqConfig::anyAlert())
@@ -31,13 +30,13 @@ template <> bool EqTask<EqTaskId::Heartbeat>::Callback() {
 
 // internal temperature control
 template <>
-EqTask<EqTaskId::ItSensorControl>::EqTask()
+EqTaskItSensorControl::EqTask()
     : Task(EqConfig::itSensorInterval * TASK_SECOND, TASK_FOREVER, nullptr,
            false) {
   setId(static_cast<unsigned int>(EqTaskId::ItSensorControl));
 }
 
-template <> bool EqTask<EqTaskId::ItSensorControl>::Callback() {
+template <> bool EqTaskItSensorControl::Callback() {
   if (!eqItSensor.read())
     EqConfig::setAlert(EqAlertType::ItSensor);
   else {
@@ -62,13 +61,13 @@ template <> bool EqTask<EqTaskId::ItSensorControl>::Callback() {
 
 // huminidity & temperature control
 template <>
-EqTask<EqTaskId::HtSensorControl>::EqTask()
+EqTaskHtSensorControl::EqTask()
     : Task(EqConfig::htSensorInterval() * TASK_SECOND, TASK_FOREVER, nullptr,
            false) {
   setId(static_cast<unsigned int>(EqTaskId::HtSensorControl));
 }
 
-template <> bool EqTask<EqTaskId::HtSensorControl>::Callback() {
+template <> bool EqTaskHtSensorControl::Callback() {
   if (!eqHtSensor.read()) {
     setWdPoint(1);
     EqConfig::setAlert(EqAlertType::HtSensor);
@@ -81,13 +80,13 @@ template <> bool EqTask<EqTaskId::HtSensorControl>::Callback() {
 
 // fan control
 template <>
-EqTask<EqTaskId::FanControl>::EqTask()
+EqTaskFanControl::EqTask()
     : Task(EqConfig::fanPwmInterval() * TASK_SECOND, TASK_FOREVER, nullptr,
            false) {
   setId(static_cast<unsigned int>(EqTaskId::FanControl));
 }
 
-template <> bool EqTask<EqTaskId::FanControl>::Callback() {
+template <> bool EqTaskFanControl::Callback() {
   // setting pwm:
   if (!EqConfig::anyAlert())
     if (EqConfig::overdriveTime() > 0) {
@@ -114,13 +113,13 @@ template <> bool EqTask<EqTaskId::FanControl>::Callback() {
 
 // button control
 template <>
-EqTask<EqTaskId::ButtonControl>::EqTask()
+EqTaskButtonControl::EqTask()
     : Task(EqConfig::buttonReadInterval * TASK_MILLISECOND, TASK_FOREVER,
            nullptr, false) {
   setId(static_cast<unsigned int>(EqTaskId::ButtonControl));
 }
 
-template <> bool EqTask<EqTaskId::ButtonControl>::Callback() {
+template <> bool EqTaskButtonControl::Callback() {
   eqButtonBacklight.read();
   setWdPoint(1);
   eqButtonOverdrive.read();
@@ -131,13 +130,13 @@ template <> bool EqTask<EqTaskId::ButtonControl>::Callback() {
 #ifdef EQ_DEBUG
 #include "MemoryFree.h"
 template <>
-EqTask<EqTaskId::Debug>::EqTask()
+EqTaskDebug::EqTask()
     : Task(EqConfig::debugInterval * TASK_SECOND, TASK_FOREVER, nullptr,
            false) {
   setId(static_cast<unsigned int>(EqTaskId::Debug));
 }
 
-template <> bool EqTask<EqTaskId::Debug>::Callback() {
+template <> bool EqTaskDebug::Callback() {
   EqConfig::printValue(F("L="), EqLightSensor::instance().intensity());
   EqConfig::printValue(F(" H="), fixed_to_float(eqHtSensor.lastHumidity()));
   EqConfig::printValue(F(" T="), fixed_to_float(eqHtSensor.lastTemperature()));
