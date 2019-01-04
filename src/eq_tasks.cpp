@@ -120,9 +120,9 @@ EqTaskButtonControl::EqTask()
 }
 
 template <> bool EqTaskButtonControl::Callback() {
-  eqButtonBacklight.read();
+  EqButtonBacklight::instance().read();
   setWdPoint(1);
-  eqButtonOverdrive.read();
+  EqButtonOverdrive::instance().read();
   return true;
 }
 

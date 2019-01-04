@@ -32,7 +32,3 @@ template <> void EqButton<EqConfig::buttonBacklightPin>::read() {
 template <> void EqButton<EqConfig::buttonBacklightPin>::setOnPressed_() {
   button_.onPressed([]() { EqConfig::setBacklight(!EqConfig::backlight()); });
 }
-
-// preinstatiate
-EqButton<EqConfig::buttonOverdrivePin> eqButtonOverdrive;
-EqButton<EqConfig::buttonBacklightPin> eqButtonBacklight;

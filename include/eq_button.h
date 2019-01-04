@@ -7,13 +7,20 @@
 
 template <uint8_t ButtonPin> class EqButton {
 public:
-  EqButton() : button_(ButtonPin, EqConfig::buttonDebounceTime) {}
+  static EqButton &instance() {
+    static EqButton instance;
+    return instance;
+  }
+  EqButton(const EqButton &) = delete;
+  EqButton(EqButton &&) = delete;
+  void operator=(const EqButton &) = delete;
 
-  // needs specialization:  
+  // needs specialization:
   void init();
   void read();
 
 private:
+  EqButton() : button_(ButtonPin, EqConfig::buttonDebounceTime) {}
   void setOnPressed_();
   EasyButton button_;
 };
@@ -23,7 +30,7 @@ template <uint8_t ButtonPin> void EqButton<ButtonPin>::init() {
   setOnPressed_();
 }
 
-extern EqButton<EqConfig::buttonOverdrivePin> eqButtonOverdrive;
-extern EqButton<EqConfig::buttonBacklightPin> eqButtonBacklight;
+using EqButtonBacklight = EqButton<EqConfig::buttonBacklightPin>;
+using EqButtonOverdrive = EqButton<EqConfig::buttonOverdrivePin>;
 
 #endif // __EQ_BUTTON_H__

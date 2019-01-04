@@ -34,8 +34,8 @@ bool EqConfig::init() {
     return false;
   if (!eqHtSensor.init())
     return false;
-  eqButtonOverdrive.init();
-  eqButtonBacklight.init();
+  EqButtonBacklight::instance().init();
+  EqButtonOverdrive::instance().init();
   if (!eqFanPwm.init())
     return false;
   return true;
