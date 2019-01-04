@@ -14,7 +14,7 @@ EqTaskHeartbeat::EqTask() : Task(TASK_SECOND, TASK_FOREVER, nullptr, false) {
 }
 
 template <> bool EqTaskHeartbeat::Callback() {
-  EqLightSensor::instance().read();
+  eqLightSensor().read();
   setWdPoint(1);
   if (EqConfig::anyAlert())
     EqLedAlert::instance().toggle(true); // force blinking led
@@ -137,7 +137,7 @@ EqTaskDebug::EqTask()
 }
 
 template <> bool EqTaskDebug::Callback() {
-  EqConfig::printValue(F("L="), EqLightSensor::instance().intensity());
+  EqConfig::printValue(F("L="), eqLightSensor().intensity());
   EqConfig::printValue(F(" H="), fixed_to_float(eqHtSensor.lastHumidity()));
   EqConfig::printValue(F(" T="), fixed_to_float(eqHtSensor.lastTemperature()));
   EqConfig::printValue(F(" F="), eqFanPwm.lastSpeed());

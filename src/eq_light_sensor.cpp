@@ -42,3 +42,8 @@ bool EqLightSensor::init() {
   }
   return true;
 }
+
+EqLightSensor &eqLightSensor() {
+  static EqLightSensor s;
+  return s;
+}

@@ -6,14 +6,11 @@
 #include "eq_config.h"
 
 class EqLightSensor {
+  friend EqLightSensor &eqLightSensor();
 public:
-  static EqLightSensor &instance() {
-    static EqLightSensor instance;
-    return instance;
-  }
   bool init();
   void read();
-  uint8_t intensity() const { return intensity_; }
+  constexpr uint8_t intensity() const { return intensity_; }
   EqLightSensor(const EqLightSensor &) = delete;
   EqLightSensor(EqLightSensor &&) = delete;
   void operator=(const EqLightSensor &) = delete;
@@ -21,7 +18,7 @@ public:
 private:
   enum State : uint8_t { Low, Rising, High };
 
-  EqLightSensor() {}
+  constexpr EqLightSensor() {}
 
   uint8_t intensity_ = 0;
   State state_ = State::Low;
@@ -29,5 +26,7 @@ private:
   void collect_();
   void determineState_();
 };
+
+EqLightSensor &eqLightSensor();
 
 #endif // __EQ_LIGHT_SENSOR_H__

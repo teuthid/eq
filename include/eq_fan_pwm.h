@@ -6,10 +6,10 @@
 
 class EqFanPwm {
 public:
-  constexpr EqFanPwm() {}
+  EqFanPwm() {}
   bool init();
   void setDutyCycle();
-  constexpr uint8_t dutyCycle() const { return dutyCycle_; }
+  uint8_t dutyCycle() const { return dutyCycle_; }
   void setOverdrive();
   void stop();
   bool readSpeed();

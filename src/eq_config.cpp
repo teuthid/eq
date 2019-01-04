@@ -28,7 +28,7 @@ bool EqConfig::init() {
     return false;
   EqLedHeartbeat::instance().test(200, 3);
   EqLedAlert::instance().test(200, 3);
-  if (!EqLightSensor::instance().init())
+  if (!eqLightSensor().init())
     return false;
   if (!eqItSensor.init())
     return false;
