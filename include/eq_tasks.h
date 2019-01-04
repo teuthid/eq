@@ -40,4 +40,13 @@ template <EqTaskId Id> void EqTask<Id>::setWdPoint(uint8_t point) {
 #endif
 }
 
+using EqTaskHeartbeat = EqTask<EqTaskId::Heartbeat>;
+using EqTaskItSensorControl = EqTask<EqTaskId::ItSensorControl>;
+using EqTaskHtSensorControl = EqTask<EqTaskId::HtSensorControl>;
+using EqTaskFanControl = EqTask<EqTaskId::FanControl>;
+using EqTaskButtonControl = EqTask<EqTaskId::ButtonControl>;
+#ifdef EQ_DEBUG
+using EqTaskDebug = EqTask<EqTaskId::Debug>;
+#endif
+
 #endif // __EQ_TASKS_H__

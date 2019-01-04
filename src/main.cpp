@@ -10,13 +10,13 @@ void setup() {
   Serial.print(F("Initializing... "));
 #endif
   if (EqConfig::init()) {
-    eqController.addTask(EqTask<EqTaskId::Heartbeat>::instance());
-    eqController.addTask(EqTask<EqTaskId::ItSensorControl>::instance());
-    eqController.addTask(EqTask<EqTaskId::HtSensorControl>::instance());
-    eqController.addTask(EqTask<EqTaskId::FanControl>::instance());
-    eqController.addTask(EqTask<EqTaskId::ButtonControl>::instance());
+    eqController.addTask(EqTaskHeartbeat::instance());
+    eqController.addTask(EqTaskItSensorControl::instance());
+    eqController.addTask(EqTaskHtSensorControl::instance());
+    eqController.addTask(EqTaskFanControl::instance());
+    eqController.addTask(EqTaskButtonControl::instance());
 #ifdef EQ_DEBUG
-    eqController.addTask(EqTask<EqTaskId::Debug>::instance());
+    eqController.addTask(EqTaskDebug::instance());
 #endif
     eqController.enableAll();
 #ifdef EQ_DEBUG
