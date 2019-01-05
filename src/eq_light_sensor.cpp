@@ -3,8 +3,6 @@
 #include "eq_display.h"
 #include "eq_dpin.h"
 
-EqLightSensor EqLightSensor::instance_;
-
 void EqLightSensor::collect_() {
   if (EqConfig::lightSensorIsAnalog)
     collector_.add(analogRead(EqConfig::lightSensorPin));
@@ -44,3 +42,6 @@ bool EqLightSensor::init() {
   }
   return true;
 }
+
+// instance of EqLightSensor
+EqLightSensor EqLightSensor::instance_{};
