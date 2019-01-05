@@ -5,12 +5,15 @@
 #include "eq_config.h"
 #include <EasyButton.h>
 
+template <uint8_t ButtonPin> class EqButton;
+using EqButtonBacklight = EqButton<EqConfig::buttonBacklightPin>;
+using EqButtonOverdrive = EqButton<EqConfig::buttonOverdrivePin>;
+
 template <uint8_t ButtonPin> class EqButton {
+  friend EqButtonBacklight &eqButtonBacklight();
+  friend EqButtonOverdrive &eqButtonOverdrive();
+
 public:
-  static EqButton &instance() {
-    static EqButton instance;
-    return instance;
-  }
   EqButton(const EqButton &) = delete;
   EqButton(EqButton &&) = delete;
   void operator=(const EqButton &) = delete;
@@ -20,17 +23,22 @@ public:
   void read();
 
 private:
-  EqButton() : button_(ButtonPin, EqConfig::buttonDebounceTime) {}
+  EqButton();
   void setOnPressed_();
   EasyButton button_;
+  static EqButton instance_;
 };
+
+inline EqButtonBacklight &eqButtonBacklight() {
+  return EqButtonBacklight::instance_;
+}
+inline EqButtonOverdrive &eqButtonOverdrive() {
+  return EqButtonOverdrive::instance_;
+}
 
 template <uint8_t ButtonPin> void EqButton<ButtonPin>::init() {
   button_.begin();
   setOnPressed_();
 }
-
-using EqButtonBacklight = EqButton<EqConfig::buttonBacklightPin>;
-using EqButtonOverdrive = EqButton<EqConfig::buttonOverdrivePin>;
 
 #endif // __EQ_BUTTON_H__
