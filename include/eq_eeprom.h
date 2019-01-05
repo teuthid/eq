@@ -12,6 +12,7 @@ public:
 
   EqEeprom(const EqEeprom &) = delete;
   EqEeprom(EqEeprom &&) = delete;
+  void operator=(const EqEeprom &) = delete;
 
   static void init(const bool &reset = false);
   static void show();
@@ -39,7 +40,6 @@ public:
 
 private:
   EqEeprom();
-  ~EqEeprom();
 
   static constexpr uint8_t marker_ = 0xA5;
   static const PROGMEM uint8_p paramSizes_[];
