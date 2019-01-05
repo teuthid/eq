@@ -7,7 +7,6 @@
 #include "eq_led.h"
 #include "eq_light_sensor.h"
 
-// heartbeat
 template <>
 EqTaskHeartbeat::EqTask() : Task(TASK_SECOND, TASK_FOREVER, nullptr, false) {
   setId(static_cast<unsigned int>(EqTaskId::Heartbeat));
@@ -28,7 +27,6 @@ template <> bool EqTaskHeartbeat::Callback() {
   return true;
 }
 
-// internal temperature control
 template <>
 EqTaskItSensorControl::EqTask()
     : Task(EqConfig::itSensorInterval * TASK_SECOND, TASK_FOREVER, nullptr,
@@ -59,7 +57,6 @@ template <> bool EqTaskItSensorControl::Callback() {
   return true;
 }
 
-// huminidity & temperature control
 template <>
 EqTaskHtSensorControl::EqTask()
     : Task(EqConfig::htSensorInterval() * TASK_SECOND, TASK_FOREVER, nullptr,
@@ -78,7 +75,6 @@ template <> bool EqTaskHtSensorControl::Callback() {
   return true;
 }
 
-// fan control
 template <>
 EqTaskFanControl::EqTask()
     : Task(EqConfig::fanPwmInterval() * TASK_SECOND, TASK_FOREVER, nullptr,
@@ -111,7 +107,6 @@ template <> bool EqTaskFanControl::Callback() {
   return true;
 }
 
-// button control
 template <>
 EqTaskButtonControl::EqTask()
     : Task(EqConfig::buttonReadInterval * TASK_MILLISECOND, TASK_FOREVER,
@@ -126,7 +121,6 @@ template <> bool EqTaskButtonControl::Callback() {
   return true;
 }
 
-// debugging
 #ifdef EQ_DEBUG
 #include "MemoryFree.h"
 template <>
@@ -147,3 +141,13 @@ template <> bool EqTaskDebug::Callback() {
   return true;
 }
 #endif // EQ_DEBUG
+
+// instances of EqTask
+template <> EqTaskHeartbeat EqTaskHeartbeat::instance_{};
+template <> EqTaskItSensorControl EqTaskItSensorControl::instance_{};
+template <> EqTaskHtSensorControl EqTaskHtSensorControl::instance_{};
+template <> EqTaskFanControl EqTaskFanControl::instance_{};
+template <> EqTaskButtonControl EqTaskButtonControl::instance_{};
+#ifdef EQ_DEBUG
+template <> EqTaskDebug EqTaskDebug::instance_{};
+#endif
