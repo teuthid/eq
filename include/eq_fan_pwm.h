@@ -16,6 +16,10 @@ public:
   bool readSpeed();
   uint8_t lastSpeed() const; // in percents!
 
+  EqFanPwm(const EqFanPwm &) = delete;
+  EqFanPwm(EqFanPwm &&) = delete;
+  void operator=(const EqFanPwm &) = delete;
+
 private:
   uint8_t dutyCycle_ = 0;
   uint32_t lastSpeed_ = 0;

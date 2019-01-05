@@ -24,7 +24,7 @@ bool EqConfig::init() {
   EqDPin<fanTachometerControlPin>::setInputPulledUp();
   backlightTimeCounter_ = backlightTime();
   Wire.begin();
-  if (!eqDisplay.init())
+  if (!eqDisplay().init())
     return false;
   eqLedHeartbeat().test(200, 3);
   eqLedAlert().test(200, 3);
@@ -124,7 +124,7 @@ const char *EqConfig::alertAsString(const EqAlertType &alert) {
 void EqConfig::showAlert(const EqAlertType &alert) {
   eqLedAlert().setState(true);
   if (alert_ != EqAlertType::Display)
-    eqDisplay.showAlert(alert);
+    eqDisplay().showAlert(alert);
 #ifdef EQ_DEBUG
   Serial.println();
   Serial.print(F("ALERT: "));

@@ -30,7 +30,7 @@ bool EqLightSensor::init() {
 #ifdef EQ_DEBUG
   Serial.print(__s);
 #endif
-  eqDisplay.showMessage(__s);
+  eqDisplay().showMessage(__s);
   EqDPin<EqConfig::lightSensorPin>::setInput();
   for (uint8_t __i = 0; __i < EqConfig::lightSensorCollectorSize; __i++) {
     delay(200);

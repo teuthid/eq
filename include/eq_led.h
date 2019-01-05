@@ -18,6 +18,7 @@ public:
   void test(const uint32_t &interval /* in milliseconds */,
             const uint8_t &iterations);
   void toggle(const bool &force = false);
+  
   EqLed(const EqLed &) = delete;
   EqLed(EqLed &&) = delete;
   void operator=(const EqLed &) = delete;

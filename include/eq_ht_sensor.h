@@ -66,7 +66,7 @@ bool EqHtSensor<Model, IsInternal>::init() {
 #ifdef EQ_DEBUG
   Serial.print(__s);
 #endif
-  eqDisplay.showMessage(__s);
+  eqDisplay().showMessage(__s);
   if (!initHtSensor_()) {
     setAlert();
     return false;

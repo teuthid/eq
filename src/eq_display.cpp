@@ -3,8 +3,6 @@
 
 #if (EQ_DISPLAY_TYPE == EQ_NO_DISPLAY)
 
-EqDisplay<EQ_NO_DISPLAY> eqDisplay; // preinstatiate
-
 template <> bool EqDisplay<EQ_NO_DISPLAY>::initDisplay_() { return true; }
 
 template <> void EqDisplay<EQ_NO_DISPLAY>::turnOff_() {}
@@ -28,3 +26,6 @@ template <>
 void EqDisplay<EQ_NO_DISPLAY>::showCalibrating(const uint8_t &percents) {}
 
 #endif // (EQ_DISPLAY_TYPE == EQ_NO_DISPLAY)
+
+// instance of EqDisplay
+template <> EqDisplay<EQ_DISPLAY_TYPE> EqDisplay<EQ_DISPLAY_TYPE>::instance_{};

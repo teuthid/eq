@@ -14,7 +14,7 @@ bool EqFanPwm::init() {
 #ifdef EQ_DEBUG
   Serial.print(__s);
 #endif
-  eqDisplay.showMessage(__s);
+  eqDisplay().showMessage(__s);
   Timer1.initialize(EqConfig::fanPwmCycle);
   if (EqConfig::isFanTachometerEnabled()) {
     EqDPin<EqConfig::fanTachometerPin>::setInputPulledUp();
@@ -85,7 +85,7 @@ bool EqFanPwm::calibrate_() {
   Timer1.pwm(EqConfig::fanPwmPin, 1023);
   maxSpeed_ = 0;
   for (uint8_t __i = 0; __i < 10; __i++) {
-    eqDisplay.showCalibrating((__i + 1) * 10);
+    eqDisplay().showCalibrating((__i + 1) * 10);
     delay(1000);
     readSpeed();
     maxSpeed_ = max(lastSpeed_, maxSpeed_);

@@ -10,8 +10,6 @@
 #include "eq_fan_pwm.h"
 #include "eq_ht_sensor.h"
 
-EqDisplay<EQ_LCD_1602> eqDisplay; // preinstatiate
-
 namespace {
 
 class EqLcd1602 {

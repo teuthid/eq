@@ -20,7 +20,7 @@ template <> bool EqTaskHeartbeat::Callback() {
   else
     eqLedAlert().setState(false);
   eqLedHeartbeat().toggle(true);
-  eqDisplay.show();
+  eqDisplay().show();
   setWdPoint(2);
   EqConfig::decreaseOverdriveTime();
   EqConfig::decreaseBacklightTimeCounter();

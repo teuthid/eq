@@ -5,8 +5,9 @@
 #include "eq_config.h"
 
 template <uint8_t Model> class EqDisplay {
+  friend EqDisplay<EQ_DISPLAY_TYPE> &eqDisplay();
+
 public:
-  EqDisplay() {}
   void show();
   bool init();
 
@@ -15,7 +16,12 @@ public:
   void showAlert(const EqAlertType &alert);
   void showCalibrating(const uint8_t &percents);
 
+  EqDisplay(const EqDisplay &) = delete;
+  EqDisplay(EqDisplay &&) = delete;
+  void operator=(const EqDisplay &) = delete;
+
 private:
+  constexpr EqDisplay() {}
   void backlight_(const bool &on = true);
 
   // needs specialization:
@@ -29,7 +35,12 @@ private:
 
 private:
   bool isOn_ = false;
+  static EqDisplay instance_;
 };
+
+inline EqDisplay<EQ_DISPLAY_TYPE> &eqDisplay() {
+  return EqDisplay<EQ_DISPLAY_TYPE>::instance_;
+}
 
 template <uint8_t Model> bool EqDisplay<Model>::init() {
 #ifdef EQ_DEBUG
@@ -37,8 +48,6 @@ template <uint8_t Model> bool EqDisplay<Model>::init() {
 #endif
   return initDisplay_();
 }
-
-extern EqDisplay<EQ_DISPLAY_TYPE> eqDisplay;
 
 template <uint8_t Model> void EqDisplay<Model>::show() {
   if (EqConfig::backlight()) {

@@ -12,6 +12,7 @@ public:
   bool init();
   void read();
   constexpr uint8_t intensity() const { return intensity_; }
+  
   EqLightSensor(const EqLightSensor &) = delete;
   EqLightSensor(EqLightSensor &&) = delete;
   void operator=(const EqLightSensor &) = delete;
