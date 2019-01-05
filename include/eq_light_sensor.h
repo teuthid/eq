@@ -7,6 +7,7 @@
 
 class EqLightSensor {
   friend EqLightSensor &eqLightSensor();
+
 public:
   bool init();
   void read();
@@ -19,14 +20,15 @@ private:
   enum State : uint8_t { Low, Rising, High };
 
   constexpr EqLightSensor() {}
+  void collect_();
+  void determineState_();
 
   uint8_t intensity_ = 0;
   State state_ = State::Low;
   EqCollector<EqConfig::lightSensorCollectorSize> collector_;
-  void collect_();
-  void determineState_();
+  static EqLightSensor instance_;
 };
 
-EqLightSensor &eqLightSensor();
+inline EqLightSensor &eqLightSensor() { return EqLightSensor::instance_; }
 
 #endif // __EQ_LIGHT_SENSOR_H__
