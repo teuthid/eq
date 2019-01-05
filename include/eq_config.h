@@ -16,6 +16,7 @@
 
 #define EQ_NO_DISPLAY 0
 #define EQ_LCD_1602 1 // with I2C only!
+#define EQ_LCD_2004 2 // with I2C only!
 #define EQ_DISPLAY_TYPE EQ_LCD_1602
 
 enum class EqHtIndexType : uint8_t {
@@ -62,6 +63,7 @@ public:
 
   EqConfig(const EqConfig &) = delete;
   EqConfig(EqConfig &&) = delete;
+  void operator=(const EqConfig &) = delete;
 
   static bool init();
   static void reset(const bool &cleanEeprom = false);
@@ -176,7 +178,6 @@ public:
 
 private:
   EqConfig() {}
-  ~EqConfig() {}
   static EqAlertType alert_;
   static uint16_t overdriveTime_;
   static uint16_t backlightTimeCounter_;
