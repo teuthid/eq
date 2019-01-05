@@ -14,7 +14,7 @@ namespace {
 
 class EqLcd1602 {
 public:
-  EqLcd1602() : lcd_(0x27) {}
+  EqLcd1602() : lcd_(EqConfig::lcdI2CAddress) {}
   bool init();
   void turnOff();
   void turnOn() { lcd_.setBacklight(255); }
