@@ -87,17 +87,17 @@ template <> bool EqTaskFanControl::Callback() {
   if (!EqConfig::anyAlert())
     if (EqConfig::overdriveTime() > 0) {
       setWdPoint(1);
-      eqFanPwm.setOverdrive();
+      eqFanPwm().setOverdrive();
     } else {
       setWdPoint(2);
-      eqFanPwm.setDutyCycle();
+      eqFanPwm().setDutyCycle();
     }
   else {
     setWdPoint(3);
-    eqFanPwm.stop();
+    eqFanPwm().stop();
   }
   // reading fan speed:
-  if (!eqFanPwm.readSpeed()) {
+  if (!eqFanPwm().readSpeed()) {
     setWdPoint(4);
     EqConfig::setAlert(EqAlertType::Fan);
   } else {
@@ -134,7 +134,7 @@ template <> bool EqTaskDebug::Callback() {
   EqConfig::printValue(F("L="), eqLightSensor().intensity());
   EqConfig::printValue(F(" H="), fixed_to_float(eqHtSensor.lastHumidity()));
   EqConfig::printValue(F(" T="), fixed_to_float(eqHtSensor.lastTemperature()));
-  EqConfig::printValue(F(" F="), eqFanPwm.lastSpeed());
+  EqConfig::printValue(F(" F="), eqFanPwm().lastSpeed());
   EqConfig::printValue(F(" I="), fixed_to_float(eqItSensor.lastTemperature()));
   EqConfig::printValue(F(" M="), freeMemory());
   Serial.println();

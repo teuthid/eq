@@ -7,8 +7,6 @@
 #include <TimerOne.h>
 #include <util/atomic.h>
 
-EqFanPwm eqFanPwm;
-
 volatile uint32_t EqFanPwm::counter_ = 0;
 
 bool EqFanPwm::init() {
@@ -98,3 +96,6 @@ bool EqFanPwm::calibrate_() {
   }
   return true;
 }
+
+// instance of EqFanPwm
+EqFanPwm EqFanPwm::instance_{};

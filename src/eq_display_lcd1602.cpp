@@ -144,7 +144,7 @@ void EqLcd1602::showOverdriveTime() {
 }
 
 void EqLcd1602::showFanSpeed(bool detected, uint8_t percents) {
-  uint8_t __s = detected ? eqFanPwm.lastSpeed() : percents;
+  uint8_t __s = detected ? eqFanPwm().lastSpeed() : percents;
   uint8_t __c = min(10, __s / 10);
   if ((__s > 0) && (__c == 0))
     __c = 1;

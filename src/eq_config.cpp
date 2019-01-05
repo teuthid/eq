@@ -36,7 +36,7 @@ bool EqConfig::init() {
     return false;
   eqButtonBacklight().init();
   eqButtonOverdrive().init();
-  if (!eqFanPwm.init())
+  if (!eqFanPwm().init())
     return false;
   return true;
 }

@@ -5,8 +5,9 @@
 #include "eq_config.h"
 
 class EqFanPwm {
+  friend EqFanPwm &eqFanPwm();
+
 public:
-  constexpr EqFanPwm() {}
   bool init();
   void setDutyCycle();
   constexpr uint8_t dutyCycle() const { return dutyCycle_; }
@@ -21,9 +22,12 @@ private:
   uint32_t maxSpeed_ = 0;
   uint32_t timeCount_ = 0;
   static volatile uint32_t counter_;
+  static EqFanPwm instance_;
+  
+  constexpr EqFanPwm() {}
   bool calibrate_();
 };
 
-extern EqFanPwm eqFanPwm;
+inline EqFanPwm &eqFanPwm() { return EqFanPwm::instance_; }
 
 #endif // __EQ_FAN_PWM_H__
