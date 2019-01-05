@@ -26,8 +26,8 @@ bool EqConfig::init() {
   Wire.begin();
   if (!eqDisplay.init())
     return false;
-  EqLedHeartbeat::instance().test(200, 3);
-  EqLedAlert::instance().test(200, 3);
+  eqLedHeartbeat().test(200, 3);
+  eqLedAlert().test(200, 3);
   if (!eqLightSensor().init())
     return false;
   if (!eqItSensor.init())
@@ -56,8 +56,8 @@ void EqConfig::sleep() {
   attachInterrupt(digitalPinToInterrupt(EqConfig::buttonOverdrivePin), []() {},
                   LOW);
   sei();
-  EqLedHeartbeat::instance().setState(false);
-  EqLedAlert::instance().setState(true);
+  eqLedHeartbeat().setState(false);
+  eqLedAlert().setState(true);
   sleep_mode();
   // executed after the interrupt:
   sleep_disable();
@@ -122,7 +122,7 @@ const char *EqConfig::alertAsString(const EqAlertType &alert) {
 }
 
 void EqConfig::showAlert(const EqAlertType &alert) {
-  EqLedAlert::instance().setState(true);
+  eqLedAlert().setState(true);
   if (alert_ != EqAlertType::Display)
     eqDisplay.showAlert(alert);
 #ifdef EQ_DEBUG

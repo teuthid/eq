@@ -5,12 +5,15 @@
 #include "eq_config.h"
 #include "eq_dpin.h"
 
+template <uint8_t LedPin> class EqLed;
+using EqLedAlert = EqLed<EqConfig::ledAlertPin>;
+using EqLedHeartbeat = EqLed<EqConfig::ledHeartbeatPin>;
+
 template <uint8_t LedPin> class EqLed {
+  friend EqLedAlert &eqLedAlert();
+  friend EqLedHeartbeat &eqLedHeartbeat();
+
 public:
-  static EqLed &instance() {
-    static EqLed instance;
-    return instance;
-  }
   void setState(const bool &newState);
   void test(const uint32_t &interval /* in milliseconds */,
             const uint8_t &iterations);
@@ -21,7 +24,11 @@ public:
 
 private:
   EqLed();
+  static EqLed instance_;
 };
+
+inline EqLedAlert &eqLedAlert() { return EqLedAlert::instance_; }
+inline EqLedHeartbeat &eqLedHeartbeat() { return EqLedHeartbeat::instance_; }
 
 template <uint8_t LedPin> EqLed<LedPin>::EqLed() {
   EqDPin<LedPin>::setOutputLow();
@@ -46,8 +53,5 @@ template <uint8_t LedPin> void EqLed<LedPin>::toggle(const bool &force) {
   else
     EqDPin<LedPin>::setOutputValue(LOW);
 }
-
-using EqLedAlert = EqLed<EqConfig::ledAlertPin>;
-using EqLedHeartbeat = EqLed<EqConfig::ledHeartbeatPin>;
 
 #endif // __EQ_LED_H__
