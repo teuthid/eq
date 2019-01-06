@@ -11,10 +11,6 @@ AM232X __htSensor;
 
 EqHtSensor<EQ_AM2320> eqHtSensor;
 
-template <> uint16_t EqHtSensor<EQ_AM2320, false>::samplingPeriod_() const {
-  return 2000;
-}
-
 template <> bool EqHtSensor<EQ_AM2320, false>::initHtSensor_() {
   return (__htSensor.read() == AM232X_OK);
 }

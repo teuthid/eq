@@ -55,6 +55,8 @@ public:
 
   // non-configurable parameters
   static constexpr uint8_t sensorMaxDeviation = 30; // in percents
+  static constexpr uint16_t htSensorSamplingPeriod = 2000; // in milliseconds
+  static constexpr uint16_t itSensorSamplingPeriod = 1000; // in milliseconds
   static constexpr uint8_t itSensorMaxTemperature = 50;
   static constexpr uint8_t itSensorInterval = 1; // in seconds
 #ifdef EQ_DEBUG

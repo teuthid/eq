@@ -52,10 +52,6 @@ EqDallas __itSensor(EqConfig::itSensorPin);
 // specializations for DS18B20 (internal sensor)
 EqHtSensor<EQ_DS18B20, true> eqItSensor;
 
-template <> uint16_t EqHtSensor<EQ_DS18B20, true>::samplingPeriod_() const {
-  return 1000;
-}
-
 template <> bool EqHtSensor<EQ_DS18B20, true>::initHtSensor_() {
   return __itSensor.init();
 }

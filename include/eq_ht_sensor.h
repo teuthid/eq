@@ -8,7 +8,7 @@
 
 template <uint8_t Model, bool IsInternal = false> class EqHtSensor {
 public:
-  EqHtSensor(const uint8_t &sensorPin = EqConfig::htSensorPin) {}
+  constexpr EqHtSensor() {}
 
   static constexpr bool HumidityOn = !(IsInternal || (Model == EQ_DS18B20));
 
@@ -42,7 +42,6 @@ private:
   EqCollector<EqConfig::htSensorCollectorSize> temperatureCollector_;
 
   // needs specializations:
-  uint16_t samplingPeriod_() const; // in milliseconds
   bool initHtSensor_();
   void readHTSensor_(fixed_t &humidity, fixed_t &temperature);
 
@@ -81,7 +80,8 @@ bool EqHtSensor<Model, IsInternal>::init() {
   for (uint8_t __i = 0; __i < EqConfig::htSensorCollectorSize; __i++) {
     if (read())
       __c++;
-    delay(samplingPeriod_());
+    delay(IsInternal ? EqConfig::itSensorSamplingPeriod
+                     : EqConfig::htSensorSamplingPeriod);
   }
   if (__c == 0) {
     setAlert();
