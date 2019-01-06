@@ -54,7 +54,7 @@ public:
   static constexpr uint8_t itSensorPin = A2;
 
   // non-configurable parameters
-  static constexpr uint8_t sensorMaxDeviation = 30; // in percents
+  static constexpr uint8_t sensorMaxDeviation = 30;        // in percents
   static constexpr uint16_t htSensorSamplingPeriod = 2000; // in milliseconds
   static constexpr uint16_t itSensorSamplingPeriod = 1000; // in milliseconds
   static constexpr uint8_t itSensorMaxTemperature = 50;
@@ -107,7 +107,8 @@ public:
   // HT sensor
   static constexpr uint8_t htSensorCollectorSize = 5;
   static constexpr uint8_t htSensorIntervalDefault = 3; // in seconds
-  static constexpr uint8_t htSensorIntervalMin = htSensorSamplingPeriod / 1000;
+  static constexpr uint8_t htSensorIntervalMin =
+      max(1, htSensorSamplingPeriod / 1000);
   static constexpr uint8_t htSensorIntervalMax = 60;
   static constexpr uint8_t htSensorHumidityThresholdDefault = 45; // in percents
   static constexpr uint8_t htSensorHumidityThresholdMin = 20;
