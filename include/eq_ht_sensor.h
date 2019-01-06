@@ -45,7 +45,7 @@ private:
   bool initHtSensor_();
   void readHTSensor_(fixed_t &humidity, fixed_t &temperature);
 
-  void setAlert() {
+  void setAlert_() const {
     EqConfig::setAlert(IsInternal ? EqAlertType::ItSensor
                                   : (HumidityOn ? EqAlertType::HtSensor
                                                 : EqAlertType::TempSensor));
@@ -67,7 +67,7 @@ bool EqHtSensor<Model, IsInternal>::init() {
 #endif
   eqDisplay().showMessage(__s);
   if (!initHtSensor_()) {
-    setAlert();
+    setAlert_();
     return false;
   }
   if (HumidityOn)
@@ -84,7 +84,7 @@ bool EqHtSensor<Model, IsInternal>::init() {
                      : EqConfig::htSensorSamplingPeriod);
   }
   if (__c == 0) {
-    setAlert();
+    setAlert_();
     return false;
   }
   return true;
