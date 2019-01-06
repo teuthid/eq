@@ -9,8 +9,6 @@ namespace {
 AM232X __htSensor;
 }
 
-EqHtSensor<EQ_AM2320> eqHtSensor;
-
 template <> bool EqHtSensor<EQ_AM2320, false>::initHtSensor_() {
   return (__htSensor.read() == AM232X_OK);
 }

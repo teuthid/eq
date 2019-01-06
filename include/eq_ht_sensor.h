@@ -6,11 +6,19 @@
 #include "eq_config.h"
 #include "eq_display.h"
 
-template <uint8_t Model, bool IsInternal = false> class EqHtSensor {
-public:
-  constexpr EqHtSensor() {}
+template <uint8_t Model, bool IsInternal> class EqHtSensor;
+using EqItSensor = EqHtSensor<EQ_DS18B20, true>;
 
+template <uint8_t Model, bool IsInternal = false> class EqHtSensor {
+  friend EqHtSensor<EQ_HT_SENSOR_TYPE> &eqHtSensor();
+  friend EqItSensor &eqItSensor();
+
+public:
   static constexpr bool HumidityOn = !(IsInternal || (Model == EQ_DS18B20));
+
+  EqHtSensor(const EqHtSensor &) = delete;
+  EqHtSensor(EqHtSensor &&) = delete;
+  void operator=(const EqHtSensor &) = delete;
 
   bool init();
   bool read();
@@ -40,6 +48,9 @@ private:
   EqCollector<(HumidityOn ? EqConfig::htSensorCollectorSize : 1)>
       humidityCollector_;
   EqCollector<EqConfig::htSensorCollectorSize> temperatureCollector_;
+  static EqHtSensor instance_;
+
+  constexpr EqHtSensor() {}
 
   // needs specializations:
   bool initHtSensor_();
@@ -54,6 +65,11 @@ private:
   int8_t indexH_() const;
   int8_t indexT_() const;
 };
+
+inline EqHtSensor<EQ_HT_SENSOR_TYPE> &eqHtSensor() {
+  return EqHtSensor<EQ_HT_SENSOR_TYPE>::instance_;
+}
+inline EqItSensor &eqItSensor() { return EqItSensor::instance_; }
 
 template <uint8_t Model, bool IsInternal>
 bool EqHtSensor<Model, IsInternal>::init() {
@@ -145,9 +161,6 @@ uint8_t EqHtSensor<Model, IsInternal>::index() const {
     return constrain(__h + __t, 0, 100);
   }
 }
-
-extern EqHtSensor<EQ_HT_SENSOR_TYPE> eqHtSensor;
-extern EqHtSensor<EQ_DS18B20, true> eqItSensor;
 
 /*
   sensor specializations:

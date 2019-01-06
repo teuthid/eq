@@ -36,7 +36,7 @@ bool EqFanPwm::init() {
 }
 
 void EqFanPwm::setDutyCycle() {
-  uint8_t __dc = constrain(eqHtSensor.index(), 0, EqConfig::fanPwmMax());
+  uint8_t __dc = constrain(eqHtSensor().index(), 0, EqConfig::fanPwmMax());
   if (EqConfig::isFanPwmStepModeEnabled())
     __dc = (__dc / 10) * 10 + ((__dc % 10) > 4 ? 10 : 0);
   __dc = (__dc > 0) ? max(__dc, EqConfig::fanPwmMin()) : 0;

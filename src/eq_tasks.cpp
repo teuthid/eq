@@ -35,12 +35,12 @@ EqTaskItSensorControl::EqTask()
 }
 
 template <> bool EqTaskItSensorControl::Callback() {
-  if (!eqItSensor.read())
+  if (!eqItSensor().read())
     EqConfig::setAlert(EqAlertType::ItSensor);
   else {
     setWdPoint(1);
     EqConfig::resetAlert(EqAlertType::ItSensor);
-    if (eqItSensor.temperature() > EqConfig::itSensorMaxTemperature) {
+    if (eqItSensor().temperature() > EqConfig::itSensorMaxTemperature) {
       EqConfig::setAlert(EqAlertType::Overheating);
       EqConfig::registerOverheating();
       setWdPoint(2);
@@ -65,7 +65,7 @@ EqTaskHtSensorControl::EqTask()
 }
 
 template <> bool EqTaskHtSensorControl::Callback() {
-  if (!eqHtSensor.read()) {
+  if (!eqHtSensor().read()) {
     setWdPoint(1);
     EqConfig::setAlert(EqAlertType::HtSensor);
   } else {
@@ -132,10 +132,12 @@ EqTaskDebug::EqTask()
 
 template <> bool EqTaskDebug::Callback() {
   EqConfig::printValue(F("L="), eqLightSensor().intensity());
-  EqConfig::printValue(F(" H="), fixed_to_float(eqHtSensor.lastHumidity()));
-  EqConfig::printValue(F(" T="), fixed_to_float(eqHtSensor.lastTemperature()));
+  EqConfig::printValue(F(" H="), fixed_to_float(eqHtSensor().lastHumidity()));
+  EqConfig::printValue(F(" T="),
+                       fixed_to_float(eqHtSensor().lastTemperature()));
   EqConfig::printValue(F(" F="), eqFanPwm().lastSpeed());
-  EqConfig::printValue(F(" I="), fixed_to_float(eqItSensor.lastTemperature()));
+  EqConfig::printValue(F(" I="),
+                       fixed_to_float(eqItSensor().lastTemperature()));
   EqConfig::printValue(F(" M="), freeMemory());
   Serial.println();
   return true;

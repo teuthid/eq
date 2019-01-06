@@ -100,18 +100,19 @@ void EqLcd::turnOff() {
 }
 
 void EqLcd::showHT() {
-  printValue_(fixed_to_int(eqHtSensor.lastHumidity()), 0);
+  printValue_(fixed_to_int(eqHtSensor().lastHumidity()), 0);
   lcd_.setCursor(6, 0);
   lcd_.print(F("% "));
   lcd_.setCursor(10, 0);
   char __s[5];
-  lcd_.print(dtostrf(fixed_to_float(eqHtSensor.lastTemperature()), 4, 1, __s));
+  lcd_.print(
+      dtostrf(fixed_to_float(eqHtSensor().lastTemperature()), 4, 1, __s));
   lcd_.write(0xDF);
 }
 
 void EqLcd::showTrends() {
-  int8_t __tH = eqHtSensor.trendHumidity();
-  int8_t __tT = eqHtSensor.trendTemperature();
+  int8_t __tH = eqHtSensor().trendHumidity();
+  int8_t __tT = eqHtSensor().trendTemperature();
   lcd_.setCursor(7, 0);
   if (__tH > 0)
     lcd_.write(0x7E);

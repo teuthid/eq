@@ -50,21 +50,13 @@ EqDallas __itSensor(EqConfig::itSensorPin);
 } // namespace
 
 // specializations for DS18B20 (internal sensor)
-EqHtSensor<EQ_DS18B20, true> eqItSensor;
 
-template <> bool EqHtSensor<EQ_DS18B20, true>::initHtSensor_() {
-  return __itSensor.init();
-}
+template <> bool EqItSensor::initHtSensor_() { return __itSensor.init(); }
 
 template <>
-void EqHtSensor<EQ_DS18B20, true>::readHTSensor_(fixed_t &humidity,
-                                                 fixed_t &temperature) {
+void EqItSensor::readHTSensor_(fixed_t &humidity, fixed_t &temperature) {
   temperature = __itSensor.read();
 }
 
 // specializations for DS18B20 (external sensor)
-#if (EQ_HT_SENSOR_TYPE == EQ_DS18B20)
-EqDallas __htSensor(EqConfig::htSensorPin);
-#endif
-
 // TO DO

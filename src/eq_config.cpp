@@ -30,9 +30,9 @@ bool EqConfig::init() {
   eqLedAlert().test(200, 3);
   if (!eqLightSensor().init())
     return false;
-  if (!eqItSensor.init())
+  if (!eqItSensor().init())
     return false;
-  if (!eqHtSensor.init())
+  if (!eqHtSensor().init())
     return false;
   eqButtonBacklight().init();
   eqButtonOverdrive().init();
