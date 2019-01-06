@@ -34,7 +34,7 @@ private:
   static const PROGMEM Bar_ bars_[];
 
   typedef uint8_p Digit_[6];
-  static const PROGMEM Digit_ digits_[]; 
+  static const PROGMEM Digit_ digits_[];
 
   void printDigit_(const uint8_t &digit, const uint8_t &col) {
     lcd_.setCursor(col, 0);
@@ -176,7 +176,7 @@ void EqLcd::showCalibrating(const uint8_t &percents) {
   showFanSpeed(false, percents);
 }
 
-EqLcd __lcd1602;
+EqLcd __lcd;
 
 } // namespace
 
@@ -184,39 +184,38 @@ EqLcd __lcd1602;
   specializations of EqDisplay
 */
 
-template <> bool EqDisplay<EQ_LCD_1602>::initDisplay_() {
-  return __lcd1602.init();
+#if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
+using EqDisplayLcd = EqDisplay<EQ_LCD_1602>;
+#elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
+using EqDisplayLcd = EqDisplay<EQ_LCD_2004>;
+#endif
+
+template <> bool EqDisplayLcd::initDisplay_() { return __lcd.init(); }
+
+template <> void EqDisplayLcd::turnOff_() { __lcd.turnOff(); }
+
+template <> void EqDisplayLcd::turnOn_() { __lcd.turnOn(); }
+
+template <> void EqDisplayLcd::showHT_() { __lcd.showHT(); }
+
+template <> void EqDisplayLcd::showTrends_() { __lcd.showTrends(); }
+
+template <> void EqDisplayLcd::showOverdriveTime_() {
+  __lcd.showOverdriveTime();
 }
 
-template <> void EqDisplay<EQ_LCD_1602>::turnOff_() { __lcd1602.turnOff(); }
+template <> void EqDisplayLcd::showFanSpeed_() { __lcd.showFanSpeed(); }
 
-template <> void EqDisplay<EQ_LCD_1602>::turnOn_() { __lcd1602.turnOn(); }
-
-template <> void EqDisplay<EQ_LCD_1602>::showHT_() { __lcd1602.showHT(); }
-
-template <> void EqDisplay<EQ_LCD_1602>::showTrends_() {
-  __lcd1602.showTrends();
+template <> void EqDisplayLcd::showMessage(const char *message) {
+  __lcd.showMessage(message);
 }
 
-template <> void EqDisplay<EQ_LCD_1602>::showOverdriveTime_() {
-  __lcd1602.showOverdriveTime();
+template <> void EqDisplayLcd::showAlert(const EqAlertType &alert) {
+  __lcd.showAlert(alert);
 }
 
-template <> void EqDisplay<EQ_LCD_1602>::showFanSpeed_() {
-  __lcd1602.showFanSpeed();
-}
-
-template <> void EqDisplay<EQ_LCD_1602>::showMessage(const char *message) {
-  __lcd1602.showMessage(message);
-}
-
-template <> void EqDisplay<EQ_LCD_1602>::showAlert(const EqAlertType &alert) {
-  __lcd1602.showAlert(alert);
-}
-
-template <>
-void EqDisplay<EQ_LCD_1602>::showCalibrating(const uint8_t &percents) {
-  __lcd1602.showCalibrating(percents);
+template <> void EqDisplayLcd::showCalibrating(const uint8_t &percents) {
+  __lcd.showCalibrating(percents);
 }
 
 #endif // (EQ_DISPLAY_TYPE == EQ_LCD_1602) || (EQ_DISPLAY_TYPE == EQ_LCD_2004)
