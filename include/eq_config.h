@@ -175,7 +175,7 @@ public:
   static void decreaseBacklightTimeCounter();
 
   // buttons
-  static constexpr uint8_t buttonReadInterval = 5; // in milliseconds
+  static constexpr uint8_t buttonReadInterval = 10; // in milliseconds
   static constexpr uint32_t buttonDebounceTime = 100;
   static constexpr uint32_t buttonLongPressedTime = 5000;
 
