@@ -1,3 +1,7 @@
+/*
+   EQ - transcendental fan controller ;)
+   Copyright (c) 2017-2018 Mariusz Przygodzki
+*/
 
 #ifndef __EQ_EEPROM_H__
 #define __EQ_EEPROM_H__

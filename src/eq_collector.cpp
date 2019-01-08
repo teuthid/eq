@@ -1,3 +1,7 @@
+/*
+   EQ - transcendental fan controller ;)
+   Copyright (c) 2017-2018 Mariusz Przygodzki
+*/
 
 #include "eq_collector.h"
 
