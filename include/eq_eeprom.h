@@ -1,5 +1,5 @@
 /*
-   EQ - transcendental fan controller ;)
+   eq - transcendental fan controller ;)
    Copyright (c) 2017-2018 Mariusz Przygodzki
 */
 
