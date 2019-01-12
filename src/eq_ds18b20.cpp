@@ -9,7 +9,11 @@
 // Miles Burton <miles@mnetcs.com>,  Tim Newsome <nuisance@casualhacker.net>,
 // Guil Barros <gfbarros@bappos.com>, Rob Tillaart <rob.tillaart@gmail.com>
 
+#ifdef __STM32F1__
+#include <OneWireSTM.h>
+#else
 #include <OneWire.h>
+#endif
 
 #include "eq_fixedpoints.h"
 #include "eq_ht_sensor.h"
@@ -36,17 +40,16 @@ public:
 
   EqDS18B20(const uint8_t &sensorPin) : wire_(sensorPin) {}
   bool begin();
-  bool readTemperature(fixed_t &temperature,
-                       const bool &waitConversion = false);
+  bool readTemperature(fixed_t &temperature, const uint16_t &waitMillis);
   void setResolution(const uint8_t &resolution);
 
 private:
   DeviceAddress deviceAddress_ = {0};
   OneWire wire_;
 
-  void readScratchPad_(ScratchPad &scratchPad, const uint8_t &fields);
+  bool readScratchPad_(ScratchPad &scratchPad, const uint8_t &fields);
   bool isConversionComplete_() { return (wire_.read_bit() == 1); }
-  void requestTemperature_();
+  void requestTemperature_(const uint16_t &waitMillis);
 };
 
 bool EqDS18B20::begin() {
@@ -55,32 +58,29 @@ bool EqDS18B20::begin() {
   return (wire_.crc8(deviceAddress_, 7) == deviceAddress_[7]);
 }
 
-void EqDS18B20::readScratchPad_(ScratchPad &scratchPad, const uint8_t &fields) {
-  wire_.reset();
+bool EqDS18B20::readScratchPad_(ScratchPad &scratchPad, const uint8_t &fields) {
+  if (wire_.reset() == 0)
+    return false;
   wire_.select(deviceAddress_);
   wire_.write(READSCRATCH);
   for (uint8_t i = 0; i < fields; i++) {
     scratchPad[i] = wire_.read();
   }
-  wire_.reset();
+  return (wire_.reset() == 1);
 }
 
-void EqDS18B20::requestTemperature_() {
+void EqDS18B20::requestTemperature_(const uint16_t &waitMillis) {
   wire_.reset();
   wire_.skip();
   wire_.write(STARTCONVO, 0);
 }
 
 bool EqDS18B20::readTemperature(fixed_t &temperature,
-                                const bool &waitConversion) {
-  requestTemperature_();
-  if (waitConversion)
-    while (!isConversionComplete_()) {
-    }
-  else
-    return false;
+                                const uint16_t &waitMillis) {
+  requestTemperature_(waitMillis);
   ScratchPad scratchPad;
-  readScratchPad_(scratchPad, 2);
+  if (!readScratchPad_(scratchPad, 2))
+    return false;
   fixed_t __t =
       ((((int16_t)scratchPad[TEMP_MSB]) << 8) | scratchPad[TEMP_LSB]) * 0.0625;
   if ((__t < -55) || (__t > 125))
@@ -96,7 +96,7 @@ void EqDS18B20::setResolution(const uint8_t &resolution) {
   // two dummy values for LOW & HIGH ALARM
   wire_.write(0);
   wire_.write(100);
-  switch (resolution) {
+  switch (constrain(resolution, 9, 12)) {
   case 12:
     wire_.write(TEMP_12_BIT);
     break;
@@ -122,14 +122,14 @@ template <> bool EqItSensor::initHtSensor_() {
   if (__itSensor.begin()) {
     __itSensor.setResolution(9);
     fixed_t __t;
-    return __itSensor.readTemperature(__t, true); // blocking !!!
+    return __itSensor.readTemperature(__t, 94);
   } else
     return false;
 }
 
 template <>
 void EqItSensor::readHTSensor_(fixed_t &humidity, fixed_t &temperature) {
-  __itSensor.readTemperature(temperature, true); // blocking !!!
+  __itSensor.readTemperature(temperature, 94); // blocking !!!
 }
 
 // specializations for DS18B20 (external sensor)
