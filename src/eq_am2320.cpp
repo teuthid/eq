@@ -19,7 +19,6 @@ public:
   bool readHT(fixed_t &humidity, fixed_t &temperature);
 
 private:
-  static constexpr uint8_t i2cAddress_ = 0x5C;
   uint8_t buffer_[8] = {0};
 
   uint16_t crc16_() const;
@@ -44,12 +43,12 @@ uint16_t EqAM2320::crc16_() const {
 
 bool EqAM2320::readRegister_() {
   // wake up the sensor - see 8.2
-  Wire.beginTransmission(i2cAddress_);
+  Wire.beginTransmission(EqConfig::am2320I2CAddress);
   Wire.endTransmission();
   delayMicroseconds(800);
 
   // request the data
-  Wire.beginTransmission(i2cAddress_);
+  Wire.beginTransmission(EqConfig::am2320I2CAddress);
   Wire.write(0x03);
   Wire.write(0x00);
   Wire.write(4);
@@ -58,7 +57,7 @@ bool EqAM2320::readRegister_() {
   delayMicroseconds(1500);
 
   // request 4 extra, 2 for cmd + 2 for CRC
-  if (Wire.requestFrom(i2cAddress_, (uint8_t)8) != 8)
+  if (Wire.requestFrom(EqConfig::am2320I2CAddress, (uint8_t)8) != 8)
     return false;
   for (uint8_t __i = 0; __i < 8; __i++) {
     buffer_[__i] = Wire.read();

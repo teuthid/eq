@@ -50,6 +50,7 @@ public:
   static constexpr uint8_t lcdI2CAddress = 0x27;
   static constexpr uint8_t lightSensorPin = A0;
   static constexpr uint8_t htSensorPin = 8; // if I2C is not used
+  static constexpr uint8_t am2320I2CAddress = 0x5C;
   static constexpr uint8_t buttonOverdrivePin = 2;
   static constexpr uint8_t buttonBacklightPin = 5;
   static constexpr uint8_t fanPwmPin = 9;
