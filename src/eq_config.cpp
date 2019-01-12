@@ -27,7 +27,7 @@ bool EqConfig::init() {
   cancelOverheating();
   EqDPin<fanTachometerControlPin>::setInputPulledUp();
   backlightTimeCounter_ = backlightTime();
-  Wire.begin();
+  Wire.begin(); // TO FIX: for ESP32
   if (!eqDisplay().init())
     return false;
   eqLedHeartbeat().test(200, 3);
@@ -133,6 +133,7 @@ void EqConfig::showAlert(const EqAlertType &alert) {
   Serial.println();
   Serial.print(F("ALERT: "));
   Serial.println(EqConfig::alertAsString(alert));
+  Serial.flush();
 #endif
 }
 

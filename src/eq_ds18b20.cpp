@@ -15,7 +15,6 @@
 #include <OneWire.h>
 #endif
 
-#include "eq_fixedpoints.h"
 #include "eq_ht_sensor.h"
 
 // OneWire commands
@@ -64,8 +63,8 @@ bool EqDS18B20::readScratchPad_(ScratchPad &scratchPad, const uint8_t &fields) {
     return false;
   wire_.select(deviceAddress_);
   wire_.write(READSCRATCH);
-  for (uint8_t i = 0; i < fields; i++) {
-    scratchPad[i] = wire_.read();
+  for (uint8_t __i = 0; __i < fields; __i++) {
+    scratchPad[__i] = wire_.read();
   }
   return (wire_.reset() == 1);
 }
