@@ -48,8 +48,8 @@ bool EqConfig::init() {
 void EqConfig::reset(const bool &cleanEeprom) {
   EqEeprom::init(cleanEeprom);
   wdt_enable(WDTO_15MS);
-  while (true) {
-  }
+  while (true)
+    ;
 }
 
 void EqConfig::sleep() {

@@ -40,16 +40,17 @@ public:
 
   EqDS18B20(const uint8_t &sensorPin) : wire_(sensorPin) {}
   bool begin();
-  bool readTemperature(fixed_t &temperature, const uint16_t &waitMillis);
+  bool readTemperature(fixed_t &temperature);
   void setResolution(const uint8_t &resolution);
 
 private:
   DeviceAddress deviceAddress_ = {0};
   OneWire wire_;
+  uint16_t waitMillis_ = 0;
 
   bool readScratchPad_(ScratchPad &scratchPad, const uint8_t &fields);
   bool isConversionComplete_() { return (wire_.read_bit() == 1); }
-  void requestTemperature_(const uint16_t &waitMillis);
+  void requestTemperature_();
 };
 
 bool EqDS18B20::begin() {
@@ -69,20 +70,23 @@ bool EqDS18B20::readScratchPad_(ScratchPad &scratchPad, const uint8_t &fields) {
   return (wire_.reset() == 1);
 }
 
-void EqDS18B20::requestTemperature_(const uint16_t &waitMillis) {
+void EqDS18B20::requestTemperature_() {
   wire_.reset();
   wire_.skip();
   wire_.write(STARTCONVO, 0);
+  uint16_t __start = millis();
+  while (!isConversionComplete_() && (millis() - waitMillis_ < __start))
+    yield();
 }
 
-bool EqDS18B20::readTemperature(fixed_t &temperature,
-                                const uint16_t &waitMillis) {
-  requestTemperature_(waitMillis);
+bool EqDS18B20::readTemperature(fixed_t &temperature) {
+  requestTemperature_();
   ScratchPad scratchPad;
   if (!readScratchPad_(scratchPad, 2))
     return false;
-  fixed_t __t =
-      ((((int16_t)scratchPad[TEMP_MSB]) << 8) | scratchPad[TEMP_LSB]) * 0.0625;
+  fixed_t __t = ((((int16_t)scratchPad[TEMP_MSB]) << 11) |
+                 (((int16_t)scratchPad[TEMP_LSB]) << 3)) *
+                0.0078125;
   if ((__t < -55) || (__t > 125))
     return false;
   temperature = __t;
@@ -99,16 +103,20 @@ void EqDS18B20::setResolution(const uint8_t &resolution) {
   switch (constrain(resolution, 9, 12)) {
   case 12:
     wire_.write(TEMP_12_BIT);
+    waitMillis_ = 750;
     break;
   case 11:
     wire_.write(TEMP_11_BIT);
+    waitMillis_ = 375;
     break;
   case 10:
     wire_.write(TEMP_10_BIT);
+    waitMillis_ = 188;
     break;
   case 9:
   default:
     wire_.write(TEMP_9_BIT);
+    waitMillis_ = 94;
     break;
   }
   wire_.reset();
@@ -122,14 +130,14 @@ template <> bool EqItSensor::initHtSensor_() {
   if (__itSensor.begin()) {
     __itSensor.setResolution(9);
     fixed_t __t;
-    return __itSensor.readTemperature(__t, 94);
+    return __itSensor.readTemperature(__t);
   } else
     return false;
 }
 
 template <>
 void EqItSensor::readHTSensor_(fixed_t &humidity, fixed_t &temperature) {
-  __itSensor.readTemperature(temperature, 94); // blocking !!!
+  __itSensor.readTemperature(temperature);
 }
 
 // specializations for DS18B20 (external sensor)
