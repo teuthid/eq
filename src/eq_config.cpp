@@ -30,8 +30,11 @@ bool EqConfig::init() {
   Wire.begin(); // TO FIX: for ESP32
   if (!eqDisplay().init())
     return false;
-  eqLedHeartbeat().test(200, 3);
-  eqLedAlert().test(200, 3);
+  eqLedHeartbeat().test();
+  eqLedAlert().test();
+#if (EQ_LED_STATUS_ENABLED)
+  eqLedStatus().test();
+#endif
   if (!eqLightSensor().init())
     return false;
   if (!eqItSensor().init())

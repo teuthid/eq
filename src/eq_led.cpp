@@ -7,3 +7,6 @@
 
 template <> EqLedAlert EqLedAlert::instance_{};
 template <> EqLedHeartbeat EqLedHeartbeat::instance_{};
+#if (EQ_LED_STATUS_ENABLED)
+template <> EqLedStatus EqLedStatus::instance_{};
+#endif

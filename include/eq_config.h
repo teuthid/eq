@@ -10,6 +10,8 @@
 
 #define EQ_DEBUG
 
+#define EQ_LED_STATUS_ENABLED true
+
 #define EQ_DS18B20 0
 #define EQ_DHT11 1
 #define EQ_DHT21 2 // AM2301
@@ -47,6 +49,7 @@ public:
   // hardware configuration
   static constexpr uint8_t ledHeartbeatPin = 13;
   static constexpr uint8_t ledAlertPin = 4;
+  static constexpr uint8_t ledStatusPin = A3;
   static constexpr uint8_t lcdI2CAddress = 0x27;
   static constexpr uint8_t lightSensorPin = A0;
   static constexpr uint8_t htSensorPin = 8; // if I2C is not used
