@@ -65,6 +65,9 @@ void EqConfig::sleep() {
   sei();
   eqLedHeartbeat().setState(false);
   eqLedAlert().setState(true);
+#if (EQ_LED_STATUS_ENABLED)
+  eqLedStatus().setState(false);
+#endif
   sleep_mode();
   // executed after the interrupt:
   sleep_disable();
