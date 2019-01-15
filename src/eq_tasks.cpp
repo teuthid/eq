@@ -78,7 +78,9 @@ template <> bool EqTaskHtSensorControl::Callback() {
   } else {
     setWdPoint(2);
     EqConfig::resetAlert(EqAlertType::HtSensor);
+#if (EQ_LED_STATUS_ENABLED)
     EqConfig::setLedStatus();
+#endif
   }
   return true;
 }
