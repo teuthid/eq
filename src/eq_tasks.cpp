@@ -11,6 +11,7 @@
 #include "eq_led.h"
 #include "eq_light_sensor.h"
 
+// heartbeat
 template <>
 EqTaskHeartbeat::EqTask() : Task(TASK_SECOND, TASK_FOREVER, nullptr, false) {
   setId(static_cast<unsigned int>(EqTaskId::Heartbeat));
@@ -31,6 +32,7 @@ template <> bool EqTaskHeartbeat::Callback() {
   return true;
 }
 
+// IT sensor control
 template <>
 EqTaskItSensorControl::EqTask()
     : Task(EqConfig::itSensorInterval * TASK_SECOND, TASK_FOREVER, nullptr,
@@ -61,6 +63,7 @@ template <> bool EqTaskItSensorControl::Callback() {
   return true;
 }
 
+// HT sensor control
 template <>
 EqTaskHtSensorControl::EqTask()
     : Task(EqConfig::htSensorInterval() * TASK_SECOND, TASK_FOREVER, nullptr,
@@ -75,10 +78,34 @@ template <> bool EqTaskHtSensorControl::Callback() {
   } else {
     setWdPoint(2);
     EqConfig::resetAlert(EqAlertType::HtSensor);
+    // setting LED Status
+    bool __s = false;
+    switch (EqConfig::ledStatusMode) {
+    case EqLedStatusMode::LowTemperature:
+      __s = (eqHtSensor().lastTemperature() <
+             EqConfig::htSensorTemperatureThreshold());
+      break;
+    case EqLedStatusMode::HighTemperatue:
+      __s = (eqHtSensor().lastTemperature() >
+             EqConfig::htSensorTemperatureThreshold());
+      break;
+    case EqLedStatusMode::LowHumidity:
+      __s =
+          (eqHtSensor().lastHumidity() < EqConfig::htSensorHumidityThreshold());
+      break;
+    case EqLedStatusMode::HighHumidity:
+      __s =
+          (eqHtSensor().lastHumidity() > EqConfig::htSensorHumidityThreshold());
+      break;
+    default:
+      break;
+    }
+    eqLedStatus().setState(__s);
   }
   return true;
 }
 
+// fan control
 template <>
 EqTaskFanControl::EqTask()
     : Task(EqConfig::fanPwmInterval() * TASK_SECOND, TASK_FOREVER, nullptr,
@@ -111,6 +138,7 @@ template <> bool EqTaskFanControl::Callback() {
   return true;
 }
 
+// buttons control
 template <>
 EqTaskButtonControl::EqTask()
     : Task(EqConfig::buttonReadInterval * TASK_MILLISECOND, TASK_FOREVER,
@@ -125,6 +153,7 @@ template <> bool EqTaskButtonControl::Callback() {
   return true;
 }
 
+// debugging
 #ifdef EQ_DEBUG
 #include "MemoryFree.h"
 template <>
