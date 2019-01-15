@@ -78,29 +78,7 @@ template <> bool EqTaskHtSensorControl::Callback() {
   } else {
     setWdPoint(2);
     EqConfig::resetAlert(EqAlertType::HtSensor);
-    // setting LED Status
-    bool __s = false;
-    switch (EqConfig::ledStatusMode) {
-    case EqLedStatusMode::LowTemperature:
-      __s = (eqHtSensor().lastTemperature() <
-             EqConfig::htSensorTemperatureThreshold());
-      break;
-    case EqLedStatusMode::HighTemperatue:
-      __s = (eqHtSensor().lastTemperature() >
-             EqConfig::htSensorTemperatureThreshold());
-      break;
-    case EqLedStatusMode::LowHumidity:
-      __s =
-          (eqHtSensor().lastHumidity() < EqConfig::htSensorHumidityThreshold());
-      break;
-    case EqLedStatusMode::HighHumidity:
-      __s =
-          (eqHtSensor().lastHumidity() > EqConfig::htSensorHumidityThreshold());
-      break;
-    default:
-      break;
-    }
-    eqLedStatus().setState(__s);
+    EqConfig::setLedStatus();
   }
   return true;
 }

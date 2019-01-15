@@ -106,6 +106,9 @@ public:
   static const char *alertAsString(const EqAlertType &alert);
   static void showAlert(const EqAlertType &alert);
 
+  // LED status
+  static void setLedStatus();
+
   // overheating
   static constexpr uint8_t maxCountOverheating = 3;
   static bool overheating();

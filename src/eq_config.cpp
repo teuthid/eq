@@ -143,6 +143,29 @@ void EqConfig::showAlert(const EqAlertType &alert) {
 #endif
 }
 
+void EqConfig::setLedStatus() {
+  bool __s = false;
+  switch (EqConfig::ledStatusMode) {
+  case EqLedStatusMode::LowTemperature:
+    __s = (eqHtSensor().lastTemperature() <
+           EqConfig::htSensorTemperatureThreshold());
+    break;
+  case EqLedStatusMode::HighTemperatue:
+    __s = (eqHtSensor().lastTemperature() >
+           EqConfig::htSensorTemperatureThreshold());
+    break;
+  case EqLedStatusMode::LowHumidity:
+    __s = (eqHtSensor().lastHumidity() < EqConfig::htSensorHumidityThreshold());
+    break;
+  case EqLedStatusMode::HighHumidity:
+    __s = (eqHtSensor().lastHumidity() > EqConfig::htSensorHumidityThreshold());
+    break;
+  default:
+    break;
+  }
+  eqLedStatus().setState(__s);
+}
+
 bool EqConfig::overheating() {
   return (EqEeprom::readValue<uint8_t>(EqEeprom::OverheatingCounter, 0) >
           maxCountOverheating);
