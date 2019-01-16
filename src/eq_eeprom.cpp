@@ -22,6 +22,7 @@ const PROGMEM uint8_p EqEeprom::paramSizes_[] = {
     2, // AlertOnZeroSpeed
     3, // BacklighTime
     2, // OverheatingCounter
+    2, // LedStatusMode
 };
 
 void EqEeprom::init(const bool &reset) {

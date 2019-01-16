@@ -13,7 +13,7 @@
 #define EQ_LED_STATUS_ENABLED true
 
 enum class EqLedStatusMode : uint8_t {
-  LowTemperature = 0,
+  LowTemperature = 0, // default
   HighTemperatue = 1,
   LowHumidity = 2,
   HighHumidity = 3
@@ -56,9 +56,7 @@ public:
   // hardware configuration
   static constexpr uint8_t ledHeartbeatPin = 13;
   static constexpr uint8_t ledAlertPin = 4;
-  static constexpr uint8_t ledStatusPin = A3;
-  static constexpr EqLedStatusMode ledStatusMode =
-      EqLedStatusMode::LowTemperature;
+  static constexpr uint8_t ledStatusPin = A3; // optional
   static constexpr uint8_t lcdI2CAddress = 0x27;
   static constexpr uint8_t lightSensorPin = A0;
   static constexpr uint8_t htSensorPin = 8; // if I2C is not used
@@ -107,6 +105,10 @@ public:
   static void showAlert(const EqAlertType &alert);
 
   // LED status
+  static constexpr EqLedStatusMode ledStatusModeDefault =
+      EqLedStatusMode::LowTemperature;
+  static EqLedStatusMode ledStatusMode();
+  static void setLedStatusMode(const EqLedStatusMode& mode);
   static void setLedStatus();
 
   // overheating

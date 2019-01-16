@@ -35,7 +35,8 @@ public:
     FanPwmStepMode = 10,
     AlertOnZeroSpeed = 11,
     BacklighTime = 12,
-    OverheatingCounter = 13
+    OverheatingCounter = 13,
+    LedStatusMode = 14
   };
 
   template <typename T>
