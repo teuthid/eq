@@ -10,8 +10,8 @@
 // backlight on/off & reset (long press)
 template <>
 EqButtonBacklight::EqButton()
-    : button_(EqConfig::buttonBacklightPin, EqConfig::buttonDebounceTime, false,
-              false) {}
+    : button_(EqConfig::buttonBacklightPin, EqConfig::buttonDebounceTime, true,
+              EqConfig::buttonBacklightInvert) {}
 
 template <> void EqButtonBacklight::read() {
   button_.read();
@@ -26,7 +26,8 @@ template <> void EqButtonBacklight::setOnPressed_() {
 // overdrive & hard reset (long press)
 template <>
 EqButtonOverdrive::EqButton()
-    : button_(EqConfig::buttonOverdrivePin, EqConfig::buttonDebounceTime) {}
+    : button_(EqConfig::buttonOverdrivePin, EqConfig::buttonDebounceTime, true,
+              EqConfig::buttonOverdriveInvert) {}
 
 template <> void EqButtonOverdrive::read() {
   button_.read();

@@ -62,7 +62,9 @@ public:
   static constexpr uint8_t htSensorPin = 8; // if I2C is not used
   static constexpr uint8_t am2320I2CAddress = 0x5C;
   static constexpr uint8_t buttonOverdrivePin = 2;
+  static constexpr bool buttonOverdriveInvert = true;
   static constexpr uint8_t buttonBacklightPin = 5;
+  static constexpr bool buttonBacklightInvert = false; // touch switch
   static constexpr uint8_t fanPwmPin = 9;
   static constexpr uint8_t fanTachometerPin = 3;
   static constexpr uint8_t fanTachometerControlPin = A1;
