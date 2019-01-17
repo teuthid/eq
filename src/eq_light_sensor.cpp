@@ -9,7 +9,7 @@
 
 void EqLightSensor::collect_() {
   if (EqConfig::lightSensorIsAnalog) {
-    int __l = analogRead(EqConfig::lightSensorPin);
+    uint16_t __l = analogRead(EqConfig::lightSensorPin);
     collector_.add(EqConfig::lightSensorInvert ? 1023 - __l : __l);
   } else {
     bool __s = EqConfig::lightSensorInvert
