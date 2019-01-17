@@ -59,6 +59,7 @@ public:
   static constexpr uint8_t ledStatusPin = A3; // optional
   static constexpr uint8_t lcdI2CAddress = 0x27;
   static constexpr uint8_t lightSensorPin = A0;
+  static constexpr bool lightSensorInvert = false;
   static constexpr uint8_t htSensorPin = 8; // if I2C is not used
   static constexpr uint8_t am2320I2CAddress = 0x5C;
   static constexpr uint8_t buttonOverdrivePin = 2;
@@ -110,7 +111,7 @@ public:
   static constexpr EqLedStatusMode ledStatusModeDefault =
       EqLedStatusMode::LowTemperature;
   static EqLedStatusMode ledStatusMode();
-  static void setLedStatusMode(const EqLedStatusMode& mode);
+  static void setLedStatusMode(const EqLedStatusMode &mode);
   static void setLedStatus();
 
   // overheating
