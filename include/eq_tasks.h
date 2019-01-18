@@ -7,6 +7,7 @@
 #define __EQ_TASKS_H__
 
 #include "eq_config.h"
+#include "eq_interrupt_lock.h"
 
 #define _TASK_OO_CALLBACKS
 #define _TASK_PRIORITY
@@ -73,6 +74,7 @@ inline EqTaskDebug &eqTaskDebug() { return EqTaskDebug::instance_; }
 
 template <EqTaskId Id> void EqTask<Id>::setWdPoint(uint8_t point) {
 #ifdef EQ_DEBUG
+  EqInterruptLock __lock;
   setControlPoint(static_cast<unsigned int>(Id) + point);
 #endif
 }

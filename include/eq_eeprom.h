@@ -9,6 +9,8 @@
 #include <EEPROM.h>
 #include <PGMWrap.h>
 
+#include "eq_interrupt_lock.h"
+
 class EqEeprom final {
 public:
   static constexpr uint16_t startAddress = 0x00;
@@ -63,6 +65,7 @@ T EqEeprom::readValue(ParameterId id, const T &defaultValue) {
 template <typename T>
 void EqEeprom::writeValue(ParameterId id, const T &value) {
   uint16_t __address = paramAddress_(id);
+  EqInterruptLock __lock;
   EEPROM.put(__address, value);
   EEPROM.update(__address + paramSizes_[id] - 1, marker_);
 }

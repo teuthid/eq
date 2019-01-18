@@ -5,11 +5,11 @@
 
 #include "eq_fan_pwm.h"
 #include "eq_display.h"
-#include "eq_ht_sensor.h"
 #include "eq_dpin.h"
+#include "eq_ht_sensor.h"
+#include "eq_interrupt_lock.h"
 
 #include <TimerOne.h>
-#include <util/atomic.h>
 
 volatile uint32_t EqFanPwm::counter_ = 0;
 
@@ -24,9 +24,8 @@ bool EqFanPwm::init() {
     EqDPin<EqConfig::fanTachometerPin>::setInputPulledUp();
     attachInterrupt(digitalPinToInterrupt(EqConfig::fanTachometerPin),
                     []() {
-                      ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-                        EqFanPwm::counter_++;
-                      }
+                      EqInterruptLock __lock;
+                      EqFanPwm::counter_++;
                     },
                     RISING);
     EqFanPwm::counter_ = 0;
@@ -62,12 +61,14 @@ void EqFanPwm::stop() {
 
 bool EqFanPwm::readSpeed() {
   if (EqConfig::isFanTachometerEnabled()) {
-    noInterrupts();
-    uint32_t __c = EqFanPwm::counter_;
-    uint32_t __dt = micros() - timeCount_;
-    EqFanPwm::counter_ = 0;
-    timeCount_ = micros();
-    interrupts();
+    uint32_t __c, __dt;
+    {
+      EqInterruptLock __lock;
+      __c = EqFanPwm::counter_;
+      __dt = micros() - timeCount_;
+      EqFanPwm::counter_ = 0;
+      timeCount_ = micros();
+    }
     lastSpeed_ = 1000000 / (__dt / __c);
     if (EqConfig::isAlertOnZeroSpeed() && (dutyCycle_ > 0))
       return (lastSpeed_ > 0);
