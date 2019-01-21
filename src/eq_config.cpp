@@ -27,6 +27,7 @@ bool EqConfig::init() {
   cancelOverheating();
   EqDPin<fanTachometerControlPin>::setInputPulledUp();
   backlightTimeCounter_ = backlightTime();
+  // analogReadResolution(10); // TODO: for non-AVR architecture
   Wire.begin(); // TO FIX: for ESP32
   if (!eqDisplay().init())
     return false;

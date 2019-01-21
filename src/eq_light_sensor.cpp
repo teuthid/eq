@@ -8,10 +8,15 @@
 #include "eq_dpin.h"
 
 void EqLightSensor::collect_() {
-  if (EqConfig::lightSensorIsAnalog)
-    collector_.add(analogRead(EqConfig::lightSensorPin));
-  else
-    collector_.add(EqDPin<EqConfig::lightSensorPin>::isInputHigh() ? 1023 : 0);
+  if (EqConfig::lightSensorIsAnalog) {
+    uint16_t __l = analogRead(EqConfig::lightSensorPin);
+    collector_.add(EqConfig::lightSensorInvert ? 1023 - __l : __l);
+  } else {
+    bool __s = EqConfig::lightSensorInvert
+                   ? EqDPin<EqConfig::lightSensorPin>::isInputLow()
+                   : EqDPin<EqConfig::lightSensorPin>::isInputHigh();
+    collector_.add(__s ? 1023 : 0);
+  }
 }
 
 void EqLightSensor::determineState_() {
