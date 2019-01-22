@@ -1,6 +1,6 @@
 /*
    eq - transcendental fan controller ;)
-   Copyright (c) 2017-2018 Mariusz Przygodzki
+   Copyright (c) 2018-2019 Mariusz Przygodzki
 */
 
 #ifndef __EQ_FAN_PWM_H__
