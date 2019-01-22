@@ -36,8 +36,14 @@ public:
   constexpr fixed_t lastHumidity() const {
     return HumidityOn ? humidityCollector_.last() : 0;
   }
+  constexpr long lastHumidityAsLong() const {
+    return HumidityOn ? humidityCollector_.lastAsLong() : 0;
+  }
   constexpr fixed_t lastTemperature() const {
     return temperatureCollector_.last();
+  }
+  constexpr long lastTemperatureAsLong() const {
+    return temperatureCollector_.lastAsLong();
   }
   constexpr int8_t trendHumidity() const {
     return HumidityOn ? humidityCollector_.trend() : 0;

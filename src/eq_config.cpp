@@ -157,16 +157,18 @@ void EqConfig::setLedStatus() {
   bool __s = false;
   switch (ledStatusMode()) {
   case EqLedStatusMode::LowTemperature:
-    __s = (eqHtSensor().lastTemperature() < htSensorTemperatureThreshold());
+    __s =
+        (eqHtSensor().lastTemperatureAsLong() < htSensorTemperatureThreshold());
     break;
   case EqLedStatusMode::HighTemperatue:
-    __s = (eqHtSensor().lastTemperature() > htSensorTemperatureThreshold());
+    __s =
+        (eqHtSensor().lastTemperatureAsLong() > htSensorTemperatureThreshold());
     break;
   case EqLedStatusMode::LowHumidity:
-    __s = (eqHtSensor().lastHumidity() < htSensorHumidityThreshold());
+    __s = (eqHtSensor().lastHumidityAsLong() < htSensorHumidityThreshold());
     break;
   case EqLedStatusMode::HighHumidity:
-    __s = (eqHtSensor().lastHumidity() > htSensorHumidityThreshold());
+    __s = (eqHtSensor().lastHumidityAsLong() > htSensorHumidityThreshold());
     break;
   default:
     break;

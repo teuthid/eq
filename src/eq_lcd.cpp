@@ -104,7 +104,7 @@ void EqLcd::turnOff() {
 }
 
 void EqLcd::showHT() {
-  printValue_(fixed_to_int(eqHtSensor().lastHumidity()), 0);
+  printValue_(eqHtSensor().lastHumidityAsLong(), 0);
   lcd_.setCursor(6, 0);
   lcd_.print(F("% "));
   lcd_.setCursor(10, 0);
