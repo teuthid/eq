@@ -55,24 +55,26 @@ class EqConfig final {
 public:
   // hardware configuration
   static constexpr uint8_t ledHeartbeatPin = 13;
-  static constexpr bool ledHeartbeatInvert = false;
   static constexpr uint8_t ledAlertPin = 4;
-  static constexpr bool ledAlertInvert = false;
   static constexpr uint8_t ledStatusPin = A3; // optional
-  static constexpr bool ledStatusInvert = false;
-  static constexpr uint8_t lcdI2CAddress = 0x27;
   static constexpr uint8_t lightSensorPin = A0;
-  static constexpr bool lightSensorInvert = false;
   static constexpr uint8_t htSensorPin = 8; // if I2C is not used
-  static constexpr uint8_t am2320I2CAddress = 0x5C;
   static constexpr uint8_t buttonOverdrivePin = 2;
-  static constexpr bool buttonOverdriveInvert = true;
   static constexpr uint8_t buttonBacklightPin = 5;
-  static constexpr bool buttonBacklightInvert = false; // touch switch
   static constexpr uint8_t fanPwmPin = 9;
   static constexpr uint8_t fanTachometerPin = 3;
   static constexpr uint8_t fanTachometerControlPin = A1;
   static constexpr uint8_t itSensorPin = A2;
+
+  static constexpr bool ledHeartbeatInvert = false;
+  static constexpr bool ledAlertInvert = false;
+  static constexpr bool ledStatusInvert = false;
+  static constexpr bool lightSensorInvert = false;
+  static constexpr bool buttonOverdriveInvert = true;
+  static constexpr bool buttonBacklightInvert = false; // touch switch
+
+  static constexpr uint8_t lcdI2CAddress = 0x27;
+  static constexpr uint8_t am2320I2CAddress = 0x5C;
 
   // non-configurable parameters
   static constexpr uint8_t sensorMaxDeviation = 30;        // in percents
