@@ -55,8 +55,11 @@ class EqConfig final {
 public:
   // hardware configuration
   static constexpr uint8_t ledHeartbeatPin = 13;
+  static constexpr bool ledHeartbeatInvert = false;
   static constexpr uint8_t ledAlertPin = 4;
+  static constexpr bool ledAlertInvert = false;
   static constexpr uint8_t ledStatusPin = A3; // optional
+  static constexpr bool ledStatusInvert = false;
   static constexpr uint8_t lcdI2CAddress = 0x27;
   static constexpr uint8_t lightSensorPin = A0;
   static constexpr bool lightSensorInvert = false;

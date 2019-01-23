@@ -9,12 +9,13 @@
 #include "eq_config.h"
 #include "eq_dpin.h"
 
-template <uint8_t LedPin> class EqLed;
-using EqLedAlert = EqLed<EqConfig::ledAlertPin>;
-using EqLedHeartbeat = EqLed<EqConfig::ledHeartbeatPin>;
-using EqLedStatus = EqLed<EqConfig::ledStatusPin>;
+template <uint8_t LedPin, bool Invert> class EqLed;
+using EqLedAlert = EqLed<EqConfig::ledAlertPin, EqConfig::ledAlertInvert>;
+using EqLedHeartbeat =
+    EqLed<EqConfig::ledHeartbeatPin, EqConfig::ledHeartbeatInvert>;
+using EqLedStatus = EqLed<EqConfig::ledStatusPin, EqConfig::ledStatusInvert>;
 
-template <uint8_t LedPin> class EqLed {
+template <uint8_t LedPin, bool Invert> class EqLed {
   friend EqLedAlert &eqLedAlert();
   friend EqLedHeartbeat &eqLedHeartbeat();
   friend EqLedStatus &eqLedStatus();
@@ -39,27 +40,29 @@ inline EqLedAlert &eqLedAlert() { return EqLedAlert::instance_; }
 inline EqLedHeartbeat &eqLedHeartbeat() { return EqLedHeartbeat::instance_; }
 inline EqLedStatus &eqLedStatus() { return EqLedStatus::instance_; }
 
-template <uint8_t LedPin> EqLed<LedPin>::EqLed() {
-  EqDPin<LedPin>::setOutputLow();
+template <uint8_t LedPin, bool Invert> EqLed<LedPin, Invert>::EqLed() {
+  EqDPin<LedPin>::setOutput(Invert);
 }
 
-template <uint8_t LedPin>
-void EqLed<LedPin>::setState(const bool &state) const {
-  EqDPin<LedPin>::setOutputValue(state);
+template <uint8_t LedPin, bool Invert>
+void EqLed<LedPin, Invert>::setState(const bool &state) const {
+  EqDPin<LedPin>::setOutputValue(Invert ? state : !state);
 }
 
-template <uint8_t LedPin> void EqLed<LedPin>::test() const {
+template <uint8_t LedPin, bool Invert>
+void EqLed<LedPin, Invert>::test() const {
   for (uint16_t __i = 0; __i < (2 * testIterations_); __i++) {
     EqDPin<LedPin>::setOutputValueToggle();
     delay(testInterval_);
   }
 }
 
-template <uint8_t LedPin> void EqLed<LedPin>::toggle(const bool &force) const {
+template <uint8_t LedPin, bool Invert>
+void EqLed<LedPin, Invert>::toggle(const bool &force) const {
   if (force || EqConfig::backlight())
     EqDPin<LedPin>::setOutputValueToggle();
   else
-    EqDPin<LedPin>::setOutputValue(LOW);
+    EqDPin<LedPin>::setOutputValue(Invert);
 }
 
 #endif // __EQ_LED_H__
