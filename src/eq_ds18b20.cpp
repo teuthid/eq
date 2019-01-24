@@ -25,6 +25,7 @@
 // Scratchpad locations
 #define TEMP_LSB 0
 #define TEMP_MSB 1
+#define SCRATCHPAD_CRC 8
 
 // Device resolution
 #define TEMP_9_BIT 0x1F  //  9 bit
@@ -40,15 +41,17 @@ public:
   EqDS18B20(const uint8_t &sensorPin) : wire_(sensorPin) {}
   bool begin();
   bool readTemperature(fixed_t &temperature);
-  void setResolution(const uint8_t &resolution);
+  bool setResolution(const uint8_t &resolution);
 
 private:
   DeviceAddress deviceAddress_ = {0};
   OneWire wire_;
   uint16_t waitMillis_ = 0;
 
-  bool readScratchPad_(ScratchPad &scratchPad, const uint8_t &fields);
+  bool isAllZeros_(const ScratchPad &scratchPad) const;
+  bool isConnected_(ScratchPad &scratchPad);
   bool isConversionComplete_() { return (wire_.read_bit() == 1); }
+  bool readScratchPad_(ScratchPad &scratchPad);
   void requestTemperature_();
 };
 
@@ -58,12 +61,29 @@ bool EqDS18B20::begin() {
   return (wire_.crc8(deviceAddress_, 7) == deviceAddress_[7]);
 }
 
-bool EqDS18B20::readScratchPad_(ScratchPad &scratchPad, const uint8_t &fields) {
+bool EqDS18B20::isAllZeros_(const ScratchPad &scratchPad) const {
+  for (uint8_t i = 0; i < sizeof(scratchPad); i++)
+    if (scratchPad[i] != 0)
+      return false;
+  return true;
+}
+
+bool EqDS18B20::isConnected_(ScratchPad &scratchPad) {
+  if (!readScratchPad_(scratchPad))
+    return false;
+  if (isAllZeros_(scratchPad))
+    return false;
+  if (!(wire_.crc8(scratchPad, 8) == scratchPad[SCRATCHPAD_CRC]))
+    return false;
+  return true;
+}
+
+bool EqDS18B20::readScratchPad_(ScratchPad &scratchPad) {
   if (wire_.reset() == 0)
     return false;
   wire_.select(deviceAddress_);
   wire_.write(READSCRATCH);
-  for (uint8_t __i = 0; __i < fields; __i++) {
+  for (uint8_t __i = 0; __i < sizeof(scratchPad); __i++) {
     scratchPad[__i] = wire_.read();
   }
   return (wire_.reset() == 1);
@@ -73,7 +93,7 @@ void EqDS18B20::requestTemperature_() {
   wire_.reset();
   wire_.skip();
   wire_.write(STARTCONVO, 0);
-  uint16_t __start = millis();
+  unsigned long __start = millis();
   while (!isConversionComplete_() && (millis() - waitMillis_ < __start))
     yield();
 }
@@ -81,7 +101,7 @@ void EqDS18B20::requestTemperature_() {
 bool EqDS18B20::readTemperature(fixed_t &temperature) {
   requestTemperature_();
   ScratchPad scratchPad;
-  if (!readScratchPad_(scratchPad, 2))
+  if (!readScratchPad_(scratchPad))
     return false;
   fixed_t __t = ((((int16_t)scratchPad[TEMP_MSB]) << 11) |
                  (((int16_t)scratchPad[TEMP_LSB]) << 3)) *
@@ -92,7 +112,10 @@ bool EqDS18B20::readTemperature(fixed_t &temperature) {
   return true;
 }
 
-void EqDS18B20::setResolution(const uint8_t &resolution) {
+bool EqDS18B20::setResolution(const uint8_t &resolution) {
+  ScratchPad scratchPad;
+  if (!isConnected_(scratchPad))
+    return false;
   wire_.reset();
   wire_.select(deviceAddress_);
   wire_.write(WRITESCRATCH);
@@ -119,6 +142,7 @@ void EqDS18B20::setResolution(const uint8_t &resolution) {
     break;
   }
   wire_.reset();
+  return true;
 }
 
 EqDS18B20 __itSensor(EqConfig::itSensorPin);
@@ -126,12 +150,9 @@ EqDS18B20 __itSensor(EqConfig::itSensorPin);
 // specializations for DS18B20 (internal sensor)
 
 template <> bool EqItSensor::initHtSensor_() {
-  if (__itSensor.begin()) {
-    __itSensor.setResolution(9);
-    fixed_t __t;
-    return __itSensor.readTemperature(__t);
-  } else
-    return false;
+  if (__itSensor.begin())
+    return __itSensor.setResolution(9);
+  return false;
 }
 
 template <>
