@@ -46,7 +46,7 @@ template <uint8_t LedPin, bool Invert> EqLed<LedPin, Invert>::EqLed() {
 
 template <uint8_t LedPin, bool Invert>
 void EqLed<LedPin, Invert>::setState(const bool &state) const {
-  EqDPin<LedPin>::setOutputValue(Invert ? state : !state);
+  EqDPin<LedPin>::setOutputValue(Invert ? !state : state);
 }
 
 template <uint8_t LedPin, bool Invert>

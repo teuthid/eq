@@ -54,6 +54,8 @@ enum class EqAlertType : uint8_t {
 class EqConfig final {
 public:
   // hardware configuration
+
+#ifdef EQ_ARCH_AVR
   static constexpr uint8_t ledHeartbeatPin = 13;
   static constexpr uint8_t ledAlertPin = 4;
   static constexpr uint8_t ledStatusPin = A3; // optional
@@ -65,6 +67,9 @@ public:
   static constexpr uint8_t fanTachometerPin = 3;
   static constexpr uint8_t fanTachometerControlPin = A1;
   static constexpr uint8_t itSensorPin = A2;
+#else
+// TODO: other architectures
+#endif
 
   static constexpr bool ledHeartbeatInvert = false;
   static constexpr bool ledAlertInvert = false;
@@ -73,8 +78,8 @@ public:
   static constexpr bool buttonOverdriveInvert = true;
   static constexpr bool buttonBacklightInvert = false; // touch switch
 
-  static constexpr uint8_t lcdI2CAddress = 0x27;
-  static constexpr uint8_t am2320I2CAddress = 0x5C;
+  static constexpr uint8_t lcdI2CAddress = 0x27;    // EQ_LCD_1602
+  static constexpr uint8_t am2320I2CAddress = 0x5C; // EQ_AM2320
 
   // non-configurable parameters
   static constexpr uint8_t sensorMaxDeviation = 30;        // in percents
