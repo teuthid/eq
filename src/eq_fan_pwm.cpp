@@ -8,6 +8,7 @@
 #include "eq_dpin.h"
 #include "eq_ht_sensor.h"
 #include "eq_interrupt_lock.h"
+#include "eq_timer.h"
 
 #include <TimerOne.h>
 
@@ -19,7 +20,7 @@ bool EqFanPwm::init() {
   Serial.print(__s);
 #endif
   eqDisplay().showMessage(__s);
-  Timer1.initialize(EqConfig::fanPwmCycle);
+  eqTimer().init();
   if (EqConfig::isFanTachometerEnabled()) {
     EqDPin<EqConfig::fanTachometerPin>::setInputPulledUp();
     attachInterrupt(digitalPinToInterrupt(EqConfig::fanTachometerPin),
@@ -45,17 +46,17 @@ void EqFanPwm::setDutyCycle() {
   __dc = (__dc > 0) ? max(__dc, EqConfig::fanPwmMin()) : 0;
   if (__dc != dutyCycle_) {
     dutyCycle_ = __dc;
-    Timer1.pwm(EqConfig::fanPwmPin, map(dutyCycle_, 0, 100, 0, 1023));
+    eqTimer().setPwm(dutyCycle_);
   }
 }
 
 void EqFanPwm::setOverdrive() {
   dutyCycle_ = EqConfig::fanPwmOverdrive();
-  Timer1.pwm(EqConfig::fanPwmPin, map(dutyCycle_, 0, 100, 0, 1023));
+  eqTimer().setPwm(dutyCycle_);
 }
 
 void EqFanPwm::stop() {
-  Timer1.disablePwm(EqConfig::fanPwmPin);
+  eqTimer().setPwm(0);
   dutyCycle_ = 0;
 }
 
@@ -87,7 +88,7 @@ uint8_t EqFanPwm::lastSpeed() const {
 
 bool EqFanPwm::calibrate_() {
   dutyCycle_ = 0xFF;
-  Timer1.pwm(EqConfig::fanPwmPin, 1023);
+  eqTimer().setPwm(100); // max fan speed
   maxSpeed_ = 0;
   for (uint8_t __i = 0; __i < 10; __i++) {
     eqDisplay().showCalibrating((__i + 1) * 10);

@@ -12,6 +12,7 @@
 #include "eq_ht_sensor.h"
 #include "eq_led.h"
 #include "eq_light_sensor.h"
+#include "eq_timer.h"
 
 #include <Wire.h>
 #include <avr/pgmspace.h>
@@ -64,6 +65,7 @@ void EqConfig::sleep() {
   attachInterrupt(digitalPinToInterrupt(EqConfig::buttonOverdrivePin), []() {},
                   LOW);
   sei();
+  eqTimer().setPwm(0);
   eqLedHeartbeat().setState(false);
   eqLedAlert().setState(true);
 #if (EQ_LED_STATUS_ENABLED)
