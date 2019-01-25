@@ -40,6 +40,7 @@ public:
 
   EqDS18B20(const uint8_t &sensorPin) : wire_(sensorPin) {}
   bool begin();
+  bool isConnected();
   bool readTemperature(fixed_t &temperature);
   bool setResolution(const uint8_t &resolution);
 
@@ -78,6 +79,11 @@ bool EqDS18B20::isConnected_(ScratchPad &scratchPad) {
   return true;
 }
 
+bool EqDS18B20::isConnected() {
+  ScratchPad scratchPad;
+  return isConnected_(scratchPad);
+}
+
 bool EqDS18B20::readScratchPad_(ScratchPad &scratchPad) {
   if (wire_.reset() == 0)
     return false;
@@ -101,20 +107,16 @@ void EqDS18B20::requestTemperature_() {
 bool EqDS18B20::readTemperature(fixed_t &temperature) {
   requestTemperature_();
   ScratchPad scratchPad;
-  if (!readScratchPad_(scratchPad))
+  if (!isConnected_(scratchPad))
     return false;
-  fixed_t __t = ((((int16_t)scratchPad[TEMP_MSB]) << 11) |
+  temperature = ((((int16_t)scratchPad[TEMP_MSB]) << 11) |
                  (((int16_t)scratchPad[TEMP_LSB]) << 3)) *
                 0.0078125;
-  if ((__t < -55) || (__t > 125))
-    return false;
-  temperature = __t;
   return true;
 }
 
 bool EqDS18B20::setResolution(const uint8_t &resolution) {
-  ScratchPad scratchPad;
-  if (!isConnected_(scratchPad))
+  if (!isConnected())
     return false;
   wire_.reset();
   wire_.select(deviceAddress_);
@@ -141,8 +143,7 @@ bool EqDS18B20::setResolution(const uint8_t &resolution) {
     waitMillis_ = 94;
     break;
   }
-  wire_.reset();
-  return true;
+  return (wire_.reset() == 1);
 }
 
 EqDS18B20 __itSensor(EqConfig::itSensorPin);
