@@ -204,6 +204,8 @@ public:
   static constexpr uint8_t blowingIntervalDefault = 1; // in hours
   static constexpr uint8_t blowingIntervalMin = 1;
   static constexpr uint8_t blowingIntervalMax = 24;
+  static bool isBlowingEnabled();
+  static void setBlowingEnabled(const bool &enabled = true);
   static uint8_t blowingInterval();
   static void setBlowingInterval(const uint8_t &value);
 

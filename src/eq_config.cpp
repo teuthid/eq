@@ -328,6 +328,15 @@ bool EqConfig::isFanTachometerEnabled() {
   return EqDPin<EqConfig::fanTachometerControlPin>::isInputHigh();
 }
 
+bool EqConfig::isBlowingEnabled() {
+  return EqEeprom::readValue<bool>(EqEeprom::BlowingEnabled,
+                                   blowingEnabledDefault);
+}
+
+void EqConfig::setBlowingEnabled(const bool &enabled) {
+  EqEeprom::writeValue<bool>(EqEeprom::BlowingEnabled, enabled);
+}
+
 uint8_t EqConfig::blowingInterval() {
   return EqEeprom::readValue<uint8_t>(EqEeprom::BlowingInterval,
                                       blowingIntervalDefault);
