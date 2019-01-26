@@ -142,7 +142,9 @@ EqTaskBlowingControl::EqTask()
 }
 
 template <> bool EqTaskBlowingControl::Callback() {
-  // TODO
+  if (EqConfig::isBlowingEnabled())
+    EqConfig::increaseOverdriveTime(EqConfig::overdriveStep());
+  setWdPoint(1);
   return true;
 }
 

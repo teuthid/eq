@@ -36,10 +36,8 @@ template <> void EqButtonOverdrive::read() {
 }
 
 template <> void EqButtonOverdrive::setOnPressed_() {
-  button_.onPressed([]() {
-    if (!EqConfig::anyAlert())
-      EqConfig::increaseOverdriveTime(EqConfig::overdriveStep());
-  });
+  button_.onPressed(
+      []() { EqConfig::increaseOverdriveTime(EqConfig::overdriveStep()); });
 }
 
 // instances of EqButton
