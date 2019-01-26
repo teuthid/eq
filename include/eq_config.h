@@ -199,6 +199,13 @@ public:
   // tachometer
   static bool isFanTachometerEnabled();
 
+  // blowing
+  static constexpr uint8_t blowingIntervalDefault = 1; // in hours
+  static constexpr uint8_t blowingIntervalMin = 1;
+  static constexpr uint8_t blowingIntervalMax = 24;
+  static uint8_t blowingInterval();
+  static void setBlowingInterval(const uint8_t &value);
+
   // display backlight
   static constexpr uint16_t backlightTimeDefault = 60; // in seconds
   static constexpr uint16_t backlightTimeMax = 300;

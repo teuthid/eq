@@ -38,7 +38,8 @@ public:
     AlertOnZeroSpeed = 11,
     BacklighTime = 12,
     OverheatingCounter = 13,
-    LedStatusMode = 14
+    LedStatusMode = 14,
+    BlowingInterval = 15
   };
 
   template <typename T>
