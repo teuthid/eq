@@ -172,7 +172,8 @@ public:
   static uint16_t overdriveTime() { return overdriveTime_; }
   static void setOverdriveTime(const uint16_t &value);
   static void decreaseOverdriveTime(const uint16_t &value = 1);
-  static void increaseOverdriveTime(const uint16_t &value = 1);
+  static void increaseOverdriveTime(const uint16_t &value,
+                                    const bool &backlight = true);
   static uint16_t overdriveStep();
   static void setOverdriveStep(const uint16_t &value);
 

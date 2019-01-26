@@ -256,10 +256,12 @@ void EqConfig::decreaseOverdriveTime(const uint16_t &value) {
   overdriveTime_ = (overdriveTime_ > value) ? (overdriveTime_ - value) : 0;
 }
 
-void EqConfig::increaseOverdriveTime(const uint16_t &value) {
+void EqConfig::increaseOverdriveTime(const uint16_t &value,
+                                     const bool &backlight) {
   if (overdriveTime_ < overdriveMaxTime) {
     overdriveTime_ = min(overdriveTime_ + value, overdriveMaxTime);
-    setBacklight();
+    if (backlight)
+      setBacklight();
   }
 }
 
