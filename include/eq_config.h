@@ -200,6 +200,7 @@ public:
   static bool isFanTachometerEnabled();
 
   // blowing
+  static constexpr bool blowingEnabledDefault = true;
   static constexpr uint8_t blowingIntervalDefault = 1; // in hours
   static constexpr uint8_t blowingIntervalMin = 1;
   static constexpr uint8_t blowingIntervalMax = 24;

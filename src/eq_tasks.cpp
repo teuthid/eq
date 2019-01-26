@@ -142,7 +142,7 @@ EqTaskBlowingControl::EqTask()
 }
 
 template <> bool EqTaskBlowingControl::Callback() {
-  //
+  // TODO
   return true;
 }
 

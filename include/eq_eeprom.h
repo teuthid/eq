@@ -39,7 +39,8 @@ public:
     BacklighTime = 12,
     OverheatingCounter = 13,
     LedStatusMode = 14,
-    BlowingInterval = 15
+    BlowingEnabled = 15,
+    BlowingInterval = 16
   };
 
   template <typename T>
