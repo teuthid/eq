@@ -133,6 +133,19 @@ template <> bool EqTaskButtonControl::Callback() {
   return true;
 }
 
+// blowing control
+template <>
+EqTaskBlowingControl::EqTask()
+    : Task(EqConfig::blowingInterval() * TASK_HOUR, TASK_FOREVER, nullptr,
+           false) {
+  setId(static_cast<unsigned int>(EqTaskId::BlowingControl));
+}
+
+template <> bool EqTaskBlowingControl::Callback() {
+  //
+  return true;
+}
+
 // debugging
 #ifdef EQ_DEBUG
 #include "MemoryFree.h"
@@ -163,6 +176,7 @@ template <> EqTaskItSensorControl EqTaskItSensorControl::instance_{};
 template <> EqTaskHtSensorControl EqTaskHtSensorControl::instance_{};
 template <> EqTaskFanControl EqTaskFanControl::instance_{};
 template <> EqTaskButtonControl EqTaskButtonControl::instance_{};
+template <> EqTaskBlowingControl EqTaskBlowingControl::instance_{};
 #ifdef EQ_DEBUG
 template <> EqTaskDebug EqTaskDebug::instance_{};
 #endif

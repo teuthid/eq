@@ -54,6 +54,9 @@ private:
   static uint16_t paramAddress_(ParameterId id);
 };
 
+// [address] <= value
+// [address + sizeof(value)] <= marker
+
 template <typename T>
 T EqEeprom::readValue(ParameterId id, const T &defaultValue) {
   T __value = defaultValue;
