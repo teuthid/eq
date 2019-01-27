@@ -74,8 +74,8 @@ bool EqFanPwm::readSpeed() {
     if (EqConfig::isAlertOnZeroSpeed() && (dutyCycle_ > 0))
       return (lastSpeed_ > 0);
     return true;
-  } else
-    return true; // fan tachometer is not enabled
+  } else // fan tachometer is not enabled
+    return true; 
 }
 
 uint8_t EqFanPwm::lastSpeed() const {

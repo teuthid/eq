@@ -46,19 +46,19 @@ EqTaskItSensorControl::EqTask()
 template <> bool EqTaskItSensorControl::Callback() {
   if (!eqItSensor().read())
     EqConfig::setAlert(EqAlertType::ItSensor);
-  else {
+  else { // no sensor alert
     setWdPoint(1);
     EqConfig::resetAlert(EqAlertType::ItSensor);
     if (eqItSensor().temperature() > EqConfig::itSensorMaxTemperature) {
       EqConfig::setAlert(EqAlertType::Overheating);
       EqConfig::registerOverheating();
       setWdPoint(2);
-      if (EqConfig::overheating()) {
+      if (EqConfig::overheating()) { // maxCountOverheating reached
         setWdPoint(3);
         Scheduler::currentScheduler().disableAll();
         EqConfig::sleep();
       }
-    } else {
+    } else { // no overheating alert
       setWdPoint(4);
       EqConfig::resetAlert(EqAlertType::Overheating);
     }
@@ -78,7 +78,7 @@ template <> bool EqTaskHtSensorControl::Callback() {
   if (!eqHtSensor().read()) {
     setWdPoint(1);
     EqConfig::setAlert(EqAlertType::HtSensor);
-  } else {
+  } else { // no alert
     setWdPoint(2);
     EqConfig::resetAlert(EqAlertType::HtSensor);
 #if (EQ_LED_STATUS_ENABLED)
@@ -102,11 +102,11 @@ template <> bool EqTaskFanControl::Callback() {
     if (EqConfig::overdriveTime() > 0) {
       setWdPoint(1);
       eqFanPwm().setOverdrive();
-    } else {
+    } else { // no overdrive
       setWdPoint(2);
       eqFanPwm().setDutyCycle();
     }
-  else {
+  else { // alerts detected
     setWdPoint(3);
     eqFanPwm().stop();
   }
@@ -114,7 +114,7 @@ template <> bool EqTaskFanControl::Callback() {
   if (!eqFanPwm().readSpeed()) {
     setWdPoint(4);
     EqConfig::setAlert(EqAlertType::Fan);
-  } else {
+  } else { // zero speed detected
     setWdPoint(5);
     EqConfig::resetAlert(EqAlertType::Fan);
   }
@@ -145,10 +145,12 @@ EqTaskBlowingControl::EqTask()
 }
 
 template <> bool EqTaskBlowingControl::Callback() {
-  if (EqConfig::isBlowingEnabled())
+  if (EqConfig::isBlowingEnabled()) {
     EqConfig::increaseOverdriveTime(EqConfig::overdriveStep(), false);
-  setWdPoint(1);
-  return true;
+    setWdPoint(1);
+    return true;
+  }
+  return false; // non-productive run
 }
 
 // debugging
