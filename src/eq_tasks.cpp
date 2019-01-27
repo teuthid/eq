@@ -20,9 +20,12 @@ EqTaskHeartbeat::EqTask() : Task(TASK_SECOND, TASK_FOREVER, nullptr, false) {
 template <> bool EqTaskHeartbeat::Callback() {
   eqLightSensor().read();
   setWdPoint(1);
-  if (EqConfig::anyAlert())
-    eqLedAlert().toggle(true); // force blinking led
-  else
+  if (EqConfig::anyAlert()) {
+    eqLedAlert().toggle(true); // force blinking ledAlert
+#if (EQ_LED_STATUS_ENABLED)
+    eqLedStatus().setState(false);
+#endif
+  } else // no alerts
     eqLedAlert().setState(false);
   eqLedHeartbeat().toggle(true);
   eqDisplay().show();

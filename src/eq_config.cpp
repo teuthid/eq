@@ -156,26 +156,28 @@ void EqConfig::setLedStatusMode(const EqLedStatusMode &mode) {
 }
 
 void EqConfig::setLedStatus() {
-  bool __s = false;
-  switch (ledStatusMode()) {
-  case EqLedStatusMode::LowTemperature:
-    __s =
-        (eqHtSensor().lastTemperatureAsLong() < htSensorTemperatureThreshold());
-    break;
-  case EqLedStatusMode::HighTemperatue:
-    __s =
-        (eqHtSensor().lastTemperatureAsLong() > htSensorTemperatureThreshold());
-    break;
-  case EqLedStatusMode::LowHumidity:
-    __s = (eqHtSensor().lastHumidityAsLong() < htSensorHumidityThreshold());
-    break;
-  case EqLedStatusMode::HighHumidity:
-    __s = (eqHtSensor().lastHumidityAsLong() > htSensorHumidityThreshold());
-    break;
-  default:
-    break;
+  if (!EqConfig::anyAlert()) {
+    bool __s = false;
+    switch (ledStatusMode()) {
+    case EqLedStatusMode::LowTemperature:
+      __s = (eqHtSensor().lastTemperatureAsLong() <
+             htSensorTemperatureThreshold());
+      break;
+    case EqLedStatusMode::HighTemperatue:
+      __s = (eqHtSensor().lastTemperatureAsLong() >
+             htSensorTemperatureThreshold());
+      break;
+    case EqLedStatusMode::LowHumidity:
+      __s = (eqHtSensor().lastHumidityAsLong() < htSensorHumidityThreshold());
+      break;
+    case EqLedStatusMode::HighHumidity:
+      __s = (eqHtSensor().lastHumidityAsLong() > htSensorHumidityThreshold());
+      break;
+    default:
+      break;
+    }
+    eqLedStatus().setState(__s);
   }
-  eqLedStatus().setState(__s);
 }
 
 bool EqConfig::overheating() {
