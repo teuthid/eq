@@ -260,8 +260,7 @@ void EqConfig::increaseOverdriveTime(const uint16_t &value,
                                      const bool &backlight) {
   if (overdriveTime_ < overdriveMaxTime) {
     overdriveTime_ = min(overdriveTime_ + value, overdriveMaxTime);
-    if (backlight)
-      setBacklight();
+    setBacklight(backlight);
   }
 }
 
