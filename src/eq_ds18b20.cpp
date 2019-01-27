@@ -53,7 +53,7 @@ private:
   bool isConnected_(ScratchPad &scratchPad);
   bool isConversionComplete_() { return (wire_.read_bit() == 1); }
   bool readScratchPad_(ScratchPad &scratchPad);
-  void requestTemperature_();
+  bool requestTemperature_();
 };
 
 bool EqDS18B20::begin() {
@@ -95,17 +95,20 @@ bool EqDS18B20::readScratchPad_(ScratchPad &scratchPad) {
   return (wire_.reset() == 1);
 }
 
-void EqDS18B20::requestTemperature_() {
-  wire_.reset();
+bool EqDS18B20::requestTemperature_() {
+  if (wire_.reset() == 0)
+    return false;
   wire_.skip();
   wire_.write(STARTCONVO, 0);
   unsigned long __start = millis();
   while (!isConversionComplete_() && (millis() - waitMillis_ < __start))
     yield();
+  return true;
 }
 
 bool EqDS18B20::readTemperature(fixed_t &temperature) {
-  requestTemperature_();
+  if (!requestTemperature_())
+    return false;
   ScratchPad scratchPad;
   if (!isConnected_(scratchPad))
     return false;
@@ -116,7 +119,8 @@ bool EqDS18B20::readTemperature(fixed_t &temperature) {
 }
 
 bool EqDS18B20::setResolution(const uint8_t &resolution) {
-  wire_.reset();
+  if (wire_.reset() == 0)
+    return false;
   wire_.select(deviceAddress_);
   wire_.write(WRITESCRATCH);
   // two dummy values for LOW & HIGH ALARM
