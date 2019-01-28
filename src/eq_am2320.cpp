@@ -76,10 +76,10 @@ bool EqAM2320::readHT(fixed_t &humidity, fixed_t &temperature) {
   if (!readRegister_())
     return false;
   if ((buffer_[2] == 0xFF) && (buffer_[3] == 0xFF))
-    return false;
+    return false; // NaN humidity
   humidity = fixed_t(buffer_[2] * 256 + buffer_[3]) / 10;
   if ((buffer_[4] == 0xFF) && (buffer_[5] == 0xFF))
-    return false; // NaN
+    return false; // NaN temperature
   temperature = fixed_t((buffer_[4] & 0x7F) * 256 + buffer_[5]) / 10;
   if (buffer_[4] & 0x80) {
     temperature = -temperature;
