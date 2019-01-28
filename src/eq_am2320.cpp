@@ -16,6 +16,7 @@
 class EqAM2320 {
 public:
   constexpr EqAM2320() {}
+  bool isConnected() { return readRegister_(); }
   bool readHT(fixed_t &humidity, fixed_t &temperature);
 
 private:
@@ -74,8 +75,12 @@ bool EqAM2320::readRegister_() {
 bool EqAM2320::readHT(fixed_t &humidity, fixed_t &temperature) {
   if (!readRegister_())
     return false;
-  humidity = (buffer_[2] * 256 + buffer_[3]) * 0.1;
-  temperature = (buffer_[4] & 0x7F) * 256 + buffer_[5] * 0.1;
+  if ((buffer_[2] == 0xFF) && (buffer_[3] == 0xFF))
+    return false;
+  humidity = fixed_t(buffer_[2] * 256 + buffer_[3]) / 10;
+  if ((buffer_[4] == 0xFF) && (buffer_[5] == 0xFF))
+    return false; // NaN
+  temperature = fixed_t((buffer_[4] & 0x7F) * 256 + buffer_[5]) / 10;
   if (buffer_[4] & 0x80) {
     temperature = -temperature;
   }
@@ -85,8 +90,7 @@ bool EqAM2320::readHT(fixed_t &humidity, fixed_t &temperature) {
 EqAM2320 __htSensor;
 
 template <> bool EqHtSensor<EQ_AM2320, false>::initHtSensor_() {
-  fixed_t __h, __t;
-  return (__htSensor.readHT(__h, __t));
+  return __htSensor.isConnected();
 }
 
 template <>
