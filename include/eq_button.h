@@ -22,13 +22,13 @@ public:
   EqButton(EqButton &&) = delete;
   void operator=(const EqButton &) = delete;
 
-  // needs specialization:
+  // needs specialization
   void init();
   void read();
 
 private:
   EqButton();
-  void setOnPressed_();
+  void setOnPressed_(); // needs specialization
   EasyButton button_;
   static EqButton instance_;
 };

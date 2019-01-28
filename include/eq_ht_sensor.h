@@ -94,7 +94,7 @@ bool EqHtSensor<Model, IsInternal>::init() {
   eqDisplay().showMessage(__s);
   if (!initHtSensor_()) {
     setAlert_();
-    return false;
+    return false; // failed initialization of sensor
   }
   if (HumidityOn)
     humidityCollector_.setAcceptableValueRange(EqConfig::htSensorHumidityMin,
@@ -111,7 +111,7 @@ bool EqHtSensor<Model, IsInternal>::init() {
   }
   if (__c == 0) {
     setAlert_();
-    return false;
+    return false; // problem with reading data from the sensor
   }
   return true;
 }
@@ -128,7 +128,7 @@ bool EqHtSensor<Model, IsInternal>::read() {
   if (!IsInternal)
     __ctrl = __ctrl &&
              (temperatureCollector_.deviation() < EqConfig::sensorMaxDeviation);
-  return __ctrl;
+  return __ctrl; // false if incorrect data reading
 }
 
 template <uint8_t Model, bool IsInternal>

@@ -61,7 +61,7 @@ template <uint8_t LedPin, bool Invert>
 void EqLed<LedPin, Invert>::toggle(const bool &force) const {
   if (force || EqConfig::backlight())
     EqDPin<LedPin>::setOutputValueToggle();
-  else
+  else // led off
     EqDPin<LedPin>::setOutputValue(Invert);
 }
 

@@ -61,11 +61,11 @@ template <uint8_t Model> void EqDisplay<Model>::show() {
         showHT_();
         showTrends_();
         showFanSpeed_();
-      } else
+      } else // show overdrive time
         showOverdriveTime_();
-    else
+    else // show alert
       showAlert(EqConfig::alert());
-  } else
+  } else // turn off display
     backlight_(false);
 }
 
