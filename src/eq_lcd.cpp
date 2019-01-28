@@ -100,7 +100,7 @@ bool EqLcd::init() {
 void EqLcd::turnOff() {
   lcd_.setBacklight(0);
   lcd_.clear();
-  lastSpeedDots_ = 0xFF;
+  lastSpeedDots_ = 0xFF; // clear flag
 }
 
 void EqLcd::showHT() {
@@ -108,9 +108,7 @@ void EqLcd::showHT() {
   lcd_.setCursor(6, 0);
   lcd_.print(F("% "));
   lcd_.setCursor(10, 0);
-  char __s[5];
-  lcd_.print(
-      dtostrf(fixed_to_float(eqHtSensor().lastTemperature()), 4, 1, __s));
+  lcd_.print(fixed_to_float(eqHtSensor().lastTemperature()), 1);
   lcd_.write(0xDF);
 }
 

@@ -32,7 +32,7 @@ bool EqFanPwm::init() {
     EqFanPwm::counter_ = 0;
     timeCount_ = micros();
     return calibrate_();
-  } else {
+  } else { // tachometer is disabled
     delay(1000);                        // just for showing boot message
     EqConfig::increaseOverdriveTime(5); // checking fan without tachometer
     return true;
@@ -74,7 +74,7 @@ bool EqFanPwm::readSpeed() {
     if (EqConfig::isAlertOnZeroSpeed() && (dutyCycle_ > 0))
       return (lastSpeed_ > 0);
     return true;
-  } else // fan tachometer is not enabled
+  } else // tachometer is disabled
     return true; 
 }
 
@@ -82,7 +82,7 @@ uint8_t EqFanPwm::lastSpeed() const {
   if (EqConfig::isFanTachometerEnabled()) {
     uint8_t __s = map(lastSpeed_, 0, maxSpeed_, 0, 100);
     return constrain(__s, 0, 100);
-  } else
+  } else // tachometer is disabled
     return dutyCycle_;
 }
 

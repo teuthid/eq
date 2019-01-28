@@ -11,7 +11,7 @@ void EqLightSensor::collect_() {
   if (EqConfig::lightSensorIsAnalog) {
     uint16_t __l = analogRead(EqConfig::lightSensorPin);
     collector_.add(EqConfig::lightSensorInvert ? 1023 - __l : __l);
-  } else {
+  } else { // digital light sensor
     bool __s = EqConfig::lightSensorInvert
                    ? EqDPin<EqConfig::lightSensorPin>::isInputLow()
                    : EqDPin<EqConfig::lightSensorPin>::isInputHigh();
@@ -47,7 +47,7 @@ bool EqLightSensor::init() {
   }
   if (collector_.deviation() > EqConfig::sensorMaxDeviation) {
     EqConfig::setAlert(EqAlertType::LightSensor);
-    return false;
+    return false; // to much sensor deviation
   }
   return true;
 }
