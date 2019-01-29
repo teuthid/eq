@@ -57,6 +57,7 @@ private:
 };
 
 bool EqDS18B20::begin() {
+  EQ_INTERRUPT_LOCK
   wire_.reset_search();
   wire_.search(deviceAddress_);
   return (wire_.crc8(deviceAddress_, 7) == deviceAddress_[7]);
