@@ -52,7 +52,6 @@ private:
 
   bool isAllZeros_(const ScratchPad &scratchPad) const;
   bool isConnected_(ScratchPad &scratchPad);
-  bool isConversionComplete_() { return (wire_.read_bit() == 1); }
   bool readScratchPad_(ScratchPad &scratchPad);
   bool requestTemperature_();
 };
@@ -104,7 +103,7 @@ bool EqDS18B20::requestTemperature_() {
   wire_.skip();
   wire_.write(STARTCONVO, 0);
   unsigned long __start = millis();
-  while (!isConversionComplete_() && (millis() - waitMillis_ < __start))
+  while (!(wire_.read_bit() == 1) && (millis() - waitMillis_ < __start))
     yield();
   return true;
 }
