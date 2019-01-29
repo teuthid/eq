@@ -25,14 +25,14 @@ bool EqFanPwm::init() {
     EqDPin<EqConfig::fanTachometerPin>::setInputPulledUp();
     attachInterrupt(digitalPinToInterrupt(EqConfig::fanTachometerPin),
                     []() {
-                      EqInterruptLock __lock;
+                      EQ_INTERRUPT_LOCK
                       EqFanPwm::counter_++;
                     },
                     RISING);
     EqFanPwm::counter_ = 0;
     timeCount_ = micros();
     return calibrate_();
-  } else { // tachometer is disabled
+  } else {                              // tachometer is disabled
     delay(1000);                        // just for showing boot message
     EqConfig::increaseOverdriveTime(5); // checking fan without tachometer
     return true;
@@ -64,7 +64,7 @@ bool EqFanPwm::readSpeed() {
   if (EqConfig::isFanTachometerEnabled()) {
     uint32_t __c, __dt;
     {
-      EqInterruptLock __lock;
+      EQ_INTERRUPT_LOCK
       __c = EqFanPwm::counter_;
       __dt = micros() - timeCount_;
       EqFanPwm::counter_ = 0;
@@ -75,7 +75,7 @@ bool EqFanPwm::readSpeed() {
       return (lastSpeed_ > 0);
     return true;
   } else // tachometer is disabled
-    return true; 
+    return true;
 }
 
 uint8_t EqFanPwm::lastSpeed() const {

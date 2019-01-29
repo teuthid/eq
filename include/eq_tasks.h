@@ -80,7 +80,7 @@ inline EqTaskDebug &eqTaskDebug() { return EqTaskDebug::instance_; }
 
 template <EqTaskId Id> void EqTask<Id>::setWdPoint(uint8_t point) {
 #ifdef EQ_DEBUG
-  EqInterruptLock __lock;
+  EQ_INTERRUPT_LOCK
   setControlPoint(static_cast<unsigned int>(Id) + point);
 #endif
 }

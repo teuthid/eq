@@ -31,7 +31,7 @@ void EqEeprom::init(const bool &reset) {
   eeprom_busy_wait();
   uint8_t __value = EEPROM.read(startAddress);
   if (reset || (__value != marker_)) {
-    EqInterruptLock __lock;
+    EQ_INTERRUPT_LOCK
     for (uint16_t __i = startAddress + 1; __i <= endAddress; __i++)
       EEPROM.update(__i, 0);
     EEPROM.update(startAddress, marker_);

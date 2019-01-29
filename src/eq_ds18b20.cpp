@@ -16,6 +16,7 @@
 #endif
 
 #include "eq_ht_sensor.h"
+#include "eq_interrupt_lock.h"
 
 // OneWire commands
 #define STARTCONVO 0x44
@@ -85,6 +86,7 @@ bool EqDS18B20::isConnected() {
 }
 
 bool EqDS18B20::readScratchPad_(ScratchPad &scratchPad) {
+  EQ_INTERRUPT_LOCK
   if (wire_.reset() == 0)
     return false;
   wire_.select(deviceAddress_);
@@ -96,6 +98,7 @@ bool EqDS18B20::readScratchPad_(ScratchPad &scratchPad) {
 }
 
 bool EqDS18B20::requestTemperature_() {
+  EQ_INTERRUPT_LOCK
   if (wire_.reset() == 0)
     return false;
   wire_.skip();
@@ -119,6 +122,7 @@ bool EqDS18B20::readTemperature(fixed_t &temperature) {
 }
 
 bool EqDS18B20::setResolution(const uint8_t &resolution) {
+  EQ_INTERRUPT_LOCK
   if (wire_.reset() == 0)
     return false;
   wire_.select(deviceAddress_);

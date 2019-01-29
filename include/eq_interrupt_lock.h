@@ -28,4 +28,6 @@ private:
 // TODO: other architectures
 #endif
 
+#define EQ_INTERRUPT_LOCK EqInterruptLock __eq_interrupt_lock;
+
 #endif // __EQ_INTERRUPT_LOCK_H__

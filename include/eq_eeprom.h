@@ -70,7 +70,7 @@ T EqEeprom::readValue(ParameterId id, const T &defaultValue) {
 template <typename T>
 void EqEeprom::writeValue(ParameterId id, const T &value) {
   uint16_t __address = paramAddress_(id);
-  EqInterruptLock __lock;
+  EQ_INTERRUPT_LOCK
   EEPROM.put(__address, value);
   EEPROM.update(__address + paramSizes_[id] - 1, marker_);
 }
