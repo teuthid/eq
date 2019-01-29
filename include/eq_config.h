@@ -71,6 +71,8 @@ public:
 // TODO: other architectures
 #endif
 
+  // inverts button logic
+  // if true, low level means pressed else high level means pressed
   static constexpr bool ledHeartbeatInvert = false;
   static constexpr bool ledAlertInvert = false;
   static constexpr bool ledStatusInvert = false;
