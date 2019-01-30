@@ -25,8 +25,15 @@ template <> bool EqTaskHeartbeat::Callback() {
 #if (EQ_LED_STATUS_ENABLED)
     eqLedStatus().setState(false);
 #endif
-  } else // no alerts
+  } else { // no alerts
     eqLedAlert().setState(false);
+#if (EQ_LED_STATUS_ENABLED)
+    if (EqConfig::overdriveTime() > 0)
+      eqLedStatus().toggle(true); // force blinking ledStatus
+    else
+      EqConfig::setLedStatus();
+#endif // EQ_LED_STATUS_ENABLED
+  }
   eqLedHeartbeat().toggle(true);
   eqDisplay().show();
   setWdPoint(2);
@@ -81,9 +88,6 @@ template <> bool EqTaskHtSensorControl::Callback() {
   } else { // no alert
     setWdPoint(2);
     EqConfig::resetAlert(EqAlertType::HtSensor);
-#if (EQ_LED_STATUS_ENABLED)
-    EqConfig::setLedStatus();
-#endif
   }
   return true;
 }
