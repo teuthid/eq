@@ -228,6 +228,20 @@ void EqConfig::setHtSensorHumidityThreshold(const uint8_t &value) {
                                           htSensorHumidityThresholdMax));
 }
 
+fixed_t EqConfig::htSensorHumidityCorrection() {
+  return fixed_t(
+             EqEeprom::readValue<uint8_t>(EqEeprom::HtSensorHumidityCorrection,
+                                          htSensorHumidityCorrectionDefault)) /
+         10;
+}
+
+void EqConfig::setHtSensorHumidityCorrection(const fixed_t &value) {
+  EqEeprom::writeValue<uint8_t>(EqEeprom::HtSensorHumidityCorrection,
+                                constrain(fixed_to_int(value * 10),
+                                          -htSensorHumidityCorrectionMax,
+                                          htSensorHumidityCorrectionMax));
+}
+
 uint8_t EqConfig::htSensorTemperatureThreshold() {
   return EqEeprom::readValue<uint8_t>(EqEeprom::HtSensorTemperatureThreshold,
                                       htSensorTemperatureThresholdDefault);
@@ -238,6 +252,20 @@ void EqConfig::setHtSensorTemperatureThreshold(const uint8_t &value) {
                                 constrain(value,
                                           htSensorTemperatureThresholdMin,
                                           htSensorTemperatureThresholdMax));
+}
+
+fixed_t EqConfig::htSensorTemperatureCorrection() {
+  return fixed_t(EqEeprom::readValue<uint8_t>(
+             EqEeprom::HtSensorTemperatureCorrection,
+             htSensorTemperatureCorrectionDefault)) /
+         10;
+}
+
+void EqConfig::setHtSensorTemperatureCorrection(const fixed_t &value) {
+  EqEeprom::writeValue<uint8_t>(EqEeprom::HtSensorTemperatureCorrection,
+                                constrain(fixed_to_int(value * 10),
+                                          -htSensorTemperatureCorrectionMax,
+                                          htSensorTemperatureCorrectionMax));
 }
 
 EqHtIndexType EqConfig::htIndexType() {

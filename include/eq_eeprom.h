@@ -40,7 +40,9 @@ public:
     OverheatingCounter = 13,
     LedStatusMode = 14,
     BlowingEnabled = 15,
-    BlowingInterval = 16
+    BlowingInterval = 16,
+    HtSensorHumidityCorrection = 17,   // round(hc * 10)
+    HtSensorTemperatureCorrection = 18 // round(tc * 10)
   };
 
   template <typename T>

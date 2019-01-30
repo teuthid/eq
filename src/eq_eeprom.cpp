@@ -25,6 +25,8 @@ const PROGMEM uint8_p EqEeprom::paramSizes_[] = {
     2, // LedStatusMode (uint8_t)
     2, // BlowingEnabled (bool)
     2, // BlowingInterval (uint8_t)
+    2, // HtSensorHumidityCorrection
+    2, // HtSensorTemperatureCorrection
 };
 
 void EqEeprom::init(const bool &reset) {

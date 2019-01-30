@@ -20,6 +20,7 @@ void setup() {
     eqController.addTask(eqTaskHtSensorControl());
     eqController.addTask(eqTaskFanControl());
     eqController.addTask(eqTaskButtonControl());
+    eqController.addTask(eqTaskBlowingControl());
 #ifdef EQ_DEBUG
     eqController.addTask(eqTaskDebug());
 #endif
