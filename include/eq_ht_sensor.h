@@ -120,6 +120,10 @@ template <uint8_t Model, bool IsInternal>
 bool EqHtSensor<Model, IsInternal>::read() {
   fixed_t __h = 0, __t = 0;
   readHTSensor_(__h, __t);
+  if (HumidityOn)
+    __h += EqConfig::htSensorHumidityCorrection();
+  if (!IsInternal)
+    __t += EqConfig::htSensorTemperatureCorrection();
   bool __ctrl = HumidityOn ? humidityCollector_.add(__h) : true;
   __ctrl = __ctrl && temperatureCollector_.add(__t);
   if (HumidityOn)

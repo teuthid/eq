@@ -230,16 +230,16 @@ void EqConfig::setHtSensorHumidityThreshold(const uint8_t &value) {
 
 fixed_t EqConfig::htSensorHumidityCorrection() {
   return fixed_t(
-             EqEeprom::readValue<uint8_t>(EqEeprom::HtSensorHumidityCorrection,
-                                          htSensorHumidityCorrectionDefault)) /
+             EqEeprom::readValue<int8_t>(EqEeprom::HtSensorHumidityCorrection,
+                                         htSensorHumidityCorrectionDefault)) /
          10;
 }
 
 void EqConfig::setHtSensorHumidityCorrection(const fixed_t &value) {
-  EqEeprom::writeValue<uint8_t>(EqEeprom::HtSensorHumidityCorrection,
-                                constrain(fixed_to_int(value * 10),
-                                          -htSensorHumidityCorrectionMax,
-                                          htSensorHumidityCorrectionMax));
+  EqEeprom::writeValue<int8_t>(EqEeprom::HtSensorHumidityCorrection,
+                               constrain(fixed_to_int(value * 10),
+                                         -htSensorHumidityCorrectionMax,
+                                         htSensorHumidityCorrectionMax));
 }
 
 uint8_t EqConfig::htSensorTemperatureThreshold() {
@@ -255,17 +255,17 @@ void EqConfig::setHtSensorTemperatureThreshold(const uint8_t &value) {
 }
 
 fixed_t EqConfig::htSensorTemperatureCorrection() {
-  return fixed_t(EqEeprom::readValue<uint8_t>(
+  return fixed_t(EqEeprom::readValue<int8_t>(
              EqEeprom::HtSensorTemperatureCorrection,
              htSensorTemperatureCorrectionDefault)) /
          10;
 }
 
 void EqConfig::setHtSensorTemperatureCorrection(const fixed_t &value) {
-  EqEeprom::writeValue<uint8_t>(EqEeprom::HtSensorTemperatureCorrection,
-                                constrain(fixed_to_int(value * 10),
-                                          -htSensorTemperatureCorrectionMax,
-                                          htSensorTemperatureCorrectionMax));
+  EqEeprom::writeValue<int8_t>(EqEeprom::HtSensorTemperatureCorrection,
+                               constrain(fixed_to_int(value * 10),
+                                         -htSensorTemperatureCorrectionMax,
+                                         htSensorTemperatureCorrectionMax));
 }
 
 EqHtIndexType EqConfig::htIndexType() {

@@ -154,14 +154,14 @@ public:
   static constexpr uint8_t htSensorHumidityThresholdMax = 80;
   static constexpr uint8_t htSensorHumidityMin = 5;
   static constexpr uint8_t htSensorHumidityMax = 95;
-  static constexpr uint8_t htSensorHumidityCorrectionDefault = 0; // 0.0 %
+  static constexpr int8_t htSensorHumidityCorrectionDefault = 0; // 0.0 %
   static constexpr uint8_t htSensorHumidityCorrectionMax = 50;    // +/- 5.0 %
   static constexpr uint8_t htSensorTemperatureThresholdDefault = 23; // in *C
   static constexpr uint8_t htSensorTemperatureThresholdMin = 15;
   static constexpr uint8_t htSensorTemperatureThresholdMax = 30;
   static constexpr uint8_t htSensorTemperatureMin = 5;
   static constexpr uint8_t htSensorTemperatureMax = itSensorMaxTemperature;
-  static constexpr uint8_t htSensorTemperatureCorrectionDefault = 0; // 0.0 *C
+  static constexpr int8_t htSensorTemperatureCorrectionDefault = 0; // 0.0 *C
   static constexpr uint8_t htSensorTemperatureCorrectionMax = 20; // +/- 2.0 *C
   static uint8_t htSensorInterval();
   static void setHtSensorInterval(const uint8_t &value);
