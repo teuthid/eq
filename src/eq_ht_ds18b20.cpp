@@ -106,7 +106,7 @@ bool EqDS18B20::requestTemperature_() {
   unsigned long __start = millis();
   while (!(wire_.read_bit() == 1) && (millis() - waitMillis_ < __start))
     yield();
-  return true;
+  return (wire_.read_bit() == 1);
 }
 
 bool EqDS18B20::readTemperature(fixed_t &temperature) {
