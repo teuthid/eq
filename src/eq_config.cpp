@@ -35,7 +35,8 @@ bool EqConfig::init() {
   eqLedHeartbeat().test();
   eqLedAlert().test();
 #if (EQ_LED_STATUS_ENABLED)
-  eqLedStatus().test();
+  if (isFanTachometerEnabled())
+    eqLedStatus().test();
 #endif
   if (!eqLightSensor().init())
     return false;
