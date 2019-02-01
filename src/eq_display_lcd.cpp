@@ -87,7 +87,8 @@ bool EqLcd::init() {
   lcd_.noCursor();
   lcd_.noAutoscroll();
   lcd_.setBacklight(255);
-  lcd_.print(F("Booting..."));
+  lcd_.print(F("Booting... "));
+  lcd_.print(EqConfig::readWatchdogPoint());
   uint8_t __bar[8];
   for (uint8_t __i = 0; __i < 8; __i++) {
     for (uint8_t __j = 0; __j < 8; __j++)
