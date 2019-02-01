@@ -23,7 +23,7 @@ uint8_t EqConfig::readWatchdogPoint() {
   return EqEeprom::readValue<uint8_t>(EqEeprom::LastWatchdogPoint, 0);
 }
 
-void EqConfig::saveWatchdogPoint(uint8_t point) {
+void EqConfig::saveWatchdogPoint(const uint8_t &point) {
   EqEeprom::writeValue<uint8_t>(EqEeprom::LastWatchdogPoint, point);
 }
 
@@ -377,7 +377,7 @@ void EqConfig::setBacklighTime(const uint16_t &value) {
       constrain(value, backlightTimeMin, backlightTimeMax));
 }
 
-void EqConfig::setBacklight(bool enabled) {
+void EqConfig::setBacklight(const bool &enabled) {
   backlightTimeCounter_ = enabled ? backlightTime() : 0;
 }
 

@@ -105,8 +105,8 @@ public:
   static void resetWatchdog();
   static void sleep();
 
-  static uint8_t readWatchdogPoint();           // from EEPROM
-  static void saveWatchdogPoint(uint8_t point); // in EEPROM
+  static uint8_t readWatchdogPoint();                  // from EEPROM
+  static void saveWatchdogPoint(const uint8_t &point); // in EEPROM
   static void clearWatchdogPoint() { saveWatchdogPoint(0); }
 
   static bool init();
@@ -238,7 +238,7 @@ public:
   static constexpr uint16_t backlightTimeMin = 5;
   static uint16_t backlightTime();
   static void setBacklighTime(const uint16_t &value);
-  static void setBacklight(bool enabled = true);
+  static void setBacklight(const bool &enabled = true);
   static bool backlight() { return (backlightTimeCounter_ > 0); }
   static void decreaseBacklightTimeCounter();
 
