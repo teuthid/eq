@@ -24,25 +24,26 @@ public:
   static void show();
 
   enum ParameterId : uint8_t {
-    LightSensorThreshold = 0,
-    HtSensorInterval = 1,
-    HtSensorHumidityThreshold = 2,
-    HtSensorTemperatureThreshold = 3,
-    HtIndexType = 4,
-    OverdriveStep = 5,
-    FanPwmInterval = 6,
-    FanPwmMin = 7,
-    FanPwmMax = 8,
-    FanPwmOverdrive = 9,
-    FanPwmStepMode = 10,
-    AlertOnZeroSpeed = 11,
-    BacklighTime = 12,
-    OverheatingCounter = 13,
-    LedStatusMode = 14,
-    BlowingEnabled = 15,
-    BlowingInterval = 16,
-    HtSensorHumidityCorrection = 17,   // round(hc * 10)
-    HtSensorTemperatureCorrection = 18 // round(tc * 10)
+    LastWatchdogPoint = 0,
+    LightSensorThreshold = 1,
+    HtSensorInterval = 2,
+    HtSensorHumidityThreshold = 3,
+    HtSensorTemperatureThreshold = 4,
+    HtSensorHumidityCorrection = 5,   // round(hc * 10)
+    HtSensorTemperatureCorrection = 6, // round(tc * 10)
+    HtIndexType = 7,
+    OverdriveStep = 8,
+    FanPwmInterval = 9,
+    FanPwmMin = 10,
+    FanPwmMax = 11,
+    FanPwmOverdrive = 12,
+    FanPwmStepMode = 13,
+    AlertOnZeroSpeed = 14,
+    BacklighTime = 15,
+    OverheatingCounter = 16,
+    LedStatusMode = 17,
+    BlowingEnabled = 18,
+    BlowingInterval = 19,
   };
 
   template <typename T>

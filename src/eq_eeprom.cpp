@@ -8,10 +8,13 @@
 
 const PROGMEM uint8_p EqEeprom::paramSizes_[] = {
     // including a size of the marker
+    2, // LastWatchdogPoint (uint8_t)
     2, // LightSensorThreshold (uint8_t)
     2, // HtSensorInterval (uint8_t)
     2, // HtSensorHumidityThreshold (uint8_t)
     2, // HtSensorTemperatureThreshold (uint8_t)
+    2, // HtSensorHumidityCorrection (int8_t)
+    2, // HtSensorTemperatureCorrection (int8_t)
     2, // HtIndexType (uint8_t)
     3, // OverdriveStep (uint16_t)
     2, // FanPwmInterval (uint8_t)
@@ -25,8 +28,6 @@ const PROGMEM uint8_p EqEeprom::paramSizes_[] = {
     2, // LedStatusMode (uint8_t)
     2, // BlowingEnabled (bool)
     2, // BlowingInterval (uint8_t)
-    2, // HtSensorHumidityCorrection (int8_t)
-    2, // HtSensorTemperatureCorrection (int8_t)
 };
 
 void EqEeprom::init(const bool &reset) {
