@@ -62,7 +62,7 @@ template <> bool EqTaskItSensorControl::Callback() {
       setWdPoint(2);
       if (EqConfig::overheating()) { // maxCountOverheating reached
         setWdPoint(3);
-        Scheduler::currentScheduler().disableAll();
+        EqConfig::disableAllTasks();
         EqConfig::sleep();
       }
     } else { // no overheating alert

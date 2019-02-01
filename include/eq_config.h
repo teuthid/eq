@@ -99,13 +99,14 @@ public:
   EqConfig(EqConfig &&) = delete;
   void operator=(const EqConfig &) = delete;
 
+  // definitions for different architectures
   static void disableWatchdog();
   static void enableWatchdog();
   static void resetWatchdog();
+  static void sleep();
 
   static bool init();
   static void reset(const bool &cleanEeprom = false);
-  static void sleep();
 
   template <typename T>
   static void printValue(const __FlashStringHelper *description,
@@ -240,7 +241,10 @@ public:
   // buttons
   static constexpr uint8_t buttonReadInterval = 10; // in milliseconds
   static constexpr uint32_t buttonDebounceTime = 100;
-  static constexpr uint32_t buttonLongPressedTime = 5000;
+  static constexpr uint32_t buttonLongPressedTime = 3000;
+
+  // definition in main.cpp
+  static void disableAllTasks();
 
 private:
   EqConfig() {}

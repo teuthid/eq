@@ -22,7 +22,7 @@ void EqConfig::enableWatchdog() {
   wdt_reset();
   // set up WDT interrupt
   WDTCSR = (1 << WDCE) | (1 << WDE);
-  // start watchdog timer with aDelay prescaller
+  // start watchdog timer (delay of 2s)
   WDTCSR = (1 << WDIE) | (1 << WDE) | (WDTO_2S & 0x2F);
   //  WDTCSR = (1<<WDIE)|(WDTO_2S & 0x2F);  // interrupt only without reset
   sei();

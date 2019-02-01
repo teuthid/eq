@@ -9,6 +9,8 @@
 Scheduler eqController;
 Scheduler eqHPController; // high priority scheduler
 
+void EqConfig::disableAllTasks() { eqController.disableAll(); }
+
 void setup() {
   Serial.begin(115200);
 #ifdef EQ_DEBUG
