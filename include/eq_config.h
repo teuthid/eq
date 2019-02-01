@@ -99,9 +99,14 @@ public:
   EqConfig(EqConfig &&) = delete;
   void operator=(const EqConfig &) = delete;
 
+  static void disableWatchdog();
+  static void enableWatchdog();
+  static void resetWatchdog();
+
   static bool init();
   static void reset(const bool &cleanEeprom = false);
   static void sleep();
+
   template <typename T>
   static void printValue(const __FlashStringHelper *description,
                          const T &value) {

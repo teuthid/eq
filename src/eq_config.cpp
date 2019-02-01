@@ -48,39 +48,12 @@ bool EqConfig::init() {
   return true;
 }
 
-#ifdef EQ_ARCH_AVR
-#include <avr/sleep.h>
-#include <avr/wdt.h>
-
 void EqConfig::reset(const bool &cleanEeprom) {
   EqEeprom::init(cleanEeprom);
-  wdt_enable(WDTO_15MS);
-  while (true)
-    ;
+  enableWatchdog();
+  while (true) {
+  }
 }
-
-void EqConfig::sleep() {
-  if (EqConfig::isFanTachometerEnabled())
-    EqFanPwm::stopTachometer();
-  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-  sleep_enable();
-  attachInterrupt(digitalPinToInterrupt(EqConfig::buttonOverdrivePin), []() {},
-                  LOW);
-  sei();
-  eqTimer().setPwm(0);
-  eqLedHeartbeat().setState(false);
-  eqLedAlert().setState(true);
-#if (EQ_LED_STATUS_ENABLED)
-  eqLedStatus().setState(false);
-#endif
-  sleep_mode();
-  // executed after the interrupt:
-  sleep_disable();
-  EqConfig::reset();
-}
-#else
-// TODO: other architectures
-#endif
 
 void EqConfig::show() {
   Serial.println(F("Configuration:"));
