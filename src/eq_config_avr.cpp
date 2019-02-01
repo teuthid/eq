@@ -10,7 +10,6 @@
 #include <avr/sleep.h>
 #include <avr/wdt.h>
 
-#include "eq_config.h"
 #include "eq_fan_pwm.h"
 #include "eq_led.h"
 #include "eq_timer.h"

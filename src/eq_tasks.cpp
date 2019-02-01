@@ -19,7 +19,7 @@ EqTaskHeartbeat::EqTask() : Task(TASK_SECOND, TASK_FOREVER, nullptr, false) {
 
 template <> bool EqTaskHeartbeat::Callback() {
   eqLightSensor().read();
-  setWdPoint(1);
+  setWatchdogPoint(1);
   if (EqConfig::anyAlert()) {
     eqLedAlert().toggle(true); // force blinking ledAlert
 #if (EQ_LED_STATUS_ENABLED)
@@ -36,7 +36,7 @@ template <> bool EqTaskHeartbeat::Callback() {
   }
   eqLedHeartbeat().toggle(true);
   eqDisplay().show();
-  setWdPoint(2);
+  setWatchdogPoint(2);
   EqConfig::decreaseOverdriveTime();
   EqConfig::decreaseBacklightTimeCounter();
   return true;
@@ -54,19 +54,19 @@ template <> bool EqTaskItSensorControl::Callback() {
   if (!eqItSensor().read())
     EqConfig::setAlert(EqAlertType::ItSensor);
   else { // no sensor alert
-    setWdPoint(1);
+    setWatchdogPoint(1);
     EqConfig::resetAlert(EqAlertType::ItSensor);
     if (eqItSensor().temperature() > EqConfig::itSensorMaxTemperature) {
       EqConfig::setAlert(EqAlertType::Overheating);
       EqConfig::registerOverheating();
-      setWdPoint(2);
+      setWatchdogPoint(2);
       if (EqConfig::overheating()) { // maxCountOverheating reached
-        setWdPoint(3);
+        setWatchdogPoint(3);
         EqConfig::disableAllTasks();
         EqConfig::sleep();
       }
     } else { // no overheating alert
-      setWdPoint(4);
+      setWatchdogPoint(4);
       EqConfig::resetAlert(EqAlertType::Overheating);
     }
   }
@@ -83,10 +83,10 @@ EqTaskHtSensorControl::EqTask()
 
 template <> bool EqTaskHtSensorControl::Callback() {
   if (!eqHtSensor().read()) {
-    setWdPoint(1);
+    setWatchdogPoint(1);
     EqConfig::setAlert(EqAlertType::HtSensor);
   } else { // no alert
-    setWdPoint(2);
+    setWatchdogPoint(2);
     EqConfig::resetAlert(EqAlertType::HtSensor);
   }
   return true;
@@ -104,22 +104,22 @@ template <> bool EqTaskFanControl::Callback() {
   // setting pwm:
   if (!EqConfig::anyAlert())
     if (EqConfig::overdriveTime() > 0) {
-      setWdPoint(1);
+      setWatchdogPoint(1);
       eqFanPwm().setOverdrive();
     } else { // no overdrive
-      setWdPoint(2);
+      setWatchdogPoint(2);
       eqFanPwm().setDutyCycle();
     }
   else { // alerts detected
-    setWdPoint(3);
+    setWatchdogPoint(3);
     eqFanPwm().stop();
   }
   // reading fan speed:
   if (!eqFanPwm().readSpeed()) {
-    setWdPoint(4);
+    setWatchdogPoint(4);
     EqConfig::setAlert(EqAlertType::Fan);
   } else { // zero speed detected
-    setWdPoint(5);
+    setWatchdogPoint(5);
     EqConfig::resetAlert(EqAlertType::Fan);
   }
   return true;
@@ -135,7 +135,7 @@ EqTaskButtonControl::EqTask()
 
 template <> bool EqTaskButtonControl::Callback() {
   eqButtonBacklight().read();
-  setWdPoint(1);
+  setWatchdogPoint(1);
   eqButtonOverdrive().read();
   return true;
 }
@@ -151,7 +151,7 @@ EqTaskBlowingControl::EqTask()
 template <> bool EqTaskBlowingControl::Callback() {
   if (EqConfig::isBlowingEnabled()) {
     EqConfig::increaseOverdriveTime(EqConfig::overdriveStep(), false);
-    setWdPoint(1);
+    setWatchdogPoint(1);
     return true;
   }
   return false; // non-productive run
