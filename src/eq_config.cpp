@@ -15,9 +15,6 @@
 #include "eq_timer.h"
 
 #include <Wire.h>
-#include <avr/pgmspace.h>
-#include <avr/sleep.h>
-#include <avr/wdt.h>
 
 EqAlertType EqConfig::alert_ = EqAlertType::None;
 uint16_t EqConfig::overdriveTime_ = 0;
@@ -51,6 +48,10 @@ bool EqConfig::init() {
   return true;
 }
 
+#ifdef EQ_ARCH_AVR
+#include <avr/sleep.h>
+#include <avr/wdt.h>
+
 void EqConfig::reset(const bool &cleanEeprom) {
   EqEeprom::init(cleanEeprom);
   wdt_enable(WDTO_15MS);
@@ -60,7 +61,7 @@ void EqConfig::reset(const bool &cleanEeprom) {
 
 void EqConfig::sleep() {
   if (EqConfig::isFanTachometerEnabled())
-    detachInterrupt(digitalPinToInterrupt(EqConfig::fanTachometerPin));
+    EqFanPwm::stopTachometer();
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   sleep_enable();
   attachInterrupt(digitalPinToInterrupt(EqConfig::buttonOverdrivePin), []() {},
@@ -77,6 +78,9 @@ void EqConfig::sleep() {
   sleep_disable();
   EqConfig::reset();
 }
+#else
+// TODO: other architectures
+#endif
 
 void EqConfig::show() {
   Serial.println(F("Configuration:"));

@@ -22,21 +22,30 @@ bool EqFanPwm::init() {
   eqDisplay().showMessage(__s);
   eqTimer().init();
   if (EqConfig::isFanTachometerEnabled()) {
-    EqDPin<EqConfig::fanTachometerPin>::setInputPulledUp();
-    attachInterrupt(digitalPinToInterrupt(EqConfig::fanTachometerPin),
-                    []() {
-                      EQ_INTERRUPT_LOCK
-                      EqFanPwm::counter_++;
-                    },
-                    RISING);
     EqFanPwm::counter_ = 0;
     timeCount_ = micros();
+    startTachometer();
     return calibrate_();
   } else {                              // tachometer is disabled
     delay(1000);                        // just for showing boot message
-    EqConfig::increaseOverdriveTime(5); // checking fan without tachometer
+    EqConfig::increaseOverdriveTime(5);
     return true;
   }
+}
+
+void EqFanPwm::startTachometer() {
+  EqDPin<EqConfig::fanTachometerPin>::setInputPulledUp();
+  attachInterrupt(digitalPinToInterrupt(EqConfig::fanTachometerPin),
+                  []() {
+                    EQ_INTERRUPT_LOCK
+                    EqFanPwm::counter_++;
+                  },
+                  RISING);
+}
+
+void EqFanPwm::stopTachometer() {
+  EQ_INTERRUPT_LOCK
+  detachInterrupt(digitalPinToInterrupt(EqConfig::fanTachometerPin));
 }
 
 void EqFanPwm::setDutyCycle() {

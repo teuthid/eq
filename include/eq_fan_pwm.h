@@ -20,6 +20,9 @@ public:
   bool readSpeed();
   uint8_t lastSpeed() const; // in percents!
 
+  static void startTachometer();
+  static void stopTachometer();
+
   EqFanPwm(const EqFanPwm &) = delete;
   EqFanPwm(EqFanPwm &&) = delete;
   void operator=(const EqFanPwm &) = delete;

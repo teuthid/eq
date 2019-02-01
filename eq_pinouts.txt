@@ -10,8 +10,8 @@
               |                             AREF [ ] |
               |                              GND [ ] |
               | [ ] N/C                   SCK/13 [X] | B5 ledHeartbeat
-              | [ ] IOREF                MISO/12 [ ] | B4
-              | [ ] RST                  MOSI/11 [ ]~| B3
+              | [ ] IOREF                MISO/12 [ ] | B4 SoftSerial
+              | [ ] RST                  MOSI/11 [ ]~| B3 SoftSerial 
               | [ ] 3V3                       10 [ ]~| B2
               | [ ] 5v                         9 [X]~| B1 fanPwm
               | [ ] GND                        8 [ ] | B0 htSensor (option)
