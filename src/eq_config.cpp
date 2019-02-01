@@ -29,7 +29,6 @@ void EqConfig::saveWatchdogPoint(uint8_t point) {
 
 bool EqConfig::init() {
   EqEeprom::init();
-  cancelOverheating();
   EqDPin<fanTachometerControlPin>::setInputPulledUp();
   backlightTimeCounter_ = backlightTime();
   // analogReadResolution(10); // TODO: for non-AVR architecture
@@ -52,6 +51,8 @@ bool EqConfig::init() {
   eqButtonOverdrive().init();
   if (!eqFanPwm().init())
     return false;
+  clearOverheating();
+  clearWatchdogPoint();
   return true;
 }
 
@@ -176,7 +177,7 @@ void EqConfig::registerOverheating() {
       EqEeprom::readValue<uint8_t>(EqEeprom::OverheatingCounter, 0) + 1);
 }
 
-void EqConfig::cancelOverheating() {
+void EqConfig::clearOverheating() {
   EqEeprom::writeValue<uint8_t>(EqEeprom::OverheatingCounter, 0);
 }
 

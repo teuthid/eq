@@ -142,7 +142,7 @@ public:
   static constexpr uint8_t maxCountOverheating = 3;
   static bool overheating();
   static void registerOverheating();
-  static void cancelOverheating();
+  static void clearOverheating();
 
   // light sensor
   static constexpr bool lightSensorIsAnalog = true;
