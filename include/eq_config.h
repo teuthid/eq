@@ -105,6 +105,10 @@ public:
   static void resetWatchdog();
   static void sleep();
 
+  static uint8_t readWatchdogPoint();           // from EEPROM
+  static void saveWatchdogPoint(uint8_t point); // in EEPROM
+  static void clearWatchdogPoint() { saveWatchdogPoint(0); }
+
   static bool init();
   static void reset(const bool &cleanEeprom = false);
 

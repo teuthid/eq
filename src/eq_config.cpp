@@ -19,6 +19,14 @@ EqAlertType EqConfig::alert_ = EqAlertType::None;
 uint16_t EqConfig::overdriveTime_ = 0;
 uint16_t EqConfig::backlightTimeCounter_ = 0;
 
+uint8_t EqConfig::readWatchdogPoint() {
+  return EqEeprom::readValue<uint8_t>(EqEeprom::LastWatchdogPoint, 0);
+}
+
+void EqConfig::saveWatchdogPoint(uint8_t point) {
+  EqEeprom::writeValue<uint8_t>(EqEeprom::LastWatchdogPoint, point);
+}
+
 bool EqConfig::init() {
   EqEeprom::init();
   cancelOverheating();
