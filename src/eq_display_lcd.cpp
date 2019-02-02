@@ -21,7 +21,7 @@ public:
   EqLcd() : lcd_(EqConfig::lcdI2CAddress) {}
   bool init();
   void turnOff();
-  void turnOn() { lcd_.setBacklight(255); }
+  void turnOn();
   void showHT();
   void showTrends();
   void showOverdriveTime();
@@ -31,8 +31,9 @@ public:
   void showCalibrating(const uint8_t &percents);
 
 private:
-  LiquidCrystal_PCF8574 lcd_;
+  bool cleared_ = false;
   uint8_t lastSpeedDots_ = 0xFF;
+  LiquidCrystal_PCF8574 lcd_;
 
   typedef uint8_p Bar_[8];
   static const PROGMEM Bar_ bars_[];
@@ -40,18 +41,9 @@ private:
   typedef uint8_p Digit_[6];
   static const PROGMEM Digit_ digits_[];
 
-  void printDigit_(const uint8_t &digit, const uint8_t &col) {
-    lcd_.setCursor(col, 0);
-    for (uint8_t __i = 0; __i < 6; __i++) {
-      lcd_.write(digits_[digit][__i]);
-      if (__i == 2)
-        lcd_.setCursor(col, 1);
-    }
-  }
-  void printValue_(const uint8_t &value, const uint8_t &col) {
-    printDigit_(value / 10, col);
-    printDigit_(value % 10, col + 3);
-  }
+  void clear_();
+  void printDigit_(const uint8_t &digit, const uint8_t &col);
+  void printValue_(const uint8_t &value, const uint8_t &col);
 };
 
 // elements of big digits:
@@ -75,6 +67,27 @@ const PROGMEM EqLcd::Digit_ EqLcd::digits_[] = {{2, 8, 1, 2, 6, 1},     // 0
                                                 {2, 8, 1, 32, 32, 1},   // 7
                                                 {2, 3, 1, 2, 6, 1},     // 8
                                                 {2, 3, 1, 7, 6, 1}};    // 9
+
+void EqLcd::clear_() {
+  if (!cleared_) {
+    lcd_.clear();
+    cleared_ = true;
+  }
+}
+
+void EqLcd::printDigit_(const uint8_t &digit, const uint8_t &col) {
+  lcd_.setCursor(col, 0);
+  for (uint8_t __i = 0; __i < 6; __i++) {
+    lcd_.write(digits_[digit][__i]);
+    if (__i == 2)
+      lcd_.setCursor(col, 1);
+  }
+}
+
+void EqLcd::printValue_(const uint8_t &value, const uint8_t &col) {
+  printDigit_(value / 10, col);
+  printDigit_(value % 10, col + 3);
+}
 
 bool EqLcd::init() {
   Wire.beginTransmission(EqConfig::lcdI2CAddress);
@@ -100,9 +113,11 @@ bool EqLcd::init() {
 
 void EqLcd::turnOff() {
   lcd_.setBacklight(0);
-  lcd_.clear();
+  clear_();
   lastSpeedDots_ = 0xFF; // clear flag
 }
+
+void EqLcd::turnOn() { lcd_.setBacklight(255); }
 
 void EqLcd::showHT() {
   printValue_(eqHtSensor().lastHumidityAsLong(), 0);
@@ -111,6 +126,7 @@ void EqLcd::showHT() {
   lcd_.setCursor(10, 0);
   lcd_.print(fixed_to_float(eqHtSensor().lastTemperature()), 1);
   lcd_.write(0xDF);
+  cleared_ = false;
 }
 
 void EqLcd::showTrends() {
@@ -134,7 +150,7 @@ void EqLcd::showTrends() {
 }
 
 void EqLcd::showOverdriveTime() {
-  lcd_.clear();
+  clear_();
   printValue_(EqConfig::overdriveTime() / 60, 2);
   lcd_.setCursor(8, 0);
   lcd_.write(0xA1);
@@ -168,14 +184,14 @@ void EqLcd::showMessage(const char *message) {
 }
 
 void EqLcd::showAlert(const EqAlertType &alert) {
-  lcd_.clear();
+  clear_();
   lcd_.print(F("ALERT"));
   showMessage(EqConfig::alertAsString(alert));
   lastSpeedDots_ = 0xFF;
 }
 
 void EqLcd::showCalibrating(const uint8_t &percents) {
-  lcd_.clear();
+  clear_();
   lcd_.print(F("Calibrating..."));
   showFanSpeed(false, percents);
 }
