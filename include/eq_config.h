@@ -91,6 +91,10 @@ public:
   static constexpr uint16_t itSensorSamplingPeriod = 1000; // in milliseconds
   static constexpr uint8_t itSensorMaxTemperature = 50;    // in *C
   static constexpr uint8_t itSensorInterval = 1;           // in seconds
+  static constexpr uint8_t buttonReadInterval = 100;       // in milliseconds
+  static constexpr uint16_t buttonDebounceTime = 300;      // in milliseconds
+  static constexpr uint16_t buttonLongPressedTime = 3000;  // in milliseconds
+
 #ifdef EQ_DEBUG
   static constexpr uint8_t debugInterval = 5; // in seconds
 #endif
@@ -246,11 +250,6 @@ public:
   static void setBacklight(const bool &enabled = true);
   static bool backlight() { return (backlightTimeCounter_ > 0); }
   static void decreaseBacklightTimeCounter();
-
-  // buttons
-  static constexpr uint8_t buttonReadInterval = 100;      // in milliseconds
-  static constexpr uint16_t buttonDebounceTime = 300;     // in milliseconds
-  static constexpr uint16_t buttonLongPressedTime = 3000; // in milliseconds
 
   // definition in main.cpp
   static void disableAllTasks();
