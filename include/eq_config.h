@@ -89,8 +89,8 @@ public:
   static constexpr uint8_t sensorMaxDeviation = 30;        // in percents
   static constexpr uint16_t htSensorSamplingPeriod = 2000; // in milliseconds
   static constexpr uint16_t itSensorSamplingPeriod = 1000; // in milliseconds
-  static constexpr uint8_t itSensorMaxTemperature = 50;
-  static constexpr uint8_t itSensorInterval = 1; // in seconds
+  static constexpr uint8_t itSensorMaxTemperature = 50;    // in *C
+  static constexpr uint8_t itSensorInterval = 1;           // in seconds
 #ifdef EQ_DEBUG
   static constexpr uint8_t debugInterval = 5; // in seconds
 #endif
@@ -145,31 +145,31 @@ public:
   static void clearOverheating();
 
   // light sensor
-  static constexpr bool lightSensorIsAnalog = true;
+  static constexpr bool lightSensorIsAnalog = true; // lightSensorPin is analog
   static constexpr uint8_t lightSensorCollectorSize = 5;
   static constexpr uint8_t lightSensorThresholdDefault = 40; // in percents
-  static constexpr uint8_t lightSensorThresholdMin = 20;
-  static constexpr uint8_t lightSensorThresholdMax = 80;
+  static constexpr uint8_t lightSensorThresholdMin = 20;     // in percents
+  static constexpr uint8_t lightSensorThresholdMax = 80;     // in percents
   static uint8_t lightSensorThreshold();
   static void setLightSensorThreshold(const uint8_t &value);
 
   // HT sensor
   static constexpr uint8_t htSensorCollectorSize = 5;
   static constexpr uint8_t htSensorIntervalDefault = 3; // in seconds
-  static constexpr uint8_t htSensorIntervalMin =
+  static constexpr uint8_t htSensorIntervalMin =        // in seconds
       max(1, htSensorSamplingPeriod / 1000);
-  static constexpr uint8_t htSensorIntervalMax = 60;
+  static constexpr uint8_t htSensorIntervalMax = 60;              // in seconds
   static constexpr uint8_t htSensorHumidityThresholdDefault = 45; // in percents
-  static constexpr uint8_t htSensorHumidityThresholdMin = 20;
-  static constexpr uint8_t htSensorHumidityThresholdMax = 80;
-  static constexpr uint8_t htSensorHumidityMin = 5;
-  static constexpr uint8_t htSensorHumidityMax = 95;
-  static constexpr int8_t htSensorHumidityCorrectionDefault = 0; // 0.0 %
-  static constexpr uint8_t htSensorHumidityCorrectionMax = 50;   // +/- 5.0 %
+  static constexpr uint8_t htSensorHumidityThresholdMin = 20;     // in percents
+  static constexpr uint8_t htSensorHumidityThresholdMax = 80;     // in percents
+  static constexpr uint8_t htSensorHumidityMin = 5;               // in percents
+  static constexpr uint8_t htSensorHumidityMax = 95;              // in percents
+  static constexpr int8_t htSensorHumidityCorrectionDefault = 0;  // 0.0 %
+  static constexpr uint8_t htSensorHumidityCorrectionMax = 50;    // +/- 5.0 %
   static constexpr uint8_t htSensorTemperatureThresholdDefault = 23; // in *C
-  static constexpr uint8_t htSensorTemperatureThresholdMin = 15;
-  static constexpr uint8_t htSensorTemperatureThresholdMax = 30;
-  static constexpr uint8_t htSensorTemperatureMin = 5;
+  static constexpr uint8_t htSensorTemperatureThresholdMin = 15;     // in *C
+  static constexpr uint8_t htSensorTemperatureThresholdMax = 30;     // in *C
+  static constexpr uint8_t htSensorTemperatureMin = 5;               // in *C
   static constexpr uint8_t htSensorTemperatureMax = itSensorMaxTemperature;
   static constexpr int8_t htSensorTemperatureCorrectionDefault = 0; // 0.0 *C
   static constexpr uint8_t htSensorTemperatureCorrectionMax = 20; // +/- 2.0 *C
@@ -187,10 +187,10 @@ public:
   static void setHtIndexType(const EqHtIndexType &value);
 
   // overdrive
-  static constexpr uint16_t overdriveMaxTime = 3599; // in seconds
-  static constexpr uint16_t overdriveStepDefault = 10;
-  static constexpr uint16_t overdriveStepMin = 10;
-  static constexpr uint16_t overdriveStepMax = 600;
+  static constexpr uint16_t overdriveMaxTime = 3599;   // in seconds
+  static constexpr uint16_t overdriveStepDefault = 10; // in seconds
+  static constexpr uint16_t overdriveStepMin = 10;     // in seconds
+  static constexpr uint16_t overdriveStepMax = 600;    // in seconds
   static uint16_t overdriveTime() { return overdriveTime_; }
   static void setOverdriveTime(const uint16_t &value);
   static void decreaseOverdriveTime(const uint16_t &value = 1);
@@ -201,10 +201,10 @@ public:
 
   // fan PWM
   static constexpr uint8_t fanPwmIntervalDefault = 2; // in seconds
-  static constexpr uint8_t fanPwmIntervalMin = 1;
-  static constexpr uint8_t fanPwmIntervalMax = 5;
-  static constexpr uint8_t fanPwmMinDefault = 10; // in percents
-  static constexpr uint8_t fanPwmMaxDefault = 100;
+  static constexpr uint8_t fanPwmIntervalMin = 1;     // in seconds
+  static constexpr uint8_t fanPwmIntervalMax = 5;     // in seconds
+  static constexpr uint8_t fanPwmMinDefault = 10;     // in percents
+  static constexpr uint8_t fanPwmMaxDefault = 100;    // in percents
   static constexpr uint8_t fanPwmOverdriveDefault = fanPwmMaxDefault;
   static constexpr uint32_t fanPwmCycle = 100000; // in microseconds
   static constexpr bool fanPwmStepModeDefault = false;
@@ -224,12 +224,12 @@ public:
 
   // blowing
   static constexpr bool blowingEnabledDefault = true;
-  static constexpr uint8_t blowingIntervalDefault = 1; // in hours
-  static constexpr uint8_t blowingIntervalMin = 1;
-  static constexpr uint8_t blowingIntervalMax = 24;
+  static constexpr uint8_t blowingIntervalDefault = 1;             // in hours
+  static constexpr uint8_t blowingIntervalMin = 1;                 // in hours
+  static constexpr uint8_t blowingIntervalMax = 24;                // in hours
   static constexpr uint16_t blowingTimeDefault = overdriveStepMin; // in seconds
-  static constexpr uint16_t blowingTimeMax = overdriveStepMax;
-  static constexpr uint16_t blowingTimeMin = overdriveStepMin;
+  static constexpr uint16_t blowingTimeMax = overdriveStepMax;     // in seconds
+  static constexpr uint16_t blowingTimeMin = overdriveStepMin;     // in seconds
   static bool isBlowingEnabled();
   static void setBlowingEnabled(const bool &enabled = true);
   static uint8_t blowingInterval();
@@ -239,8 +239,8 @@ public:
 
   // display backlight
   static constexpr uint16_t backlightTimeDefault = 60; // in seconds
-  static constexpr uint16_t backlightTimeMax = 300;
-  static constexpr uint16_t backlightTimeMin = 5;
+  static constexpr uint16_t backlightTimeMax = 300;    // in seconds
+  static constexpr uint16_t backlightTimeMin = 5;      // in seconds
   static uint16_t backlightTime();
   static void setBacklighTime(const uint16_t &value);
   static void setBacklight(const bool &enabled = true);
@@ -248,9 +248,9 @@ public:
   static void decreaseBacklightTimeCounter();
 
   // buttons
-  static constexpr uint8_t buttonReadInterval = 10; // in milliseconds
-  static constexpr uint32_t buttonDebounceTime = 100;
-  static constexpr uint32_t buttonLongPressedTime = 3000;
+  static constexpr uint8_t buttonReadInterval = 10;       // in milliseconds
+  static constexpr uint32_t buttonDebounceTime = 100;     // in milliseconds
+  static constexpr uint32_t buttonLongPressedTime = 3000; // in milliseconds
 
   // definition in main.cpp
   static void disableAllTasks();
