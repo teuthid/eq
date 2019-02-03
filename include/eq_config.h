@@ -248,9 +248,9 @@ public:
   static void decreaseBacklightTimeCounter();
 
   // buttons
-  static constexpr uint8_t buttonReadInterval = 10;       // in milliseconds
-  static constexpr uint32_t buttonDebounceTime = 100;     // in milliseconds
-  static constexpr uint32_t buttonLongPressedTime = 3000; // in milliseconds
+  static constexpr uint8_t buttonReadInterval = 100;      // in milliseconds
+  static constexpr uint16_t buttonDebounceTime = 300;     // in milliseconds
+  static constexpr uint16_t buttonLongPressedTime = 3000; // in milliseconds
 
   // definition in main.cpp
   static void disableAllTasks();
