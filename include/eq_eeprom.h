@@ -44,6 +44,7 @@ public:
     LedStatusMode = 17,
     BlowingEnabled = 18,
     BlowingInterval = 19,
+    BlowingTime = 20,
   };
 
   template <typename T>

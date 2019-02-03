@@ -227,10 +227,15 @@ public:
   static constexpr uint8_t blowingIntervalDefault = 1; // in hours
   static constexpr uint8_t blowingIntervalMin = 1;
   static constexpr uint8_t blowingIntervalMax = 24;
+  static constexpr uint16_t blowingTimeDefault = overdriveStepMin; // in seconds
+  static constexpr uint16_t blowingTimeMax = overdriveStepMax;
+  static constexpr uint16_t blowingTimeMin = overdriveStepMin;
   static bool isBlowingEnabled();
   static void setBlowingEnabled(const bool &enabled = true);
   static uint8_t blowingInterval();
   static void setBlowingInterval(const uint8_t &value);
+  static uint16_t blowingTime();
+  static void setBlowingTime(const uint16_t &value);
 
   // display backlight
   static constexpr uint16_t backlightTimeDefault = 60; // in seconds

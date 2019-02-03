@@ -366,6 +366,16 @@ void EqConfig::setBlowingInterval(const uint8_t &value) {
       constrain(value, blowingIntervalMin, blowingIntervalMax));
 }
 
+uint16_t EqConfig::blowingTime() {
+  return EqEeprom::readValue<uint16_t>(EqEeprom::BlowingTime,
+                                       blowingTimeDefault);
+}
+
+void EqConfig::setBlowingTime(const uint16_t &value) {
+  EqEeprom::writeValue<uint16_t>(
+      EqEeprom::BlowingTime, constrain(value, blowingTimeMin, blowingTimeMax));
+}
+
 uint16_t EqConfig::backlightTime() {
   return EqEeprom::readValue<uint16_t>(EqEeprom::BacklighTime,
                                        backlightTimeDefault);
