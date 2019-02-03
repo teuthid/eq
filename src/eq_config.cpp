@@ -13,7 +13,7 @@
 #include "eq_ht_sensor.h"
 #include "eq_led.h"
 #include "eq_light_sensor.h"
-#include "eq_timer.h"
+#include "eq_pwm_timer.h"
 
 EqAlertType EqConfig::alert_ = EqAlertType::None;
 uint16_t EqConfig::overdriveTime_ = 0;

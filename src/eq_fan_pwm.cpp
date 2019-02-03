@@ -8,7 +8,7 @@
 #include "eq_dpin.h"
 #include "eq_ht_sensor.h"
 #include "eq_interrupt_lock.h"
-#include "eq_timer.h"
+#include "eq_pwm_timer.h"
 
 #include <TimerOne.h>
 
@@ -20,14 +20,14 @@ bool EqFanPwm::init() {
   Serial.print(__s);
 #endif
   eqDisplay().showMessage(__s);
-  eqTimer().init();
+  eqPwmTimer().init();
   if (EqConfig::isFanTachometerEnabled()) {
     EqFanPwm::counter_ = 0;
     timeCount_ = micros();
     startTachometer();
     return calibrate_();
-  } else {                              // tachometer is disabled
-    delay(1000);                        // just for showing boot message
+  } else {       // tachometer is disabled
+    delay(1000); // just for showing boot message
     EqConfig::increaseOverdriveTime(5);
     return true;
   }
@@ -55,17 +55,17 @@ void EqFanPwm::setDutyCycle() {
   __dc = (__dc > 0) ? max(__dc, EqConfig::fanPwmMin()) : 0;
   if (__dc != dutyCycle_) {
     dutyCycle_ = __dc;
-    eqTimer().setPwm(dutyCycle_);
+    eqPwmTimer().setDutyCycle(dutyCycle_);
   }
 }
 
 void EqFanPwm::setOverdrive() {
   dutyCycle_ = EqConfig::fanPwmOverdrive();
-  eqTimer().setPwm(dutyCycle_);
+  eqPwmTimer().setDutyCycle(dutyCycle_);
 }
 
 void EqFanPwm::stop() {
-  eqTimer().setPwm(0);
+  eqPwmTimer().setDutyCycle(0);
   dutyCycle_ = 0;
 }
 
@@ -97,7 +97,7 @@ uint8_t EqFanPwm::lastSpeed() const {
 
 bool EqFanPwm::calibrate_() {
   dutyCycle_ = 0xFF;
-  eqTimer().setPwm(100); // max fan speed
+  eqPwmTimer().setDutyCycle(100); // max fan speed
   maxSpeed_ = 0;
   for (uint8_t __i = 0; __i < 10; __i++) {
     eqDisplay().showCalibrating((__i + 1) * 10);

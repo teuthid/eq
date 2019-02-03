@@ -12,7 +12,7 @@
 
 #include "eq_fan_pwm.h"
 #include "eq_led.h"
-#include "eq_timer.h"
+#include "eq_pwm_timer.h"
 
 void EqConfig::disableWatchdog() { wdt_disable(); }
 
@@ -37,7 +37,7 @@ void EqConfig::sleep() {
   attachInterrupt(digitalPinToInterrupt(EqConfig::buttonOverdrivePin), []() {},
                   LOW);
   sei();
-  eqTimer().setPwm(0);
+  eqPwmTimer().setDutyCycle(0);
   eqLedHeartbeat().setState(false);
   eqLedAlert().setState(true);
 #if (EQ_LED_STATUS_ENABLED)
