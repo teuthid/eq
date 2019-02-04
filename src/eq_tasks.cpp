@@ -54,7 +54,7 @@ EqTaskItSensorControl::EqTask()
 template <> bool EqTaskItSensorControl::Callback() {
   if (!eqItSensor().read())
     EqConfig::setAlert(EqAlertType::ItSensor);
-  else { // no sensor alert
+  else {
     setWatchdogPoint(1);
     EqConfig::resetAlert(EqAlertType::ItSensor);
     if (eqItSensor().temperature() > EqConfig::itSensorMaxTemperature) {
@@ -75,7 +75,7 @@ template <> bool EqTaskItSensorControl::Callback() {
 #endif
         EqConfig::sleep(); // wait for pressing override button
       }
-    } else { // no overheating alert
+    } else { // no overheating
       setWatchdogPoint(4);
       EqConfig::resetAlert(EqAlertType::Overheating);
     }

@@ -14,6 +14,7 @@
 #include "eq_led.h"
 #include "eq_light_sensor.h"
 #include "eq_pwm_timer.h"
+#include "eq_tasks.h"
 
 EqAlertType EqConfig::alert_ = EqAlertType::None;
 uint16_t EqConfig::overdriveTime_ = 0;
@@ -198,9 +199,9 @@ uint8_t EqConfig::htSensorInterval() {
 }
 
 void EqConfig::setHtSensorInterval(const uint8_t &value) {
-  EqEeprom::writeValue<uint8_t>(
-      EqEeprom::HtSensorInterval,
-      constrain(value, htSensorIntervalMin, htSensorIntervalMax));
+  uint8_t __i = constrain(value, htSensorIntervalMin, htSensorIntervalMax);
+  EqEeprom::writeValue<uint8_t>(EqEeprom::HtSensorInterval, __i);
+  eqTaskHtSensorControl().setInterval(__i);
 }
 
 uint8_t EqConfig::htSensorHumidityThreshold() {
@@ -212,6 +213,7 @@ void EqConfig::setHtSensorHumidityThreshold(const uint8_t &value) {
   EqEeprom::writeValue<uint8_t>(EqEeprom::HtSensorHumidityThreshold,
                                 constrain(value, htSensorHumidityThresholdMin,
                                           htSensorHumidityThresholdMax));
+  eqTaskHtSensorControl().forceNextIteration();
 }
 
 fixed_t EqConfig::htSensorHumidityCorrection() {
@@ -226,6 +228,7 @@ void EqConfig::setHtSensorHumidityCorrection(const fixed_t &value) {
                                constrain(fixed_to_int(value * 10),
                                          -htSensorHumidityCorrectionMax,
                                          htSensorHumidityCorrectionMax));
+  eqTaskHtSensorControl().forceNextIteration();
 }
 
 uint8_t EqConfig::htSensorTemperatureThreshold() {
@@ -238,6 +241,7 @@ void EqConfig::setHtSensorTemperatureThreshold(const uint8_t &value) {
                                 constrain(value,
                                           htSensorTemperatureThresholdMin,
                                           htSensorTemperatureThresholdMax));
+  eqTaskHtSensorControl().forceNextIteration();
 }
 
 fixed_t EqConfig::htSensorTemperatureCorrection() {
@@ -252,6 +256,7 @@ void EqConfig::setHtSensorTemperatureCorrection(const fixed_t &value) {
                                constrain(fixed_to_int(value * 10),
                                          -htSensorTemperatureCorrectionMax,
                                          htSensorTemperatureCorrectionMax));
+  eqTaskHtSensorControl().forceNextIteration();
 }
 
 EqHtIndexType EqConfig::htIndexType() {
@@ -261,6 +266,7 @@ EqHtIndexType EqConfig::htIndexType() {
 
 void EqConfig::setHtIndexType(const EqHtIndexType &value) {
   EqEeprom::writeValue<EqHtIndexType>(EqEeprom::HtIndexType, value);
+  eqTaskHtSensorControl().forceNextIteration();
 }
 
 void EqConfig::setOverdriveTime(const uint16_t &value) {
@@ -298,9 +304,9 @@ uint8_t EqConfig::fanPwmInterval() {
 }
 
 void EqConfig::setFanPwmInterval(const uint8_t &value) {
-  EqEeprom::writeValue<uint8_t>(
-      EqEeprom::FanPwmInterval,
-      constrain(value, fanPwmIntervalMin, fanPwmIntervalMax));
+  uint8_t __i = constrain(value, fanPwmIntervalMin, fanPwmIntervalMax);
+  EqEeprom::writeValue<uint8_t>(EqEeprom::FanPwmInterval, __i);
+  eqTaskFanControl().setInterval(__i);
 }
 
 uint8_t EqConfig::fanPwmMin() {
@@ -309,8 +315,10 @@ uint8_t EqConfig::fanPwmMin() {
 
 void EqConfig::setFanPwmMin(const uint8_t &value) {
   uint8_t __v = constrain(value, fanPwmMinDefault, fanPwmMaxDefault - 1);
-  if (__v < EqConfig::fanPwmMax())
+  if (__v < EqConfig::fanPwmMax()) {
     EqEeprom::writeValue<uint8_t>(EqEeprom::FanPwmMin, __v);
+    eqTaskFanControl().forceNextIteration();
+  }
 }
 
 uint8_t EqConfig::fanPwmMax() {
@@ -319,8 +327,10 @@ uint8_t EqConfig::fanPwmMax() {
 
 void EqConfig::setFanPwmMax(const uint8_t &value) {
   uint8_t __v = constrain(value, fanPwmMinDefault + 1, fanPwmMaxDefault);
-  if (__v > EqConfig::fanPwmMin())
+  if (__v > EqConfig::fanPwmMin()) {
     EqEeprom::writeValue<uint8_t>(EqEeprom::FanPwmMax, __v);
+    eqTaskFanControl().forceNextIteration();
+  }
 }
 
 uint8_t EqConfig::fanPwmOverdrive() {
@@ -340,6 +350,7 @@ bool EqConfig::isFanPwmStepModeEnabled() {
 
 void EqConfig::setFanPwmStepMode(const bool &enabled) {
   EqEeprom::writeValue<bool>(EqEeprom::FanPwmStepMode, enabled);
+  eqTaskFanControl().forceNextIteration();
 }
 
 bool EqConfig::isFanTachometerEnabled() {

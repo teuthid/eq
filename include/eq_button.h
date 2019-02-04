@@ -6,8 +6,9 @@
 #ifndef __EQ_BUTTON_H__
 #define __EQ_BUTTON_H__
 
-#include "eq_config.h"
 #include <EasyButton.h>
+
+#include "eq_config.h"
 
 template <uint8_t ButtonPin> class EqButton;
 using EqButtonBacklight = EqButton<EqConfig::buttonBacklightPin>;
