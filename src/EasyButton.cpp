@@ -7,50 +7,6 @@
 
 #include "EasyButton.h"
 
-void EasyButton::begin() {
-  pinMode(_pin, _pu_enabled ? INPUT_PULLUP : INPUT);
-  _current_state = digitalRead(_pin);
-  if (_invert)
-    _current_state = !_current_state;
-  _time = millis();
-  _last_state = _current_state;
-  _changed = false;
-  _last_change = _time;
-}
-
-void EasyButton::onPressed(EasyButton::callback_t callback) {
-  mPressedCallback = callback;
-}
-
-void EasyButton::onPressedFor(uint32_t duration,
-                              EasyButton::callback_t callback) {
-  _held_threshold = duration;
-  mPressedForCallback = callback;
-}
-
-void EasyButton::onSequence(uint8_t sequences, uint32_t duration,
-                            EasyButton::callback_t callback) {
-  _press_sequences = sequences;
-  _press_sequence_duration = duration;
-  mPressedSequenceCallback = callback;
-}
-
-bool EasyButton::isPressed() { return _current_state; }
-
-bool EasyButton::isReleased() { return !_current_state; }
-
-bool EasyButton::wasPressed() { return _current_state && _changed; }
-
-bool EasyButton::wasReleased() { return !_current_state && _changed; }
-
-bool EasyButton::pressedFor(uint32_t duration) {
-  return _current_state && _time - _last_change >= duration;
-}
-
-bool EasyButton::releasedFor(uint32_t duration) {
-  return !_current_state && _time - _last_change >= duration;
-}
-
 bool EasyButton::read() {
 
   // get current millis.

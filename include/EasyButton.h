@@ -8,95 +8,140 @@
 #ifndef _EasyButton_h
 #define _EasyButton_h
 
-#include <Arduino.h>
+#include "eq_config.h"
+#include "eq_dpin.h"
 
-#ifdef ESP8266
-#define EASYBUTTON_FUNCTIONAL_SUPPORT 1
-#endif
-
-#ifdef EASYBUTTON_FUNCTIONAL_SUPPORT
-#include <functional>
-#endif
-
-class EasyButton {
+template <uint8_t ButtonPin> class EasyButton {
 public:
-#ifdef EASYBUTTON_FUNCTIONAL_SUPPORT
-  typedef std::function<void()> callback_t;
-#else
-  typedef void (*callback_t)();
-#endif
+  EasyButton(uint32_t dbTime = 35, bool puEnable = true, bool invert = true)
+      : _db_time(dbTime), _pu_enabled(puEnable), _invert(invert) {}
 
-  EasyButton(uint8_t pin, uint32_t dbTime = 35, bool puEnable = true,
-             bool invert = true)
-      : _pin(pin), _db_time(dbTime), _pu_enabled(puEnable), _invert(invert) {}
+  ~EasyButton() {}
 
-  ~EasyButton(){};
+  // Initialize a button object and the pin it's connected to.
+  void init();
 
-  // PUBLIC FUNCTIONS
-  void begin(); // Initialize a button object and the pin it's connected to.
+  // Returns the current debounced button state, true for pressed, false for
+  // released.
+  bool read();
 
-  bool read(); // Returns the current debounced button state, true for pressed,
-               // false for released.
+  // Call a callback function when the button has been pressed and released.
+  void onPressed(callback_t callback);
 
-  void onPressed(callback_t callback); // Call a callback function when the
-                                       // button has been pressed and released.
+  // Call a callback function when the button has been held for at least the
+  // given number of milliseconds.
+  void onPressedFor(const uint32_t &duration, callback_t callback);
 
-  void onPressedFor(uint32_t duration,
-                    callback_t callback); // Call a callback function when the
-                                          // button has been held for at least
-                                          // the given number of milliseconds.
+  // Call a callback function when the // given sequence has matched.
+  void onSequence(const uint8_t &sequences, const uint32_t &duration,
+                  callback_t callback);
 
-  void onSequence(uint8_t sequences, uint32_t duration,
-                  callback_t callback); // Call a callback function when the
-                                        // given sequence has matched.
+  // Returns true if the button state was pressed at the last read.
+  bool isPressed() const;
 
-  bool
-  isPressed(); // Returns true if the button state was pressed at the last read.
+  // Returns true if the button state was released at the last read.
+  bool isReleased() const;
 
-  bool isReleased(); // Returns true if the button state was released at the
-                     // last read.
+  // Returns true if the button state at the last read was pressed.
+  bool wasPressed() const;
 
-  bool wasPressed(); // Returns true if the button state at the last read was
-                     // pressed.
+  // Returns true if the button state at the last read was released.
+  bool wasReleased() const;
 
-  bool wasReleased(); // Returns true if the button state at the last read was
-                      // released.
+  // Returns true if the button state at the last read was pressed, and has been
+  // in that state for at least the given number of milliseconds.
+  bool pressedFor(const uint32_t &duration) const;
 
-  bool pressedFor(
-      uint32_t duration); // Returns true if the button state at the last read
-                          // was pressed, and has been in that state for at
-                          // least the given number of milliseconds.
-
-  bool releasedFor(
-      uint32_t duration); // Returns true if the button state at the last read
-                          // was released, and has been in that state for at
-                          // least the given number of milliseconds.
+  // Returns true if the button state at the last read was released, and has
+  // been in that state for at least the given number of milliseconds.
+  bool releasedFor(const uint32_t &duration) const;
 
 private:
-  // PRIVATE VARIABLES
-  uint32_t _short_press_count; // Short press counter.
-  uint32_t _first_press_time;  // Time when button was pressed for first time.
-  uint8_t _press_sequences;    // The number of sequences to count.
-  uint32_t _press_sequence_duration; // Time limit of the sequence.
-  uint32_t _held_threshold;          // Held threshold.
-  bool _was_btn_held;                // Indicate if button was held.
+  uint32_t _short_press_count; // short press counter.
+  uint32_t _first_press_time;  // time when button was pressed for first time.
+  volatile uint8_t _press_sequences;          // number of sequences to count.
+  volatile uint32_t _press_sequence_duration; // time limit of the sequence.
+  volatile uint32_t _held_threshold;          // held threshold.
+  bool _was_btn_held;                         // Indicate if button was held.
   bool
-      _held_callback_called; // Indicate if button long press has been notified.
-  uint8_t _pin;      // Arduino pin number where the Button is connected to.
+      _held_callback_called; // indicate if button long press has been notified.
+  // uint8_t _pin;      // Arduino pin number where the Button is connected to.
   uint32_t _db_time; // Debounce time (ms).
   bool _pu_enabled;  // Internal pullup resistor enabled.
   bool _invert;      // Inverts button logic. If true, low = pressed else high =
                      // pressed.
-  bool _current_state;   // Current button state, true = pressed.
-  bool _last_state;      // Previous button state, true = pressed.
-  bool _changed;         // Has the state change since last read.
-  uint32_t _time;        // Time of current state.
-  uint32_t _last_change; // Time of last state change.
-  // CALLBACKS
-  callback_t mPressedCallback;    // Callback function for pressed events.
-  callback_t mPressedForCallback; // Callback function for pressedFor events.
+  volatile bool _current_state;   // current button state, true = pressed.
+  volatile bool _last_state;      // previous button state, true = pressed.
+  volatile bool _changed;         // has the state change since last read.
+  volatile uint32_t _time;        // time of current state.
+  volatile uint32_t _last_change; // time of last state change.
+
+  // callbacks
+  callback_t mPressedCallback;    // callback function for pressed events.
+  callback_t mPressedForCallback; // callback function for pressedFor events.
   callback_t
-      mPressedSequenceCallback; // Callback function for pressedSequence events.
+      mPressedSequenceCallback; // callback function for pressedSequence events.
 };
 
-#endif
+void template <uint8_t ButtonPin> EasyButton::init() {
+  // pinMode(_pin, _pu_enabled ? INPUT_PULLUP : INPUT);
+  if (_pu_enabled)
+    EqDPin<ButtonPin>::setInputPulledUp();
+  else
+    EqDPin<ButtonPin>::setInput();
+  //_current_state = digitalRead(_pin);
+  // if (_invert)
+  //  _current_state = !_current_state;
+  _current_state = _invert ? EqDPin<ButtonPin>::isInputLow()
+                           : EqDPin<ButtonPin>::isInputHigh();
+  _time = millis();
+  _last_state = _current_state;
+  _changed = false;
+  _last_change = _time;
+}
+
+void template <uint8_t ButtonPin> EasyButton::onPressed(callback_t callback) {
+  mPressedCallback = callback;
+}
+
+void template <uint8_t ButtonPin>
+EasyButton::onPressedFor(const uint32_t &duration, callback_t callback) {
+  _held_threshold = duration;
+  mPressedForCallback = callback;
+}
+
+void template <uint8_t ButtonPin>
+EasyButton::onSequence(const uint8_t &sequences, const uint32_t &duration,
+                       callback_t callback) {
+  _press_sequences = sequences;
+  _press_sequence_duration = duration;
+  mPressedSequenceCallback = callback;
+}
+
+bool template <uint8_t ButtonPin> EasyButton::isPressed() const {
+  return _current_state;
+}
+
+bool template <uint8_t ButtonPin> EasyButton::isReleased() const {
+  return !_current_state;
+}
+
+bool template <uint8_t ButtonPin> EasyButton::wasPressed() const {
+  return _current_state && _changed;
+}
+
+bool template <uint8_t ButtonPin> EasyButton::wasReleased() const {
+  return !_current_state && _changed;
+}
+
+bool template <uint8_t ButtonPin>
+EasyButton::pressedFor(const uint32_t &duration) const {
+  return _current_state && _time - _last_change >= duration;
+}
+
+bool template <uint8_t ButtonPin>
+EasyButton::releasedFor(const uint32_t &duration) const {
+  return !_current_state && _time - _last_change >= duration;
+}
+
+#endif // _EasyButton_h

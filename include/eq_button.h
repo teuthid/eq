@@ -42,7 +42,7 @@ inline EqButtonOverdrive &eqButtonOverdrive() {
 }
 
 template <uint8_t ButtonPin> void EqButton<ButtonPin>::init() {
-  button_.begin();
+  button_.init();
   setOnPressed_();
 }
 

@@ -15,6 +15,7 @@
 // #define EQ_STD_FUNCTION
 
 #ifdef EQ_STD_FUNCTION
+#include <functional>
 typedef std::function<void()> callback_t;
 #else
 typedef void (*callback_t)();
