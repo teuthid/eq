@@ -12,6 +12,14 @@
 
 #define EQ_DEBUG
 
+// #define EQ_STD_FUNCTION
+
+#ifdef EQ_STD_FUNCTION
+typedef std::function<void()> callback_t;
+#else
+typedef void (*callback_t)();
+#endif
+
 #define EQ_LED_STATUS_ENABLED true
 
 enum class EqLedStatusMode : uint8_t {
