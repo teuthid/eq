@@ -30,7 +30,7 @@ public:
 private:
   EqButton();
   void setOnPressed_(); // needs specialization
-  EasyButton button_;
+  EasyButton<ButtonPin> button_;
   static EqButton instance_;
 };
 

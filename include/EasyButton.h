@@ -11,7 +11,7 @@
 #include "eq_config.h"
 #include "eq_dpin.h"
 
-template <uint8_t ButtonPin> class EasyButton {
+template <uint8_t Pin> class EasyButton {
 public:
   EasyButton(uint32_t dbTime = 35, bool puEnable = true, bool invert = true)
       : _db_time(dbTime), _pu_enabled(puEnable), _invert(invert) {}
@@ -62,7 +62,7 @@ private:
   volatile uint8_t _press_sequences;          // number of sequences to count.
   volatile uint32_t _press_sequence_duration; // time limit of the sequence.
   volatile uint32_t _held_threshold;          // held threshold.
-  bool _was_btn_held;                         // Indicate if button was held.
+  bool _was_btn_held;                         // indicate if button was held.
   bool
       _held_callback_called; // indicate if button long press has been notified.
   // uint8_t _pin;      // Arduino pin number where the Button is connected to.
@@ -83,34 +83,34 @@ private:
       mPressedSequenceCallback; // callback function for pressedSequence events.
 };
 
-void template <uint8_t ButtonPin> EasyButton::init() {
+void template <uint8_t Pin> EasyButton::init() {
   // pinMode(_pin, _pu_enabled ? INPUT_PULLUP : INPUT);
   if (_pu_enabled)
-    EqDPin<ButtonPin>::setInputPulledUp();
+    EqDPin<Pin>::setInputPulledUp();
   else
-    EqDPin<ButtonPin>::setInput();
+    EqDPin<Pin>::setInput();
   //_current_state = digitalRead(_pin);
   // if (_invert)
   //  _current_state = !_current_state;
-  _current_state = _invert ? EqDPin<ButtonPin>::isInputLow()
-                           : EqDPin<ButtonPin>::isInputHigh();
+  _current_state =
+      _invert ? EqDPin<Pin>::isInputLow() : EqDPin<Pin>::isInputHigh();
   _time = millis();
   _last_state = _current_state;
   _changed = false;
   _last_change = _time;
 }
 
-void template <uint8_t ButtonPin> EasyButton::onPressed(callback_t callback) {
+void template <uint8_t Pin> EasyButton::onPressed(callback_t callback) {
   mPressedCallback = callback;
 }
 
-void template <uint8_t ButtonPin>
+void template <uint8_t Pin>
 EasyButton::onPressedFor(const uint32_t &duration, callback_t callback) {
   _held_threshold = duration;
   mPressedForCallback = callback;
 }
 
-void template <uint8_t ButtonPin>
+void template <uint8_t Pin>
 EasyButton::onSequence(const uint8_t &sequences, const uint32_t &duration,
                        callback_t callback) {
   _press_sequences = sequences;
@@ -118,28 +118,28 @@ EasyButton::onSequence(const uint8_t &sequences, const uint32_t &duration,
   mPressedSequenceCallback = callback;
 }
 
-bool template <uint8_t ButtonPin> EasyButton::isPressed() const {
+bool template <uint8_t Pin> EasyButton::isPressed() const {
   return _current_state;
 }
 
-bool template <uint8_t ButtonPin> EasyButton::isReleased() const {
+bool template <uint8_t Pin> EasyButton::isReleased() const {
   return !_current_state;
 }
 
-bool template <uint8_t ButtonPin> EasyButton::wasPressed() const {
+bool template <uint8_t Pin> EasyButton::wasPressed() const {
   return _current_state && _changed;
 }
 
-bool template <uint8_t ButtonPin> EasyButton::wasReleased() const {
+bool template <uint8_t Pin> EasyButton::wasReleased() const {
   return !_current_state && _changed;
 }
 
-bool template <uint8_t ButtonPin>
+bool template <uint8_t Pin>
 EasyButton::pressedFor(const uint32_t &duration) const {
   return _current_state && _time - _last_change >= duration;
 }
 
-bool template <uint8_t ButtonPin>
+bool template <uint8_t Pin>
 EasyButton::releasedFor(const uint32_t &duration) const {
   return !_current_state && _time - _last_change >= duration;
 }
