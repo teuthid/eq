@@ -17,6 +17,12 @@ void EqPwmTimer::setDutyCycle(const uint8_t &duty) {
   Timer1.setPwmDuty(EqConfig::fanPwmPin, map(min(duty, 100), 0, 100, 0, 1023));
 }
 
+void EqPwmTimer::attachCallback(IsrCallback callback) {
+  Timer1.attachInterrupt(callback);
+}
+
+void EqPwmTimer::detachCallback() { Timer1.detachInterrupt(); }
+
 #else
 // TODO: other architectures
 #endif

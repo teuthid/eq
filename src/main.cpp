@@ -3,7 +3,9 @@
    Copyright (c) 2018-2019 Mariusz Przygodzki
 */
 
+#include "eq_pwm_timer.h"
 #include "eq_tasks.h"
+
 #include <TaskScheduler.h>
 
 Scheduler eqController;
@@ -34,6 +36,7 @@ void setup() {
     Serial.println(F("Running..."));
 #endif
     eqController.startNow();
+    eqPwmTimer().attachCallback([]() { eqTaskButtonControl().restart(); });
     eqTaskBlowingControl().delay();
   } else {
     EqConfig::showAlert(EqConfig::alert());

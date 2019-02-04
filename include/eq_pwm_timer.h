@@ -11,9 +11,13 @@
 class EqPwmTimer {
   friend EqPwmTimer &eqPwmTimer();
 
+  typedef void (*IsrCallback)();
+
 public:
   void init();
   void setDutyCycle(const uint8_t &duty); // 0% .. 100%
+  void attachCallback(IsrCallback callback);
+  void detachCallback();
 
   EqPwmTimer(const EqPwmTimer &) = delete;
   EqPwmTimer(EqPwmTimer &&) = delete;

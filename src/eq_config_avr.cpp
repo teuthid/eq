@@ -10,9 +10,7 @@
 #include <avr/sleep.h>
 #include <avr/wdt.h>
 
-#include "eq_fan_pwm.h"
-#include "eq_led.h"
-#include "eq_pwm_timer.h"
+#include "eq_config.h"
 
 void EqConfig::disableWatchdog() { wdt_disable(); }
 
@@ -30,19 +28,11 @@ void EqConfig::enableWatchdog() {
 void EqConfig::resetWatchdog() { wdt_reset(); }
 
 void EqConfig::sleep() {
-  if (EqConfig::isFanTachometerEnabled())
-    EqFanPwm::stopTachometer();
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   sleep_enable();
   attachInterrupt(digitalPinToInterrupt(EqConfig::buttonOverdrivePin), []() {},
                   LOW);
   sei();
-  eqPwmTimer().setDutyCycle(0);
-  eqLedHeartbeat().setState(false);
-  eqLedAlert().setState(true);
-#if (EQ_LED_STATUS_ENABLED)
-  eqLedStatus().setState(false);
-#endif
   sleep_mode();
   // executed after the interrupt:
   sleep_disable();

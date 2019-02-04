@@ -10,6 +10,7 @@
 #include "eq_ht_sensor.h"
 #include "eq_led.h"
 #include "eq_light_sensor.h"
+#include "eq_pwm_timer.h"
 
 // heartbeat
 template <>
@@ -63,7 +64,16 @@ template <> bool EqTaskItSensorControl::Callback() {
       if (EqConfig::overheating()) { // maxCountOverheating reached
         setWatchdogPoint(3);
         EqConfig::disableAllTasks();
-        EqConfig::sleep();
+        if (EqConfig::isFanTachometerEnabled())
+          EqFanPwm::stopTachometer();
+        eqPwmTimer().setDutyCycle(0);
+        eqPwmTimer().detachCallback();
+        eqLedHeartbeat().setState(false);
+        eqLedAlert().setState(true);
+#if (EQ_LED_STATUS_ENABLED)
+        eqLedStatus().setState(false);
+#endif
+        EqConfig::sleep(); // wait for pressing override button
       }
     } else { // no overheating alert
       setWatchdogPoint(4);
@@ -125,17 +135,15 @@ template <> bool EqTaskFanControl::Callback() {
   return true;
 }
 
-// buttons control
+// buttons control (interrupt-driven) triggered by EqPwmTimer.
 template <>
 EqTaskButtonControl::EqTask()
-    : Task(EqConfig::buttonReadInterval * TASK_MILLISECOND, TASK_FOREVER,
-           nullptr, false) {
+    : Task(TASK_IMMEDIATE, TASK_ONCE, nullptr, false) {
   setId(static_cast<unsigned int>(EqTaskId::ButtonControl));
 }
 
 template <> bool EqTaskButtonControl::Callback() {
   eqButtonBacklight().read();
-  setWatchdogPoint(1);
   eqButtonOverdrive().read();
   return true;
 }
