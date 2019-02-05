@@ -1,12 +1,14 @@
-/**
- * EasyButton.h
- * @author Evert Arias
- * @version 1.0.0
- * @license MIT
- */
+/*
+   eq - transcendental fan controller ;)
+   Copyright (c) 2018-2019 Mariusz Przygodzki
+*/
 
-#ifndef _EasyButton_h
-#define _EasyButton_h
+// Based on the code from EasyButton
+// https://github.com/evert-arias/EasyButton
+// Author: Evert Arias
+
+#ifndef __EQ_BUTTON_H__
+#define __EQ_BUTTON_H__
 
 #include "eq_config.h"
 #include "eq_dpin.h"
@@ -215,4 +217,4 @@ template <uint8_t Pin> bool EqButton<Pin>::update() {
   return currentState_;
 }
 
-#endif // _EasyButton_h
+#endif // __EQ_BUTTON_H__
