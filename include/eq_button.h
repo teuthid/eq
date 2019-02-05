@@ -22,10 +22,6 @@ template <uint8_t Pin> class EqButton {
   friend EqButtonOverdrive &eqButtonOverdrive();
 
 public:
-  constexpr EqButton(bool puEnabled, bool invert)
-      : puEnabled_(puEnabled), invert_(invert) {}
-  ~EqButton() {}
-
   // Initialize a button object and the pin it's connected to.
   void init();
 
@@ -66,6 +62,10 @@ public:
 
   void read(); // needs specialization
 
+  EqButton(const EqButton &) = delete;
+  EqButton(EqButton &&) = delete;
+  void operator=(const EqButton &) = delete;
+
 private:
   uint32_t shortPressCount_; // short press counter.
   uint32_t firstPressTime_;  // time when button was pressed for first time.
@@ -88,6 +88,9 @@ private:
   callback_t pressedForCallback_; // callback function for pressedFor events.
   callback_t
       pressedSequenceCallback_; // callback function for pressedSequence events.
+
+  constexpr EqButton(bool puEnabled, bool invert)
+      : puEnabled_(puEnabled), invert_(invert) {}
 
   void connect_(); // needs specializations
 
