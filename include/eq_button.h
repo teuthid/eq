@@ -20,7 +20,7 @@ template <uint8_t Pin> class EqButton {
   friend EqButtonOverdrive &eqButtonOverdrive();
 
 public:
-  EqButton(bool puEnabled, bool invert)
+  constexpr EqButton(bool puEnabled, bool invert)
       : puEnabled_(puEnabled), invert_(invert) {}
   ~EqButton() {}
 
@@ -43,24 +43,24 @@ public:
                   callback_t callback);
 
   // Returns true if the button state was pressed at the last read.
-  bool isPressed() const;
+  constexpr bool isPressed() const;
 
   // Returns true if the button state was released at the last read.
-  bool isReleased() const;
+  constexpr bool isReleased() const;
 
   // Returns true if the button state at the last read was pressed.
-  bool wasPressed() const;
+  constexpr bool wasPressed() const;
 
   // Returns true if the button state at the last read was released.
-  bool wasReleased() const;
+  constexpr bool wasReleased() const;
 
   // Returns true if the button state at the last read was pressed, and has been
   // in that state for at least the given number of milliseconds.
-  bool pressedFor(const uint32_t &duration) const;
+  constexpr bool pressedFor(const uint32_t &duration) const;
 
   // Returns true if the button state at the last read was released, and has
   // been in that state for at least the given number of milliseconds.
-  bool releasedFor(const uint32_t &duration) const;
+  constexpr bool releasedFor(const uint32_t &duration) const;
 
   void read(); // needs specialization
 
@@ -133,29 +133,29 @@ void EqButton<Pin>::onSequence(const uint8_t &sequences,
   pressedSequenceCallback_ = callback;
 }
 
-template <uint8_t Pin> bool EqButton<Pin>::isPressed() const {
+template <uint8_t Pin> constexpr bool EqButton<Pin>::isPressed() const {
   return currentState_;
 }
 
-template <uint8_t Pin> bool EqButton<Pin>::isReleased() const {
+template <uint8_t Pin> constexpr bool EqButton<Pin>::isReleased() const {
   return !currentState_;
 }
 
-template <uint8_t Pin> bool EqButton<Pin>::wasPressed() const {
+template <uint8_t Pin> constexpr bool EqButton<Pin>::wasPressed() const {
   return currentState_ && changed_;
 }
 
-template <uint8_t Pin> bool EqButton<Pin>::wasReleased() const {
+template <uint8_t Pin> constexpr bool EqButton<Pin>::wasReleased() const {
   return !currentState_ && changed_;
 }
 
 template <uint8_t Pin>
-bool EqButton<Pin>::pressedFor(const uint32_t &duration) const {
+constexpr bool EqButton<Pin>::pressedFor(const uint32_t &duration) const {
   return currentState_ && time_ - lastChange_ >= duration;
 }
 
 template <uint8_t Pin>
-bool EqButton<Pin>::releasedFor(const uint32_t &duration) const {
+constexpr bool EqButton<Pin>::releasedFor(const uint32_t &duration) const {
   return !currentState_ && time_ - lastChange_ >= duration;
 }
 
