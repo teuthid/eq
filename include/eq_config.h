@@ -88,8 +88,10 @@ public:
   static constexpr bool ledAlertInvert = false;
   static constexpr bool ledStatusInvert = false;
   static constexpr bool lightSensorInvert = false;
-  static constexpr bool buttonOverdriveInvert = true;
   static constexpr bool buttonBacklightInvert = false; // touch switch
+  static constexpr bool buttonBacklightPullUpEnabled = true;
+  static constexpr bool buttonOverdriveInvert = true;
+  static constexpr bool buttonOverdrivePullUpEnabled = true;
 
   static constexpr uint8_t lcdI2CAddress = 0x27;    // EQ_LCD_1602
   static constexpr uint8_t am2320I2CAddress = 0x5C; // EQ_AM2320
