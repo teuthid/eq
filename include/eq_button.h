@@ -13,11 +13,15 @@
 #include "eq_config.h"
 #include "eq_dpin.h"
 
-template <uint8_t Pin> class EqButton;
-using EqButtonBacklight = EqButton<EqConfig::buttonBacklightPin>;
-using EqButtonOverdrive = EqButton<EqConfig::buttonOverdrivePin>;
+template <uint8_t Pin, bool PullUp, bool Invert> class EqButton;
+using EqButtonBacklight = EqButton<EqConfig::buttonBacklightPin,
+                                   EqConfig::buttonBacklightPullUpEnabled,
+                                   EqConfig::buttonBacklightInvert>;
+using EqButtonOverdrive = EqButton<EqConfig::buttonOverdrivePin,
+                                   EqConfig::buttonOverdrivePullUpEnabled,
+                                   EqConfig::buttonOverdriveInvert>;
 
-template <uint8_t Pin> class EqButton {
+template <uint8_t Pin, bool PullUp, bool Invert> class EqButton {
   friend EqButtonBacklight &eqButtonBacklight();
   friend EqButtonOverdrive &eqButtonOverdrive();
 
@@ -69,19 +73,16 @@ public:
 private:
   uint32_t shortPressCount_; // short press counter.
   uint32_t firstPressTime_;  // time when button was pressed for first time.
-  volatile uint8_t pressSequences_;         // number of sequences to count.
-  volatile uint32_t pressSequenceDuration_; // time limit of the sequence.
-  volatile uint32_t heldThreshold_;         // held threshold.
-  bool wasHeld_;                            // indicate if button was held.
+  uint8_t pressSequences_;   // number of sequences to count.
+  uint32_t pressSequenceDuration_; // time limit of the sequence.
+  uint32_t heldThreshold_;         // held threshold.
+  bool wasHeld_;                   // indicate if button was held.
   bool heldCallbackCalled_; // indicate if button long press has been notified.
-  volatile bool puEnabled_; // internal pullup resistor enabled.
-  volatile bool invert_;    // inverts button logic, ff true, low = pressed else
-                            // high = pressed.
-  volatile bool currentState_;   // current button state, true = pressed.
-  volatile bool lastState_;      // previous button state, true = pressed.
-  volatile bool changed_;        // has the state change since last read.
-  volatile uint32_t time_;       // time of current state.
-  volatile uint32_t lastChange_; // time of last state change.
+  bool currentState_;       // current button state, true = pressed.
+  bool lastState_;          // previous button state, true = pressed.
+  bool changed_;            // has the state change since last read.
+  uint32_t time_;           // time of current state.
+  uint32_t lastChange_;     // time of last state change.
 
   // callbacks
   callback_t pressedCallback_;    // callback function for pressed events.
@@ -89,8 +90,7 @@ private:
   callback_t
       pressedSequenceCallback_; // callback function for pressedSequence events.
 
-  constexpr EqButton(bool puEnabled, bool invert)
-      : puEnabled_(puEnabled), invert_(invert) {}
+  constexpr EqButton() {}
 
   void connect_(); // needs specializations
 
@@ -105,13 +105,14 @@ inline EqButtonOverdrive &eqButtonOverdrive() {
   return EqButtonOverdrive::instance_;
 }
 
-template <uint8_t Pin> void EqButton<Pin>::init() {
-  if (puEnabled_)
+template <uint8_t Pin, bool PullUp, bool Invert>
+void EqButton<Pin, PullUp, Invert>::init() {
+  if (PullUp)
     EqDPin<Pin>::setInputPulledUp();
   else
     EqDPin<Pin>::setInput();
   currentState_ =
-      invert_ ? EqDPin<Pin>::isInputLow() : EqDPin<Pin>::isInputHigh();
+      Invert ? EqDPin<Pin>::isInputLow() : EqDPin<Pin>::isInputHigh();
   time_ = millis();
   lastState_ = currentState_;
   changed_ = false;
@@ -119,55 +120,63 @@ template <uint8_t Pin> void EqButton<Pin>::init() {
   connect_();
 }
 
-template <uint8_t Pin> void EqButton<Pin>::onPressed(callback_t callback) {
+template <uint8_t Pin, bool PullUp, bool Invert>
+void EqButton<Pin, PullUp, Invert>::onPressed(callback_t callback) {
   pressedCallback_ = callback;
 }
 
-template <uint8_t Pin>
-void EqButton<Pin>::onPressedFor(const uint32_t &duration,
-                                 callback_t callback) {
+template <uint8_t Pin, bool PullUp, bool Invert>
+void EqButton<Pin, PullUp, Invert>::onPressedFor(const uint32_t &duration,
+                                                 callback_t callback) {
   heldThreshold_ = duration;
   pressedForCallback_ = callback;
 }
 
-template <uint8_t Pin>
-void EqButton<Pin>::onSequence(const uint8_t &sequences,
-                               const uint32_t &duration, callback_t callback) {
+template <uint8_t Pin, bool PullUp, bool Invert>
+void EqButton<Pin, PullUp, Invert>::onSequence(const uint8_t &sequences,
+                                               const uint32_t &duration,
+                                               callback_t callback) {
   pressSequences_ = sequences;
   pressSequenceDuration_ = duration;
   pressedSequenceCallback_ = callback;
 }
 
-template <uint8_t Pin> constexpr bool EqButton<Pin>::isPressed() const {
+template <uint8_t Pin, bool PullUp, bool Invert>
+constexpr bool EqButton<Pin, PullUp, Invert>::isPressed() const {
   return currentState_;
 }
 
-template <uint8_t Pin> constexpr bool EqButton<Pin>::isReleased() const {
+template <uint8_t Pin, bool PullUp, bool Invert>
+constexpr bool EqButton<Pin, PullUp, Invert>::isReleased() const {
   return !currentState_;
 }
 
-template <uint8_t Pin> constexpr bool EqButton<Pin>::wasPressed() const {
+template <uint8_t Pin, bool PullUp, bool Invert>
+constexpr bool EqButton<Pin, PullUp, Invert>::wasPressed() const {
   return currentState_ && changed_;
 }
 
-template <uint8_t Pin> constexpr bool EqButton<Pin>::wasReleased() const {
+template <uint8_t Pin, bool PullUp, bool Invert>
+constexpr bool EqButton<Pin, PullUp, Invert>::wasReleased() const {
   return !currentState_ && changed_;
 }
 
-template <uint8_t Pin>
-constexpr bool EqButton<Pin>::pressedFor(const uint32_t &duration) const {
+template <uint8_t Pin, bool PullUp, bool Invert>
+constexpr bool
+EqButton<Pin, PullUp, Invert>::pressedFor(const uint32_t &duration) const {
   return currentState_ && time_ - lastChange_ >= duration;
 }
 
-template <uint8_t Pin>
-constexpr bool EqButton<Pin>::releasedFor(const uint32_t &duration) const {
+template <uint8_t Pin, bool PullUp, bool Invert>
+constexpr bool
+EqButton<Pin, PullUp, Invert>::releasedFor(const uint32_t &duration) const {
   return !currentState_ && time_ - lastChange_ >= duration;
 }
 
-template <uint8_t Pin> bool EqButton<Pin>::update() {
+template <uint8_t Pin, bool PullUp, bool Invert>
+bool EqButton<Pin, PullUp, Invert>::update() {
   uint32_t __readStartedMs = millis();
-  bool pinVal =
-      invert_ ? EqDPin<Pin>::isInputLow() : EqDPin<Pin>::isInputHigh();
+  bool pinVal = Invert ? EqDPin<Pin>::isInputLow() : EqDPin<Pin>::isInputHigh();
   if (__readStartedMs - lastChange_ < dbTime_) {
     changed_ = false;
   } else { // button's state has changed.

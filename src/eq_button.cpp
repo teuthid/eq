@@ -31,11 +31,5 @@ template <> void EqButtonOverdrive::connect_() {
 }
 
 // instances of EqButton
-template <>
-EqButtonBacklight
-    EqButtonBacklight::instance_(EqConfig::buttonBacklightPullUpEnabled,
-                                 EqConfig::buttonBacklightInvert);
-template <>
-EqButtonOverdrive
-    EqButtonOverdrive::instance_(EqConfig::buttonOverdrivePullUpEnabled,
-                                 EqConfig::buttonOverdriveInvert);
+template <> EqButtonBacklight EqButtonBacklight::instance_{};
+template <> EqButtonOverdrive EqButtonOverdrive::instance_{};
