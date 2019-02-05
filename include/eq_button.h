@@ -64,7 +64,7 @@ public:
   // been in that state for at least the given number of milliseconds.
   constexpr bool releasedFor(const uint32_t &duration) const;
 
-  void read(); // needs specialization
+  void read(); // needs specialization (shall call update())
 
   EqButton(const EqButton &) = delete;
   EqButton(EqButton &&) = delete;
@@ -92,7 +92,7 @@ private:
 
   constexpr EqButton() {}
 
-  void connect_(); // needs specializations
+  void connect_(); // needs specializations (called in init())
 
   static constexpr uint32_t dbTime_ = EqConfig::buttonDebounceTime;
   static EqButton instance_;
