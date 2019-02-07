@@ -29,7 +29,7 @@ public:
     HtSensorInterval = 2,
     HtSensorHumidityThreshold = 3,
     HtSensorTemperatureThreshold = 4,
-    HtSensorHumidityCorrection = 5,   // round(hc * 10)
+    HtSensorHumidityCorrection = 5,    // round(hc * 10)
     HtSensorTemperatureCorrection = 6, // round(tc * 10)
     HtIndexType = 7,
     OverdriveStep = 8,
@@ -74,7 +74,6 @@ T EqEeprom::readValue(ParameterId id, const T &defaultValue) {
 template <typename T>
 void EqEeprom::writeValue(ParameterId id, const T &value) {
   uint16_t __address = paramAddress_(id);
-  EQ_INTERRUPT_LOCK
   EEPROM.put(__address, value);
   EEPROM.update(__address + paramSizes_[id] - 1, marker_);
 }

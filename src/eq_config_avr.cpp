@@ -39,4 +39,9 @@ void EqConfig::sleep() {
   EqConfig::reset();
 }
 
+ISR(WDT_vect) // Watchdog timeout ISR
+{
+  EqConfig::saveWatchdogPoint();
+}
+
 #endif // EQ_ARCH_AVR

@@ -24,8 +24,8 @@ uint8_t EqConfig::readWatchdogPoint() {
   return EqEeprom::readValue<uint8_t>(EqEeprom::LastWatchdogPoint, 0);
 }
 
-void EqConfig::saveWatchdogPoint(const uint8_t &point) {
-  EqEeprom::writeValue<uint8_t>(EqEeprom::LastWatchdogPoint, point);
+void EqConfig::clearWatchdogPoint() {
+  EqEeprom::writeValue<uint8_t>(EqEeprom::LastWatchdogPoint, 0);
 }
 
 bool EqConfig::init() {
@@ -54,13 +54,13 @@ bool EqConfig::init() {
     return false;
   clearOverheating();
   clearWatchdogPoint();
+  enableWatchdog();
   return true;
 }
 
 void EqConfig::reset(const bool &cleanEeprom) {
   EqEeprom::init(cleanEeprom);
-  enableWatchdog();
-  while (true) {
+  while (true) { // waiting fot watchodg
   }
 }
 

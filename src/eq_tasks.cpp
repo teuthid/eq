@@ -19,6 +19,7 @@ EqTaskHeartbeat::EqTask() : Task(TASK_SECOND, TASK_FOREVER, nullptr, false) {
 }
 
 template <> bool EqTaskHeartbeat::Callback() {
+  EqConfig::resetWatchdog();
   eqLightSensor().read();
   setWatchdogPoint(1);
   if (EqConfig::anyAlert()) {
@@ -52,6 +53,7 @@ EqTaskItSensorControl::EqTask()
 }
 
 template <> bool EqTaskItSensorControl::Callback() {
+  EqConfig::resetWatchdog();
   if (!eqItSensor().read())
     EqConfig::setAlert(EqAlertType::ItSensor);
   else {
@@ -92,6 +94,7 @@ EqTaskHtSensorControl::EqTask()
 }
 
 template <> bool EqTaskHtSensorControl::Callback() {
+  EqConfig::resetWatchdog();
   if (!eqHtSensor().read()) {
     setWatchdogPoint(1);
     EqConfig::setAlert(EqAlertType::HtSensor);
@@ -111,6 +114,7 @@ EqTaskFanControl::EqTask()
 }
 
 template <> bool EqTaskFanControl::Callback() {
+  EqConfig::resetWatchdog();
   // setting pwm:
   if (!EqConfig::anyAlert())
     if (EqConfig::overdriveTime() > 0) {
@@ -157,6 +161,7 @@ EqTaskBlowingControl::EqTask()
 }
 
 template <> bool EqTaskBlowingControl::Callback() {
+  EqConfig::resetWatchdog();
   if (EqConfig::isBlowingEnabled())
     if (EqConfig::overdriveTime() == 0) {
       // only if override mode is not active
@@ -178,6 +183,7 @@ EqTaskDebug::EqTask()
 }
 
 template <> bool EqTaskDebug::Callback() {
+  EqConfig::resetWatchdog();
   EqConfig::printValue(F("L="), eqLightSensor().intensity());
   EqConfig::printValue(F(" H="), fixed_to_float(eqHtSensor().lastHumidity()));
   EqConfig::printValue(F(" T="),

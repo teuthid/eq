@@ -47,7 +47,7 @@ template <EqTaskId Id> class EqTask : public Task {
 #endif
 
 public:
-  void setWatchdogPoint(uint8_t point);
+  void setWatchdogPoint(const uint8_t &point);
   EqTask(const EqTask &) = delete;
   EqTask(EqTask &&) = delete;
   void operator=(const EqTask &) = delete;
@@ -78,10 +78,10 @@ inline EqTaskBlowingControl &eqTaskBlowingControl() {
 inline EqTaskDebug &eqTaskDebug() { return EqTaskDebug::instance_; }
 #endif
 
-template <EqTaskId Id> void EqTask<Id>::setWatchdogPoint(uint8_t point) {
+template <EqTaskId Id> void EqTask<Id>::setWatchdogPoint(const uint8_t &point) {
 #ifdef EQ_DEBUG
   EQ_INTERRUPT_LOCK
-  setControlPoint(static_cast<unsigned int>(Id) + point);
+  setControlPoint(static_cast<uint8_t>(Id) + point);
 #endif
 }
 

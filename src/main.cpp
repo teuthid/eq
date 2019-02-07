@@ -3,6 +3,7 @@
    Copyright (c) 2018-2019 Mariusz Przygodzki
 */
 
+#include "eq_eeprom.h"
 #include "eq_pwm_timer.h"
 #include "eq_tasks.h"
 
@@ -10,8 +11,6 @@
 
 Scheduler eqController;
 Scheduler eqHPController; // high priority scheduler
-
-void EqConfig::disableAllTasks() { eqController.disableAll(); }
 
 void setup() {
   Serial.begin(115200);
@@ -45,3 +44,21 @@ void setup() {
 }
 
 void loop() { eqController.execute(); }
+
+void EqConfig::disableAllTasks() {
+  // disable all tasks in both sschedulers
+  eqController.disableAll();
+}
+
+void EqConfig::saveWatchdogPoint() {
+  Task &__t = eqController.currentTask();
+#ifdef EQ_DEBUG
+  uint8_t __cp = __t.getControlPoint();
+  if (__cp == 0) // control point is not set
+    __cp = __t.getId();
+  EqEeprom::writeValue<uint8_t>(EqEeprom::LastWatchdogPoint, __cp);
+#else
+  EqEeprom::writeValue<uint8_t>(EqEeprom::LastWatchdogPoint,
+                                static_cast<uint8_t>(__t.getId()));
+#endif
+}
