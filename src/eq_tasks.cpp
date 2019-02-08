@@ -75,6 +75,7 @@ template <> bool EqTaskItSensorControl::Callback() {
 #if (EQ_LED_STATUS_ENABLED)
         eqLedStatus().setState(false);
 #endif
+        EqConfig::disableWatchdog();
         EqConfig::sleep(); // wait for pressing override button
       }
     } else { // no overheating

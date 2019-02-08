@@ -12,20 +12,31 @@
 
 #include "eq_config.h"
 
-void EqConfig::disableWatchdog() { wdt_disable(); }
-
-void EqConfig::enableWatchdog() {
-  cli();
-  wdt_reset();
-  // set up WDT interrupt
-  WDTCSR = (1 << WDCE) | (1 << WDE);
-  // start watchdog timer (delay of 2s)
-  WDTCSR = (1 << WDIE) | (1 << WDE) | (WDTO_2S & 0x2F);
-  //  WDTCSR = (1<<WDIE)|(WDTO_2S & 0x2F);  // interrupt only without reset
-  sei();
+void EqConfig::disableWatchdog() {
+  if (watchdogEnabled_) {
+    wdt_disable();
+    watchdogEnabled_ = false;
+  }
 }
 
-void EqConfig::resetWatchdog() { wdt_reset(); }
+void EqConfig::enableWatchdog() {
+  if (!watchdogEnabled_) {
+    cli();
+    wdt_reset();
+    // set up WDT interrupt
+    WDTCSR = (1 << WDCE) | (1 << WDE);
+    // start watchdog timer (delay of 2s)
+    WDTCSR = (1 << WDIE) | (1 << WDE) | (WDTO_2S & 0x2F);
+    //  WDTCSR = (1<<WDIE)|(WDTO_2S & 0x2F);  // interrupt only without reset
+    sei();
+    watchdogEnabled_ = true;
+  }
+}
+
+void EqConfig::resetWatchdog() {
+  if (watchdogEnabled_)
+    wdt_reset();
+}
 
 void EqConfig::sleep() {
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
@@ -39,7 +50,7 @@ void EqConfig::sleep() {
   EqConfig::reset();
 }
 
-ISR(WDT_vect) // Watchdog timeout ISR
+ISR(WDT_vect) // watchdog timeout ISR
 {
   EqConfig::saveWatchdogPoint();
 }

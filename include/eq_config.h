@@ -266,6 +266,7 @@ public:
 
 private:
   EqConfig() {}
+  static bool watchdogEnabled_;
   static EqAlertType alert_;
   static uint16_t overdriveTime_;
   static uint16_t backlightTimeCounter_;

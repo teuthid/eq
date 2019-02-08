@@ -16,6 +16,7 @@
 #include "eq_pwm_timer.h"
 #include "eq_tasks.h"
 
+bool EqConfig::watchdogEnabled_ = false;
 EqAlertType EqConfig::alert_ = EqAlertType::None;
 uint16_t EqConfig::overdriveTime_ = 0;
 uint16_t EqConfig::backlightTimeCounter_ = 0;
@@ -60,7 +61,8 @@ bool EqConfig::init() {
 
 void EqConfig::reset(const bool &cleanEeprom) {
   EqEeprom::init(cleanEeprom);
-  while (true) { // waiting fot watchodg
+  enableWatchdog();
+  while (true) { // waiting for watchdog
   }
 }
 
