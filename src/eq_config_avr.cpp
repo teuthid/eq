@@ -52,7 +52,8 @@ void EqConfig::sleep() {
 
 ISR(WDT_vect) // watchdog timeout ISR
 {
-  EqConfig::saveWatchdogPoint();
+  if (!EqConfig::overheating())
+    EqConfig::saveWatchdogPoint();
 }
 
 #endif // EQ_ARCH_AVR
