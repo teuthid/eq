@@ -42,6 +42,16 @@ private:
   typedef uint8_p Digit_[6];
   static const PROGMEM Digit_ digits_[]; // definitons of big digits
 
+#if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
+  static constexpr uint8_t maxCols_ = 16;
+  static constexpr uint8_t maxRows_ = 2;
+  static constexpr uint8_t maxSpeedDots_ = 10;
+#elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
+  static constexpr uint8_t maxCols_ = 20;
+  static constexpr uint8_t maxRows_ = 4;
+  static constexpr uint8_t maxSpeedDots_ = 20;
+#endif
+
   void clear_();
   void printDigit_(const uint8_t &digit, const uint8_t &col);
   void printValue_(const uint8_t &value, const uint8_t &col);
@@ -95,17 +105,17 @@ bool EqLcd::init() {
     EqConfig::setAlert(EqAlertType::Display);
     return false;
   }
-  lcd_.begin(16, 2);
+  lcd_.begin(maxCols_, maxRows_);
   lcd_.noBlink();
   lcd_.noCursor();
   lcd_.noAutoscroll();
-  lcd_.setBacklight(255);
+  lcd_.setBacklight(0xFF);
   lcd_.print(F("Booting... "));
   lcd_.print(EqConfig::readWatchdogPoint());
   uint8_t __bar[8];
   for (uint8_t __i = 0; __i < 8; __i++) {
     for (uint8_t __j = 0; __j < 8; __j++)
-      __bar[__j] = EqLcd::bars_[__i][__j]; // uint8_p => uint8_t
+      __bar[__j] = bars_[__i][__j]; // uint8_p => uint8_t
     lcd_.createChar(__i + 1, __bar);
   }
   return true;
@@ -114,10 +124,10 @@ bool EqLcd::init() {
 void EqLcd::turnOff() {
   lcd_.setBacklight(0);
   clear_();
-  lastSpeedDots_ = 0xFF; // clear flag
+  lastSpeedDots_ = 0xFF;
 }
 
-void EqLcd::turnOn() { lcd_.setBacklight(255); }
+void EqLcd::turnOn() { lcd_.setBacklight(0xFF); }
 
 void EqLcd::showHT() {
   printValue_(eqHtSensor().lastHumidityAsLong(), 0);
@@ -142,14 +152,14 @@ void EqLcd::showOverdriveTime() {
 
 void EqLcd::showFanSpeed(bool detected, uint8_t percents) {
   uint8_t __s = detected ? eqFanPwm().lastSpeed() : percents;
-  uint8_t __c = min(10, __s / 10);
+  uint8_t __c = min(maxSpeedDots_, __s / maxSpeedDots_);
   if ((__s > 0) && (__c == 0))
     __c = 1;
   if (lastSpeedDots_ != __c) {
     lcd_.setCursor(6, 1);
     for (uint8_t __i = 0; __i < __c; __i++)
       lcd_.write(0xFF);
-    for (uint8_t __i = __c; __i < 10; __i++)
+    for (uint8_t __i = __c; __i < maxSpeedDots_; __i++)
       lcd_.write(0xA5);
     lastSpeedDots_ = __c;
   }
@@ -157,9 +167,9 @@ void EqLcd::showFanSpeed(bool detected, uint8_t percents) {
 
 void EqLcd::showMessage(const char *message) {
   lcd_.setCursor(0, 1);
-  for (uint8_t __i = 0; __i < 16; __i++)
+  for (uint8_t __i = 0; __i < maxCols_; __i++)
     lcd_.write(0x20);
-  lcd_.setCursor(17 - min(16, strlen(message)), 1);
+  lcd_.setCursor(maxCols_ + 1 - min(maxCols_, strlen(message)), 1);
   lcd_.print(message);
 }
 
