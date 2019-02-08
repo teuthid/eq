@@ -23,7 +23,6 @@ public:
   void turnOff();
   void turnOn();
   void showHT();
-  void showTrends();
   void showOverdriveTime();
   void showFanSpeed(bool detected = true, uint8_t percents = 0);
   void showMessage(const char *message); // second line
@@ -31,22 +30,23 @@ public:
   void showCalibrating(const uint8_t &percents);
 
 private:
-  bool cleared_ = false;
-  uint8_t lastSpeedDots_ = 0xFF;
+  bool cleared_ = false; // true if screen was already cleared
+  uint8_t lastSpeedDots_ =
+      0xFF; // last displayed number of dots (speed)
+            // 0xFF means that the dots were not displayed at all
   LiquidCrystal_PCF8574 lcd_;
 
   typedef uint8_p Bar_[8];
-  static const PROGMEM Bar_ bars_[];
+  static const PROGMEM Bar_ bars_[]; // elements of big digits
 
   typedef uint8_p Digit_[6];
-  static const PROGMEM Digit_ digits_[];
+  static const PROGMEM Digit_ digits_[]; // definitons of big digits
 
   void clear_();
   void printDigit_(const uint8_t &digit, const uint8_t &col);
   void printValue_(const uint8_t &value, const uint8_t &col);
 };
 
-// elements of big digits:
 const PROGMEM EqLcd::Bar_ EqLcd::bars_[] = {
     {B11100, B11110, B11110, B11110, B11110, B11110, B11110, B11100},
     {B00111, B01111, B01111, B01111, B01111, B01111, B01111, B00111},
@@ -129,26 +129,6 @@ void EqLcd::showHT() {
   cleared_ = false;
 }
 
-void EqLcd::showTrends() {
-  int8_t __tH = eqHtSensor().trendHumidity();
-  int8_t __tT = eqHtSensor().trendTemperature();
-  lcd_.setCursor(7, 0);
-  if (__tH > 0)
-    lcd_.write(0x7E);
-  else if (__tH < 0)
-    lcd_.write(0x7F);
-  else
-    lcd_.write(0x20);
-  lcd_.print(F("  "));
-  lcd_.setCursor(15, 0);
-  if (__tT > 0)
-    lcd_.write(0x7E);
-  else if (__tT < 0)
-    lcd_.write(0x7F);
-  else
-    lcd_.write(0x20);
-}
-
 void EqLcd::showOverdriveTime() {
   clear_();
   printValue_(EqConfig::overdriveTime() / 60, 2);
@@ -217,8 +197,6 @@ template <> void EqDisplayLcd::turnOff_() { __lcd.turnOff(); }
 template <> void EqDisplayLcd::turnOn_() { __lcd.turnOn(); }
 
 template <> void EqDisplayLcd::showHT_() { __lcd.showHT(); }
-
-template <> void EqDisplayLcd::showTrends_() { __lcd.showTrends(); }
 
 template <> void EqDisplayLcd::showOverdriveTime_() {
   __lcd.showOverdriveTime();

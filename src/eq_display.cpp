@@ -11,7 +11,6 @@ template <> bool EqDisplay<EQ_NO_DISPLAY>::initDisplay_() { return true; }
 template <> void EqDisplay<EQ_NO_DISPLAY>::turnOff_() {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::turnOn_() {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::showHT_() {}
-template <> void EqDisplay<EQ_NO_DISPLAY>::showTrends_() {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::showOverdriveTime_() {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::showFanSpeed_() {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::showMessage(const char) {}

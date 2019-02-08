@@ -33,7 +33,6 @@ private:
   void turnOff_();
   void turnOn_();
   void showHT_();
-  void showTrends_();
   void showOverdriveTime_();
   void showFanSpeed_();
 
@@ -59,7 +58,6 @@ template <uint8_t Model> void EqDisplay<Model>::show() {
     if (!EqConfig::anyAlert())
       if (EqConfig::overdriveTime() == 0) {
         showHT_();
-        showTrends_();
         showFanSpeed_();
       } else // show overdrive time
         showOverdriveTime_();
