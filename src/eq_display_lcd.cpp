@@ -31,6 +31,8 @@ public:
 
 private:
   bool cleared_ = false; // true if screen was already cleared
+  uint16_t lastDH_ = 0;  // last displayed humidity
+  uint16_t lastDT_ = 0;  // last displayed temperature
   uint8_t lastSpeedDots_ =
       0xFF; // last displayed number of dots (speed)
             // 0xFF means that the dots were not displayed at all
@@ -55,6 +57,8 @@ private:
   void clear_();
   void printDigit_(const uint8_t &digit, const uint8_t &col);
   void printValue_(const uint8_t &value, const uint8_t &col);
+  void printHumidity_();
+  void printTemperature_();
 };
 
 const PROGMEM EqLcd::Bar_ EqLcd::bars_[] = {
@@ -99,6 +103,26 @@ void EqLcd::printValue_(const uint8_t &value, const uint8_t &col) {
   printDigit_(value % 10, col + 3);
 }
 
+void EqLcd::printHumidity_() {
+  uint8_t __x = lastDH_ / 10;
+#if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
+  printValue_(__x, 0);
+  lcd_.setCursor(6, 0);
+  lcd_.write('.');
+  lcd_.write((lastDH_ % 10) + 48); // digit to ascii code
+  lcd_.write('%');
+#elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
+// TODO
+#endif
+}
+
+void EqLcd::printTemperature_() {
+#if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
+#elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
+// TODO
+#endif
+}
+
 bool EqLcd::init() {
   Wire.beginTransmission(EqConfig::lcdI2CAddress);
   if (Wire.endTransmission() != 0) {
@@ -130,9 +154,12 @@ void EqLcd::turnOff() {
 void EqLcd::turnOn() { lcd_.setBacklight(0xFF); }
 
 void EqLcd::showHT() {
-  printValue_(eqHtSensor().lastHumidityAsLong(), 0);
-  lcd_.setCursor(6, 0);
-  lcd_.print(F("% "));
+  uint16_t __DH = fixed_to_int(eqHtSensor().lastHumidity() * 10);
+  uint16_t __DT = fixed_to_int(eqHtSensor().lastTemperature() * 10);
+  if (cleared_ || (__DH != lastDH_)) {
+    lastDH_ = __DH;
+    printHumidity_();
+  }
   lcd_.setCursor(10, 0);
   lcd_.print(fixed_to_float(eqHtSensor().lastTemperature()), 1);
   lcd_.write(0xDF);
