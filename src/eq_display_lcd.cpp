@@ -104,9 +104,8 @@ void EqLcd::printValue_(const uint8_t &value, const uint8_t &col) {
 }
 
 void EqLcd::printHumidity_() {
-  uint8_t __x = lastDH_ / 10;
 #if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
-  printValue_(__x, 0);
+  printValue_(lastDH_ / 10, 0);
   lcd_.setCursor(6, 0);
   lcd_.write('.');
   lcd_.write((lastDH_ % 10) + 48); // digit to ascii code
@@ -118,6 +117,12 @@ void EqLcd::printHumidity_() {
 
 void EqLcd::printTemperature_() {
 #if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
+  lcd_.setCursor(9, 0);
+  lcd_.print(F("  "));
+  lcd_.print(lastDT_ / 10);
+  lcd_.write('.');
+  lcd_.write((lastDT_ % 10) + 48); // digit to ascii code
+  lcd_.write(0xDF);
 #elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
 // TODO
 #endif
@@ -160,9 +165,10 @@ void EqLcd::showHT() {
     lastDH_ = __DH;
     printHumidity_();
   }
-  lcd_.setCursor(10, 0);
-  lcd_.print(fixed_to_float(eqHtSensor().lastTemperature()), 1);
-  lcd_.write(0xDF);
+  if (cleared_ || (__DT != lastDT_)) {
+    lastDT_ = __DT;
+    printTemperature_();
+  }
   cleared_ = false;
 }
 
