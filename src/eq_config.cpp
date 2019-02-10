@@ -49,13 +49,16 @@ bool EqConfig::init() {
     return false;
   if (!eqHtSensor().init())
     return false;
-  eqButtonBacklight().init();
-  eqButtonOverdrive().init();
   if (!eqFanPwm().init())
     return false;
+  eqButtonBacklight().init();
+  eqButtonOverdrive().init();
   clearOverheating();
   clearWatchdogPoint();
   enableWatchdog();
+  alert_ = EqAlertType::None;
+  overdriveTime_ = 0;
+  backlightTimeCounter_ = 0;
   return true;
 }
 

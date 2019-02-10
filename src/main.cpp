@@ -36,7 +36,6 @@ void setup() {
 #endif
     eqController.startNow();
     eqPwmTimer().attachCallback([]() { eqTaskButtonControl().restart(); });
-    eqTaskBlowingControl().delay();
   } else {
     EqConfig::showAlert(EqConfig::alert());
     abort();

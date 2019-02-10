@@ -48,6 +48,8 @@ private:
   static constexpr uint8_t maxCols_ = 16;
   static constexpr uint8_t maxRows_ = 2;
   static constexpr uint8_t maxSpeedDots_ = 10;
+  static constexpr uint8_t colSpeedBar_ = 6;
+  static constexpr uint8_t rowSpeedBar_ = 1;
 #elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
   static constexpr uint8_t maxCols_ = 20;
   static constexpr uint8_t maxRows_ = 4;
@@ -189,7 +191,7 @@ void EqLcd::showFanSpeed(bool detected, uint8_t percents) {
   if ((__s > 0) && (__c == 0))
     __c = 1;
   if (lastSpeedDots_ != __c) {
-    lcd_.setCursor(6, 1);
+    lcd_.setCursor(colSpeedBar_, rowSpeedBar_);
     for (uint8_t __i = 0; __i < __c; __i++)
       lcd_.write(0xFF);
     for (uint8_t __i = __c; __i < maxSpeedDots_; __i++)

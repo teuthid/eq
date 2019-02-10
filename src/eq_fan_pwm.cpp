@@ -26,9 +26,10 @@ bool EqFanPwm::init() {
     timeCount_ = micros();
     startTachometer();
     return calibrate_();
-  } else {       // tachometer is disabled
-    delay(1000); // just for showing boot message
-    EqConfig::increaseOverdriveTime(5);
+  } else { // tachometer is disabled
+    eqPwmTimer().setDutyCycle(100);
+    delay(5000); // test run of the fan due to lack of tachometer
+    eqPwmTimer().setDutyCycle(0);
     return true;
   }
 }
