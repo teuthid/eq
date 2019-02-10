@@ -280,15 +280,20 @@ void EqConfig::setOverdriveTime(const uint16_t &value) {
 }
 
 void EqConfig::decreaseOverdriveTime(const uint16_t &value) {
-  overdriveTime_ = (overdriveTime_ > value) ? (overdriveTime_ - value) : 0;
+  if (value > 0)
+    overdriveTime_ = (overdriveTime_ > value) ? (overdriveTime_ - value) : 0;
 }
 
 void EqConfig::increaseOverdriveTime(const uint16_t &value,
                                      const bool &backlight) {
-  if (overdriveTime_ < overdriveMaxTime) {
-    overdriveTime_ = min(overdriveTime_ + value, overdriveMaxTime);
-    if (backlight)
-      setBacklight();
+  if (value > 0) {
+    if (overdriveTime_ == 0)
+      eqTaskFanControl().forceNextIteration();
+    if (overdriveTime_ < overdriveMaxTime) {
+      overdriveTime_ = min(overdriveTime_ + value, overdriveMaxTime);
+      if (backlight)
+        setBacklight();
+    }
   }
 }
 
