@@ -287,7 +287,7 @@ void EqConfig::decreaseOverdriveTime(const uint16_t &value) {
 void EqConfig::increaseOverdriveTime(const uint16_t &value,
                                      const bool &backlight) {
   if (value > 0) {
-    if (overdriveTime_ == 0)
+    if (overdriveTime_ == 0) // force overdrive mode for execution immediately
       eqTaskFanControl().forceNextIteration();
     if (overdriveTime_ < overdriveMaxTime) {
       overdriveTime_ = min(overdriveTime_ + value, overdriveMaxTime);

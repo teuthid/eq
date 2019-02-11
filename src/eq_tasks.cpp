@@ -125,15 +125,17 @@ template <> bool EqTaskFanControl::Callback() {
       setWatchdogPoint(2);
       eqFanPwm().setDutyCycle();
     }
-  else { // alerts detected
+  else { // any alert detected
     setWatchdogPoint(3);
     eqFanPwm().stop();
+    return false;
   }
   // reading fan speed:
   if (!eqFanPwm().readSpeed()) {
     setWatchdogPoint(4);
     EqConfig::setAlert(EqAlertType::Fan);
-  } else { // zero speed detected
+    return false;
+  } else { // fan is working properly
     setWatchdogPoint(5);
     EqConfig::resetAlert(EqAlertType::Fan);
   }
