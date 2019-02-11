@@ -54,9 +54,10 @@ EqTaskItSensorControl::EqTask()
 
 template <> bool EqTaskItSensorControl::Callback() {
   EqConfig::resetWatchdog();
-  if (!eqItSensor().read())
+  if (!eqItSensor().read()) {
     EqConfig::setAlert(EqAlertType::ItSensor);
-  else {
+    return false;
+  } else {
     setWatchdogPoint(1);
     EqConfig::resetAlert(EqAlertType::ItSensor);
     if (eqItSensor().temperature() > EqConfig::itSensorMaxTemperature) {
@@ -99,7 +100,8 @@ template <> bool EqTaskHtSensorControl::Callback() {
   if (!eqHtSensor().read()) {
     setWatchdogPoint(1);
     EqConfig::setAlert(EqAlertType::HtSensor);
-  } else { // no alert
+    return false;
+  } else { // no alerts
     setWatchdogPoint(2);
     EqConfig::resetAlert(EqAlertType::HtSensor);
   }
