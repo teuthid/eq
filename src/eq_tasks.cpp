@@ -167,13 +167,16 @@ EqTaskBlowingControl::EqTask()
 
 template <> bool EqTaskBlowingControl::Callback() {
   EqConfig::resetWatchdog();
-  if (EqConfig::isBlowingEnabled() && !isFirstIteration())
-    if (EqConfig::overdriveTime() == 0) {
-      // only if override mode is not active
-      EqConfig::increaseOverdriveTime(EqConfig::blowingTime(), false);
-      setWatchdogPoint(1);
-      return true;
-    }
+  if (!EqConfig::isBlowingEnabled())
+    return false;
+  if (isFirstIteration())
+    return true;
+  if (EqConfig::overdriveTime() == 0) {
+    // only if override mode is not active
+    EqConfig::increaseOverdriveTime(EqConfig::blowingTime(), false);
+    setWatchdogPoint(1);
+    return true;
+  }
   return false; // non-productive run
 }
 
