@@ -22,7 +22,6 @@ void setup() {
     eqController.addTask(eqTaskHeartbeat());
     eqController.addTask(eqTaskHtSensorControl());
     eqController.addTask(eqTaskFanControl());
-    eqController.addTask(eqTaskButtonControl());
     eqController.addTask(eqTaskBlowingControl());
 #ifdef EQ_DEBUG
     eqController.addTask(eqTaskDebug());
@@ -35,7 +34,7 @@ void setup() {
     Serial.println(F("Running..."));
 #endif
     eqController.startNow();
-    eqPwmTimer().attachCallback([]() { eqTaskButtonControl().restart(); });
+    eqTaskBlowingControl().delay();
   } else {
     EqConfig::showAlert(EqConfig::alert());
     abort();

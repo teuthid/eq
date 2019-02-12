@@ -16,10 +16,10 @@
 #include "eq_pwm_timer.h"
 #include "eq_tasks.h"
 
-bool EqConfig::watchdogEnabled_ = false;
-EqAlertType EqConfig::alert_ = EqAlertType::None;
-uint16_t EqConfig::overdriveTime_ = 0;
-uint16_t EqConfig::backlightTimeCounter_ = 0;
+bool EqConfig::watchdogEnabled_{false};
+EqAlertType EqConfig::alert_{EqAlertType::None};
+uint16_t EqConfig::overdriveTime_{0};
+uint16_t EqConfig::backlightTimeCounter_{0};
 
 uint8_t EqConfig::readWatchdogPoint() {
   return EqEeprom::readValue<uint8_t>(EqEeprom::LastWatchdogPoint, 0);
@@ -53,6 +53,10 @@ bool EqConfig::init() {
     return false;
   eqButtonBacklight().init();
   eqButtonOverdrive().init();
+  eqPwmTimer().attachCallback([]() {
+    eqButtonBacklight().read();
+    eqButtonOverdrive().read();
+  });
   clearOverheating();
   clearWatchdogPoint();
   enableWatchdog();

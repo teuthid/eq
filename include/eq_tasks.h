@@ -19,8 +19,7 @@ enum class EqTaskId : uint8_t {
   ItSensorControl = 20,
   HtSensorControl = 30,
   FanControl = 40,
-  ButtonControl = 50,
-  BlowingControl = 60,
+  BlowingControl = 50,
   Debug = 255
 };
 
@@ -29,7 +28,6 @@ using EqTaskHeartbeat = EqTask<EqTaskId::Heartbeat>;
 using EqTaskItSensorControl = EqTask<EqTaskId::ItSensorControl>;
 using EqTaskHtSensorControl = EqTask<EqTaskId::HtSensorControl>;
 using EqTaskFanControl = EqTask<EqTaskId::FanControl>;
-using EqTaskButtonControl = EqTask<EqTaskId::ButtonControl>;
 using EqTaskBlowingControl = EqTask<EqTaskId::BlowingControl>;
 #ifdef EQ_DEBUG
 using EqTaskDebug = EqTask<EqTaskId::Debug>;
@@ -40,7 +38,6 @@ template <EqTaskId Id> class EqTask : public Task {
   friend EqTaskItSensorControl &eqTaskItSensorControl();
   friend EqTaskHtSensorControl &eqTaskHtSensorControl();
   friend EqTaskFanControl &eqTaskFanControl();
-  friend EqTaskButtonControl &eqTaskButtonControl();
   friend EqTaskBlowingControl &eqTaskBlowingControl();
 #ifdef EQ_DEBUG
   friend EqTaskDebug &eqTaskDebug();
@@ -67,9 +64,6 @@ inline EqTaskHtSensorControl &eqTaskHtSensorControl() {
 }
 inline EqTaskFanControl &eqTaskFanControl() {
   return EqTaskFanControl::instance_;
-}
-inline EqTaskButtonControl &eqTaskButtonControl() {
-  return EqTaskButtonControl::instance_;
 }
 inline EqTaskBlowingControl &eqTaskBlowingControl() {
   return EqTaskBlowingControl::instance_;

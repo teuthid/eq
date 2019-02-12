@@ -92,8 +92,6 @@ private:
 
   constexpr EqButton() {}
 
-  void connect_(); // needs specializations (called in init())
-
   static constexpr uint32_t dbTime_ = EqConfig::buttonDebounceTime;
   static EqButton instance_;
 };
@@ -117,7 +115,6 @@ void EqButton<Pin, PullUp, Invert>::init() {
   lastState_ = currentState_;
   changed_ = false;
   lastChange_ = time_;
-  connect_();
 }
 
 template <uint8_t Pin, bool PullUp, bool Invert>

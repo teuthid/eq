@@ -54,13 +54,13 @@ EqTaskItSensorControl::EqTask()
 
 template <> bool EqTaskItSensorControl::Callback() {
   EqConfig::resetWatchdog();
-  if (!eqItSensor().read()) {
+  if (!eqItSensor().read())
     EqConfig::setAlert(EqAlertType::ItSensor);
-    return false;
-  } else {
+  else { // sensor reading correct
     setWatchdogPoint(1);
     EqConfig::resetAlert(EqAlertType::ItSensor);
     if (eqItSensor().temperature() > EqConfig::itSensorMaxTemperature) {
+      // overheating:
       EqConfig::setAlert(EqAlertType::Overheating);
       EqConfig::registerOverheating();
       setWatchdogPoint(2);
@@ -100,7 +100,6 @@ template <> bool EqTaskHtSensorControl::Callback() {
   if (!eqHtSensor().read()) {
     setWatchdogPoint(1);
     EqConfig::setAlert(EqAlertType::HtSensor);
-    return false;
   } else { // no alerts
     setWatchdogPoint(2);
     EqConfig::resetAlert(EqAlertType::HtSensor);
@@ -130,7 +129,7 @@ template <> bool EqTaskFanControl::Callback() {
   else { // any alert detected
     setWatchdogPoint(3);
     eqFanPwm().stop();
-    return false;
+    return true;
   }
   // reading fan speed:
   if (!eqFanPwm().readSpeed()) {
@@ -141,19 +140,6 @@ template <> bool EqTaskFanControl::Callback() {
     setWatchdogPoint(5);
     EqConfig::resetAlert(EqAlertType::Fan);
   }
-  return true;
-}
-
-// buttons control (interrupt-driven) triggered by EqPwmTimer.
-template <>
-EqTaskButtonControl::EqTask()
-    : Task(TASK_IMMEDIATE, TASK_ONCE, nullptr, false) {
-  setId(static_cast<unsigned int>(EqTaskId::ButtonControl));
-}
-
-template <> bool EqTaskButtonControl::Callback() {
-  eqButtonBacklight().read();
-  eqButtonOverdrive().read();
   return true;
 }
 
@@ -168,16 +154,13 @@ EqTaskBlowingControl::EqTask()
 template <> bool EqTaskBlowingControl::Callback() {
   EqConfig::resetWatchdog();
   if (!EqConfig::isBlowingEnabled())
-    return false;
-  if (isFirstIteration())
     return true;
   if (EqConfig::overdriveTime() == 0) {
     // only if override mode is not active
     EqConfig::increaseOverdriveTime(EqConfig::blowingTime(), false);
     setWatchdogPoint(1);
-    return true;
   }
-  return false; // non-productive run
+  return true;
 }
 
 // debugging
@@ -210,7 +193,6 @@ template <> EqTaskHeartbeat EqTaskHeartbeat::instance_{};
 template <> EqTaskItSensorControl EqTaskItSensorControl::instance_{};
 template <> EqTaskHtSensorControl EqTaskHtSensorControl::instance_{};
 template <> EqTaskFanControl EqTaskFanControl::instance_{};
-template <> EqTaskButtonControl EqTaskButtonControl::instance_{};
 template <> EqTaskBlowingControl EqTaskBlowingControl::instance_{};
 #ifdef EQ_DEBUG
 template <> EqTaskDebug EqTaskDebug::instance_{};

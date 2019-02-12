@@ -12,10 +12,8 @@ template <> void EqButtonBacklight::read() {
   update();
   if (pressedFor(EqConfig::buttonLongPressedTime))
     EqConfig::reset();
-}
-
-template <> void EqButtonBacklight::connect_() {
-  onPressed([]() { EqConfig::setBacklight(!EqConfig::backlight()); });
+  if (wasPressed())
+    EqConfig::setBacklight(!EqConfig::backlight());
 }
 
 // overdrive & hard reset (long press)
@@ -23,11 +21,8 @@ template <> void EqButtonOverdrive::read() {
   update();
   if (pressedFor(EqConfig::buttonLongPressedTime))
     EqConfig::reset(true);
-}
-
-template <> void EqButtonOverdrive::connect_() {
-  onPressed(
-      []() { EqConfig::increaseOverdriveTime(EqConfig::overdriveStep()); });
+  if (wasPressed())
+    EqConfig::increaseOverdriveTime(EqConfig::overdriveStep());
 }
 
 // instances of EqButton
