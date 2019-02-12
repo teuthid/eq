@@ -54,9 +54,10 @@ EqTaskItSensorControl::EqTask()
 
 template <> bool EqTaskItSensorControl::Callback() {
   EqConfig::resetWatchdog();
-  if (!eqItSensor().read())
+  if (!eqItSensor().read()) {
     EqConfig::setAlert(EqAlertType::ItSensor);
-  else { // sensor reading correct
+    return false;
+  } else { // sensor reading correct
     setWatchdogPoint(1);
     EqConfig::resetAlert(EqAlertType::ItSensor);
     if (eqItSensor().temperature() > EqConfig::itSensorMaxTemperature) {
@@ -100,6 +101,7 @@ template <> bool EqTaskHtSensorControl::Callback() {
   if (!eqHtSensor().read()) {
     setWatchdogPoint(1);
     EqConfig::setAlert(EqAlertType::HtSensor);
+    return false;
   } else { // no alerts
     setWatchdogPoint(2);
     EqConfig::resetAlert(EqAlertType::HtSensor);
@@ -129,7 +131,7 @@ template <> bool EqTaskFanControl::Callback() {
   else { // any alert detected
     setWatchdogPoint(3);
     eqFanPwm().stop();
-    return true;
+    return false;
   }
   // reading fan speed:
   if (!eqFanPwm().readSpeed()) {
@@ -154,7 +156,7 @@ EqTaskBlowingControl::EqTask()
 template <> bool EqTaskBlowingControl::Callback() {
   EqConfig::resetWatchdog();
   if (!EqConfig::isBlowingEnabled())
-    return true;
+    return false;
   if (EqConfig::overdriveTime() == 0) {
     // only if override mode is not active
     EqConfig::increaseOverdriveTime(EqConfig::blowingTime(), false);
