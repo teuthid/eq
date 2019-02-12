@@ -34,7 +34,7 @@ void setup() {
     Serial.println(F("Running..."));
 #endif
     eqController.startNow();
-    eqTaskBlowingControl().delay();
+    // eqTaskBlowingControl().delay();
   } else {
     EqConfig::showAlert(EqConfig::alert());
     abort();
