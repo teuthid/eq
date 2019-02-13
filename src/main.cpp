@@ -34,7 +34,6 @@ void setup() {
     Serial.println(F("Running..."));
 #endif
     eqController.startNow();
-    // eqTaskBlowingControl().delay();
   } else {
     EqConfig::showAlert(EqConfig::alert());
     abort();
@@ -44,19 +43,21 @@ void setup() {
 void loop() { eqController.execute(); }
 
 void EqConfig::disableAllTasks() {
-  // disable all tasks in both sschedulers
+  // disable all tasks in both schedulers
   eqController.disableAll();
 }
 
 void EqConfig::saveWatchdogPoint() {
-  Task &__t = eqController.currentTask();
+  if (saveWatchdogPoint_) {
+    Task &__t = eqController.currentTask();
 #ifdef EQ_DEBUG
-  uint8_t __cp = __t.getControlPoint();
-  if (__cp == 0) // control point is not set
-    __cp = __t.getId();
-  EqEeprom::writeValue<uint8_t>(EqEeprom::LastWatchdogPoint, __cp);
+    uint8_t __cp = __t.getControlPoint();
+    if (__cp == 0) // control point is not set
+      __cp = __t.getId();
+    EqEeprom::writeValue<uint8_t>(EqEeprom::LastWatchdogPoint, __cp);
 #else
-  EqEeprom::writeValue<uint8_t>(EqEeprom::LastWatchdogPoint,
-                                static_cast<uint8_t>(__t.getId()));
+    EqEeprom::writeValue<uint8_t>(EqEeprom::LastWatchdogPoint,
+                                  static_cast<uint8_t>(__t.getId()));
 #endif
+  }
 }

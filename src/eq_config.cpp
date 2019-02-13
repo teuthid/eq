@@ -17,6 +17,7 @@
 #include "eq_tasks.h"
 
 bool EqConfig::watchdogEnabled_{false};
+volatile bool EqConfig::saveWatchdogPoint_{true};
 EqAlertType EqConfig::alert_{EqAlertType::None};
 uint16_t EqConfig::overdriveTime_{0};
 uint16_t EqConfig::backlightTimeCounter_{0};
@@ -59,6 +60,7 @@ bool EqConfig::init() {
   });
   clearOverheating();
   clearWatchdogPoint();
+  saveWatchdogPoint_ = true;
   enableWatchdog();
   alert_ = EqAlertType::None;
   overdriveTime_ = 0;
@@ -68,6 +70,7 @@ bool EqConfig::init() {
 
 void EqConfig::reset(const bool &cleanEeprom) {
   EqEeprom::init(cleanEeprom);
+  saveWatchdogPoint_ = false;
   enableWatchdog();
   while (true) { // waiting for watchdog
   }
