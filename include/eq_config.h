@@ -124,7 +124,7 @@ public:
   static void clearWatchdogPoint();
 
   static bool init();
-  static void reset(const bool &cleanEeprom = false);
+  static void reset(bool cleanEeprom = false);
 
   template <typename T>
   static void printValue(const __FlashStringHelper *description,
@@ -132,31 +132,31 @@ public:
     Serial.print(description);
     Serial.print(value);
   }
-  static void show();
+  static void showSettings();
 
   // alert
   static constexpr bool alertOnZeroSpeedDefault = true;
   static EqAlertType alert() { return alert_; }
-  static void setAlert(const EqAlertType &value);
-  static void resetAlert(const EqAlertType &value);
+  static void setAlert(EqAlertType value);
+  static void resetAlert(EqAlertType value);
   static bool anyAlert() { return (alert_ != EqAlertType::None); }
   static bool isAlertOnZeroSpeed();
-  static void setAlertOnZeroSpeed(const bool &enabled = true);
-  static const char *alertAsString(const EqAlertType &alert);
-  static void showAlert(const EqAlertType &alert);
+  static void setAlertOnZeroSpeed(bool enabled = true);
+  static const char *alertAsString(EqAlertType alert);
+  static void showAlert(EqAlertType alert);
 
   // LED status
   static constexpr EqLedStatusMode ledStatusModeDefault =
       EqLedStatusMode::LowTemperature;
   static EqLedStatusMode ledStatusMode();
-  static void setLedStatusMode(const EqLedStatusMode &mode);
+  static void setLedStatusMode(EqLedStatusMode mode);
   static void setLedStatus();
 
   // overheating
   static constexpr uint8_t maxCountOverheating = 3;
-  static bool overheating();
-  static void registerOverheating();
-  static void clearOverheating();
+  static bool overheating();         // true if overheating detected
+  static void registerOverheating(); // increase overheating countet in eeprom
+  static void clearOverheating();    // clear overheating counter in eeprom
 
   // light sensor
   static constexpr bool lightSensorIsAnalog = true; // lightSensorPin is analog
@@ -165,7 +165,7 @@ public:
   static constexpr uint8_t lightSensorThresholdMin = 20;     // in percents
   static constexpr uint8_t lightSensorThresholdMax = 80;     // in percents
   static uint8_t lightSensorThreshold();
-  static void setLightSensorThreshold(const uint8_t &value);
+  static void setLightSensorThreshold(uint8_t value); // in percents
 
   // HT sensor
   static constexpr uint8_t htSensorCollectorSize = 5;
@@ -187,31 +187,30 @@ public:
   static constexpr uint8_t htSensorTemperatureMax = itSensorMaxTemperature;
   static constexpr int8_t htSensorTemperatureCorrectionDefault = 0; // 0.0 *C
   static constexpr uint8_t htSensorTemperatureCorrectionMax = 20; // +/- 2.0 *C
-  static uint8_t htSensorInterval();
-  static void setHtSensorInterval(const uint8_t &value);
-  static uint8_t htSensorHumidityThreshold();
-  static void setHtSensorHumidityThreshold(const uint8_t &value);
+  static uint8_t htSensorInterval();                              // in seconds
+  static void setHtSensorInterval(uint8_t value);                 // in seconds
+  static uint8_t htSensorHumidityThreshold();                     // in percents
+  static void setHtSensorHumidityThreshold(uint8_t value);        // in percents
   static fixed_t htSensorHumidityCorrection();
-  static void setHtSensorHumidityCorrection(const fixed_t &value);
-  static uint8_t htSensorTemperatureThreshold();
-  static void setHtSensorTemperatureThreshold(const uint8_t &value);
+  static void setHtSensorHumidityCorrection(fixed_t value);
+  static uint8_t htSensorTemperatureThreshold();              // in *C
+  static void setHtSensorTemperatureThreshold(uint8_t value); // in *C
   static fixed_t htSensorTemperatureCorrection();
-  static void setHtSensorTemperatureCorrection(const fixed_t &value);
+  static void setHtSensorTemperatureCorrection(fixed_t value);
   static EqHtIndexType htIndexType();
-  static void setHtIndexType(const EqHtIndexType &value);
+  static void setHtIndexType(EqHtIndexType value);
 
   // overdrive
-  static constexpr uint16_t overdriveMaxTime = 3599;   // in seconds
-  static constexpr uint16_t overdriveStepDefault = 10; // in seconds
-  static constexpr uint16_t overdriveStepMin = 10;     // in seconds
-  static constexpr uint16_t overdriveStepMax = 600;    // in seconds
-  static uint16_t overdriveTime() { return overdriveTime_; }
-  static void setOverdriveTime(const uint16_t &value);
-  static void decreaseOverdriveTime(const uint16_t &value = 1);
-  static void increaseOverdriveTime(const uint16_t &value,
-                                    const bool &backlight = true);
+  static constexpr uint16_t overdriveMaxTime = 3599;         // in seconds
+  static constexpr uint16_t overdriveStepDefault = 10;       // in seconds
+  static constexpr uint16_t overdriveStepMin = 10;           // in seconds
+  static constexpr uint16_t overdriveStepMax = 600;          // in seconds
+  static uint16_t overdriveTime() { return overdriveTime_; } // in seconds
+  static void setOverdriveTime(uint16_t value);              // in seconds
+  static void decreaseOverdriveTime(uint16_t value = 1);
+  static void increaseOverdriveTime(uint16_t value, bool backlight = true);
   static uint16_t overdriveStep();
-  static void setOverdriveStep(const uint16_t &value);
+  static void setOverdriveStep(uint16_t value); // in seconds
 
   // fan PWM
   static constexpr uint8_t fanPwmIntervalDefault = 2; // in seconds
@@ -222,16 +221,16 @@ public:
   static constexpr uint8_t fanPwmOverdriveDefault = fanPwmMaxDefault;
   static constexpr uint32_t fanPwmCycle = 100000; // in microseconds
   static constexpr bool fanPwmStepModeDefault = false;
-  static uint8_t fanPwmInterval();
-  static void setFanPwmInterval(const uint8_t &value);
-  static uint8_t fanPwmMin();
-  static void setFanPwmMin(const uint8_t &value);
-  static uint8_t fanPwmMax();
-  static void setFanPwmMax(const uint8_t &value);
-  static uint8_t fanPwmOverdrive();
-  static void setFanPwmOverdrive(const uint8_t &value);
+  static uint8_t fanPwmInterval();               // in seconds
+  static void setFanPwmInterval(uint8_t value);  // in seconds
+  static uint8_t fanPwmMin();                    // in percents
+  static void setFanPwmMin(uint8_t value);       // in percents
+  static uint8_t fanPwmMax();                    // in percents
+  static void setFanPwmMax(uint8_t value);       // in percents
+  static uint8_t fanPwmOverdrive();              // in percents
+  static void setFanPwmOverdrive(uint8_t value); // in percents
   static bool isFanPwmStepModeEnabled();
-  static void setFanPwmStepMode(const bool &enabled = true);
+  static void setFanPwmStepMode(bool enabled = true);
 
   // tachometer
   static bool isFanTachometerEnabled();
@@ -245,24 +244,24 @@ public:
   static constexpr uint16_t blowingTimeMax = overdriveStepMax;     // in seconds
   static constexpr uint16_t blowingTimeMin = overdriveStepMin;     // in seconds
   static bool isBlowingEnabled();
-  static void setBlowingEnabled(const bool &enabled = true);
-  static uint8_t blowingInterval();
-  static void setBlowingInterval(const uint8_t &value);
-  static uint16_t blowingTime();
-  static void setBlowingTime(const uint16_t &value);
+  static void setBlowingEnabled(bool enabled = true);
+  static uint8_t blowingInterval();              // in hours
+  static void setBlowingInterval(uint8_t value); // in hours
+  static uint16_t blowingTime();                 // in seconds
+  static void setBlowingTime(uint16_t value);    // in seconds
 
   // display backlight
   static constexpr uint16_t backlightTimeDefault = 60; // in seconds
   static constexpr uint16_t backlightTimeMax = 300;    // in seconds
   static constexpr uint16_t backlightTimeMin = 5;      // in seconds
-  static uint16_t backlightTime();
-  static void setBacklighTime(const uint16_t &value);
-  static void setBacklight(const bool &enabled = true);
+  static uint16_t backlightTime();                     // in seconds
+  static void setBacklighTime(uint16_t value);         // in seconds
+  static void setBacklight(bool enabled = true);
   static bool backlight() { return (backlightTimeCounter_ > 0); }
   static void decreaseBacklightTimeCounter();
 
   // definition in main.cpp
-  static void disableAllTasks();
+  static void disableAllTasks(); // in all scedulers
 
 private:
   EqConfig() {}

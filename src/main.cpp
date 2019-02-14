@@ -30,7 +30,7 @@ void setup() {
     eqController.enableAll();
 #ifdef EQ_DEBUG
     Serial.println();
-    EqConfig::show();
+    EqConfig::showSettings();
     Serial.println(F("Running..."));
 #endif
     eqController.startNow();

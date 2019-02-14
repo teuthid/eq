@@ -68,7 +68,7 @@ bool EqConfig::init() {
   return true;
 }
 
-void EqConfig::reset(const bool &cleanEeprom) {
+void EqConfig::reset(bool cleanEeprom) {
   EqEeprom::init(cleanEeprom);
   saveWatchdogPoint_ = false;
   enableWatchdog();
@@ -76,7 +76,7 @@ void EqConfig::reset(const bool &cleanEeprom) {
   }
 }
 
-void EqConfig::show() {
+void EqConfig::showSettings() {
   Serial.println(F("Configuration:"));
   EqEeprom::show();
   Serial.print(EqConfig::alertAsString(EqAlertType::HtSensor));
@@ -93,12 +93,12 @@ void EqConfig::show() {
   Serial.println();
 }
 
-void EqConfig::setAlert(const EqAlertType &value) {
+void EqConfig::setAlert(EqAlertType value) {
   setBacklight(value != alert_);
   alert_ = value;
 }
 
-void EqConfig::resetAlert(const EqAlertType &value) {
+void EqConfig::resetAlert(EqAlertType value) {
   alert_ = (alert_ == value) ? EqAlertType::None : alert_;
 }
 
@@ -107,7 +107,7 @@ bool EqConfig::isAlertOnZeroSpeed() {
                                    alertOnZeroSpeedDefault);
 }
 
-void EqConfig::setAlertOnZeroSpeed(const bool &enabled) {
+void EqConfig::setAlertOnZeroSpeed(bool enabled) {
   EqEeprom::writeValue<bool>(EqEeprom::AlertOnZeroSpeed, enabled);
 }
 
@@ -127,13 +127,13 @@ const char *const __eqStrAlerts[] PROGMEM = {
 char __eqStrAlertBuffer[17];
 } // namespace
 
-const char *EqConfig::alertAsString(const EqAlertType &alert) {
+const char *EqConfig::alertAsString(EqAlertType alert) {
   return strncpy_P(__eqStrAlertBuffer,
                    (char *)pgm_read_word(&(__eqStrAlerts[(uint8_t)alert])),
                    sizeof(__eqStrAlertBuffer));
 }
 
-void EqConfig::showAlert(const EqAlertType &alert) {
+void EqConfig::showAlert(EqAlertType alert) {
   eqLedAlert().setState(true);
   if (alert_ != EqAlertType::Display)
     eqDisplay().showAlert(alert);
@@ -150,7 +150,7 @@ EqLedStatusMode EqConfig::ledStatusMode() {
                                               ledStatusModeDefault);
 }
 
-void EqConfig::setLedStatusMode(const EqLedStatusMode &mode) {
+void EqConfig::setLedStatusMode(EqLedStatusMode mode) {
   EqEeprom::writeValue<EqLedStatusMode>(EqEeprom::LedStatusMode, mode);
 }
 
@@ -199,7 +199,7 @@ uint8_t EqConfig::lightSensorThreshold() {
                                       lightSensorThresholdDefault);
 }
 
-void EqConfig::setLightSensorThreshold(const uint8_t &value) {
+void EqConfig::setLightSensorThreshold(uint8_t value) {
   EqEeprom::writeValue<uint8_t>(
       EqEeprom::LightSensorThreshold,
       constrain(value, lightSensorThresholdMin, lightSensorThresholdMax));
@@ -210,7 +210,7 @@ uint8_t EqConfig::htSensorInterval() {
                                       htSensorIntervalDefault);
 }
 
-void EqConfig::setHtSensorInterval(const uint8_t &value) {
+void EqConfig::setHtSensorInterval(uint8_t value) {
   uint8_t __i = constrain(value, htSensorIntervalMin, htSensorIntervalMax);
   EqEeprom::writeValue<uint8_t>(EqEeprom::HtSensorInterval, __i);
   eqTaskHtSensorControl().setInterval(__i);
@@ -221,7 +221,7 @@ uint8_t EqConfig::htSensorHumidityThreshold() {
                                       htSensorHumidityThresholdDefault);
 }
 
-void EqConfig::setHtSensorHumidityThreshold(const uint8_t &value) {
+void EqConfig::setHtSensorHumidityThreshold(uint8_t value) {
   EqEeprom::writeValue<uint8_t>(EqEeprom::HtSensorHumidityThreshold,
                                 constrain(value, htSensorHumidityThresholdMin,
                                           htSensorHumidityThresholdMax));
@@ -235,7 +235,7 @@ fixed_t EqConfig::htSensorHumidityCorrection() {
          10;
 }
 
-void EqConfig::setHtSensorHumidityCorrection(const fixed_t &value) {
+void EqConfig::setHtSensorHumidityCorrection(fixed_t value) {
   EqEeprom::writeValue<int8_t>(EqEeprom::HtSensorHumidityCorrection,
                                constrain(fixed_to_int(value * 10),
                                          -htSensorHumidityCorrectionMax,
@@ -248,7 +248,7 @@ uint8_t EqConfig::htSensorTemperatureThreshold() {
                                       htSensorTemperatureThresholdDefault);
 }
 
-void EqConfig::setHtSensorTemperatureThreshold(const uint8_t &value) {
+void EqConfig::setHtSensorTemperatureThreshold(uint8_t value) {
   EqEeprom::writeValue<uint8_t>(EqEeprom::HtSensorTemperatureThreshold,
                                 constrain(value,
                                           htSensorTemperatureThresholdMin,
@@ -263,7 +263,7 @@ fixed_t EqConfig::htSensorTemperatureCorrection() {
          10;
 }
 
-void EqConfig::setHtSensorTemperatureCorrection(const fixed_t &value) {
+void EqConfig::setHtSensorTemperatureCorrection(fixed_t value) {
   EqEeprom::writeValue<int8_t>(EqEeprom::HtSensorTemperatureCorrection,
                                constrain(fixed_to_int(value * 10),
                                          -htSensorTemperatureCorrectionMax,
@@ -276,23 +276,22 @@ EqHtIndexType EqConfig::htIndexType() {
                                             EqHtIndexType::Default);
 }
 
-void EqConfig::setHtIndexType(const EqHtIndexType &value) {
+void EqConfig::setHtIndexType(EqHtIndexType value) {
   EqEeprom::writeValue<EqHtIndexType>(EqEeprom::HtIndexType, value);
   eqTaskHtSensorControl().forceNextIteration();
 }
 
-void EqConfig::setOverdriveTime(const uint16_t &value) {
+void EqConfig::setOverdriveTime(uint16_t value) {
   EqConfig::overdriveTime_ =
       constrain(value, overdriveStepMin, overdriveMaxTime);
 }
 
-void EqConfig::decreaseOverdriveTime(const uint16_t &value) {
+void EqConfig::decreaseOverdriveTime(uint16_t value) {
   if (value > 0)
     overdriveTime_ = (overdriveTime_ > value) ? (overdriveTime_ - value) : 0;
 }
 
-void EqConfig::increaseOverdriveTime(const uint16_t &value,
-                                     const bool &backlight) {
+void EqConfig::increaseOverdriveTime(uint16_t value, bool backlight) {
   if (value > 0) {
     if (overdriveTime_ == 0) // force overdrive mode for execution immediately
       eqTaskFanControl().forceNextIteration();
@@ -309,7 +308,7 @@ uint16_t EqConfig::overdriveStep() {
                                        overdriveStepDefault);
 }
 
-void EqConfig::setOverdriveStep(const uint16_t &value) {
+void EqConfig::setOverdriveStep(uint16_t value) {
   EqEeprom::writeValue<uint16_t>(
       EqEeprom::OverdriveStep,
       constrain(value, overdriveStepMin, overdriveStepMax));
@@ -320,7 +319,7 @@ uint8_t EqConfig::fanPwmInterval() {
                                       fanPwmIntervalDefault);
 }
 
-void EqConfig::setFanPwmInterval(const uint8_t &value) {
+void EqConfig::setFanPwmInterval(uint8_t value) {
   uint8_t __i = constrain(value, fanPwmIntervalMin, fanPwmIntervalMax);
   EqEeprom::writeValue<uint8_t>(EqEeprom::FanPwmInterval, __i);
   eqTaskFanControl().setInterval(__i);
@@ -330,7 +329,7 @@ uint8_t EqConfig::fanPwmMin() {
   return EqEeprom::readValue<uint8_t>(EqEeprom::FanPwmMin, fanPwmMinDefault);
 }
 
-void EqConfig::setFanPwmMin(const uint8_t &value) {
+void EqConfig::setFanPwmMin(uint8_t value) {
   uint8_t __v = constrain(value, fanPwmMinDefault, fanPwmMaxDefault - 1);
   if (__v < EqConfig::fanPwmMax()) {
     EqEeprom::writeValue<uint8_t>(EqEeprom::FanPwmMin, __v);
@@ -342,7 +341,7 @@ uint8_t EqConfig::fanPwmMax() {
   return EqEeprom::readValue<uint8_t>(EqEeprom::FanPwmMax, fanPwmMaxDefault);
 }
 
-void EqConfig::setFanPwmMax(const uint8_t &value) {
+void EqConfig::setFanPwmMax(uint8_t value) {
   uint8_t __v = constrain(value, fanPwmMinDefault + 1, fanPwmMaxDefault);
   if (__v > EqConfig::fanPwmMin()) {
     EqEeprom::writeValue<uint8_t>(EqEeprom::FanPwmMax, __v);
@@ -355,7 +354,7 @@ uint8_t EqConfig::fanPwmOverdrive() {
                                       fanPwmOverdriveDefault);
 }
 
-void EqConfig::setFanPwmOverdrive(const uint8_t &value) {
+void EqConfig::setFanPwmOverdrive(uint8_t value) {
   EqEeprom::writeValue<uint8_t>(EqEeprom::FanPwmOverdrive,
                                 constrain(value, EqConfig::fanPwmMin(), 100));
 }
@@ -365,7 +364,7 @@ bool EqConfig::isFanPwmStepModeEnabled() {
                                    fanPwmStepModeDefault);
 }
 
-void EqConfig::setFanPwmStepMode(const bool &enabled) {
+void EqConfig::setFanPwmStepMode(bool enabled) {
   EqEeprom::writeValue<bool>(EqEeprom::FanPwmStepMode, enabled);
   eqTaskFanControl().forceNextIteration();
 }
@@ -379,7 +378,7 @@ bool EqConfig::isBlowingEnabled() {
                                    blowingEnabledDefault);
 }
 
-void EqConfig::setBlowingEnabled(const bool &enabled) {
+void EqConfig::setBlowingEnabled(bool enabled) {
   EqEeprom::writeValue<bool>(EqEeprom::BlowingEnabled, enabled);
 }
 
@@ -388,7 +387,7 @@ uint8_t EqConfig::blowingInterval() {
                                       blowingIntervalDefault);
 }
 
-void EqConfig::setBlowingInterval(const uint8_t &value) {
+void EqConfig::setBlowingInterval(uint8_t value) {
   EqEeprom::writeValue<uint8_t>(
       EqEeprom::BlowingInterval,
       constrain(value, blowingIntervalMin, blowingIntervalMax));
@@ -399,7 +398,7 @@ uint16_t EqConfig::blowingTime() {
                                        blowingTimeDefault);
 }
 
-void EqConfig::setBlowingTime(const uint16_t &value) {
+void EqConfig::setBlowingTime(uint16_t value) {
   EqEeprom::writeValue<uint16_t>(
       EqEeprom::BlowingTime, constrain(value, blowingTimeMin, blowingTimeMax));
 }
@@ -409,13 +408,13 @@ uint16_t EqConfig::backlightTime() {
                                        backlightTimeDefault);
 }
 
-void EqConfig::setBacklighTime(const uint16_t &value) {
+void EqConfig::setBacklighTime(uint16_t value) {
   EqEeprom::writeValue<uint16_t>(
       EqEeprom::BacklighTime,
       constrain(value, backlightTimeMin, backlightTimeMax));
 }
 
-void EqConfig::setBacklight(const bool &enabled) {
+void EqConfig::setBacklight(bool enabled) {
   backlightTimeCounter_ = enabled ? backlightTime() : 0;
 }
 

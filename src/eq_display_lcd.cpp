@@ -55,7 +55,7 @@ private:
   static constexpr uint8_t maxRows_ = 4;
   static constexpr uint8_t maxSpeedDots_ = 20;
   static constexpr uint8_t colSpeedBar_ = 0;
-  static constexpr uint8_t rowSpeedBar_ = 3;
+  static constexpr uint8_t rowSpeedBar_ = 2;
   static constexpr uint8_t messageRow_ = 3;
   static constexpr uint8_t overdriveCol_ = 3;
 #endif
