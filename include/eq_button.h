@@ -38,11 +38,10 @@ public:
 
   // Call a callback function when the button has been held for at least the
   // given number of milliseconds.
-  void onPressedFor(const uint32_t &duration, callback_t callback);
+  void onPressedFor(uint32_t duration, callback_t callback);
 
-  // Call a callback function when the // given sequence has matched.
-  void onSequence(const uint8_t &sequences, const uint32_t &duration,
-                  callback_t callback);
+  // Call a callback function when the given sequence has matched.
+  void onSequence(uint8_t sequences, uint32_t duration, callback_t callback);
 
   // Returns true if the button state was pressed at the last read.
   constexpr bool isPressed() const;
@@ -58,11 +57,11 @@ public:
 
   // Returns true if the button state at the last read was pressed, and has been
   // in that state for at least the given number of milliseconds.
-  constexpr bool pressedFor(const uint32_t &duration) const;
+  constexpr bool pressedFor(uint32_t duration) const;
 
   // Returns true if the button state at the last read was released, and has
   // been in that state for at least the given number of milliseconds.
-  constexpr bool releasedFor(const uint32_t &duration) const;
+  constexpr bool releasedFor(uint32_t duration) const;
 
   void read(); // needs specialization (shall call update())
 
@@ -123,15 +122,15 @@ void EqButton<Pin, PullUp, Invert>::onPressed(callback_t callback) {
 }
 
 template <uint8_t Pin, bool PullUp, bool Invert>
-void EqButton<Pin, PullUp, Invert>::onPressedFor(const uint32_t &duration,
+void EqButton<Pin, PullUp, Invert>::onPressedFor(uint32_t duration,
                                                  callback_t callback) {
   heldThreshold_ = duration;
   pressedForCallback_ = callback;
 }
 
 template <uint8_t Pin, bool PullUp, bool Invert>
-void EqButton<Pin, PullUp, Invert>::onSequence(const uint8_t &sequences,
-                                               const uint32_t &duration,
+void EqButton<Pin, PullUp, Invert>::onSequence(uint8_t sequences,
+                                               uint32_t duration,
                                                callback_t callback) {
   pressSequences_ = sequences;
   pressSequenceDuration_ = duration;
@@ -160,13 +159,13 @@ constexpr bool EqButton<Pin, PullUp, Invert>::wasReleased() const {
 
 template <uint8_t Pin, bool PullUp, bool Invert>
 constexpr bool
-EqButton<Pin, PullUp, Invert>::pressedFor(const uint32_t &duration) const {
+EqButton<Pin, PullUp, Invert>::pressedFor(uint32_t duration) const {
   return currentState_ && time_ - lastChange_ >= duration;
 }
 
 template <uint8_t Pin, bool PullUp, bool Invert>
 constexpr bool
-EqButton<Pin, PullUp, Invert>::releasedFor(const uint32_t &duration) const {
+EqButton<Pin, PullUp, Invert>::releasedFor(uint32_t duration) const {
   return !currentState_ && time_ - lastChange_ >= duration;
 }
 
