@@ -42,7 +42,7 @@ void EqConfig::sleep() {
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   sleep_enable();
   attachInterrupt(digitalPinToInterrupt(EqConfig::buttonOverdrivePin), []() {},
-                  LOW);
+                  !EqConfig::buttonOverdriveInvert);
   sei();
   sleep_mode();
   // executed after the interrupt:

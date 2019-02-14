@@ -41,7 +41,7 @@ enum class EqLedStatusMode : uint8_t {
 #define EQ_NO_DISPLAY 0
 #define EQ_LCD_1602 1 // with I2C only!
 #define EQ_LCD_2004 2 // with I2C only!
-#define EQ_DISPLAY_TYPE EQ_LCD_1602
+#define EQ_DISPLAY_TYPE EQ_LCD_2004
 
 enum class EqHtIndexType : uint8_t {
   Default = 0,

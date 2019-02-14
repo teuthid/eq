@@ -14,8 +14,6 @@
 #include "eq_fan_pwm.h"
 #include "eq_ht_sensor.h"
 
-namespace {
-
 class EqLcd {
 public:
   EqLcd() : lcd_(EqConfig::lcdI2CAddress) {}
@@ -26,8 +24,8 @@ public:
   void showOverdriveTime();
   void showFanSpeed(bool detected = true, uint8_t percents = 0);
   void showMessage(const char *message); // second line
-  void showAlert(const EqAlertType &alert);
-  void showCalibrating(const uint8_t &percents);
+  void showAlert(EqAlertType alert);
+  void showCalibrating(uint8_t percents);
 
 private:
   bool cleared_ = false; // true if screen was already cleared
@@ -50,15 +48,21 @@ private:
   static constexpr uint8_t maxSpeedDots_ = 10;
   static constexpr uint8_t colSpeedBar_ = 6;
   static constexpr uint8_t rowSpeedBar_ = 1;
+  static constexpr uint8_t messageRow_ = 1;
+  static constexpr uint8_t overdriveCol_ = 2;
 #elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
   static constexpr uint8_t maxCols_ = 20;
   static constexpr uint8_t maxRows_ = 4;
   static constexpr uint8_t maxSpeedDots_ = 20;
+  static constexpr uint8_t colSpeedBar_ = 0;
+  static constexpr uint8_t rowSpeedBar_ = 3;
+  static constexpr uint8_t messageRow_ = 3;
+  static constexpr uint8_t overdriveCol_ = 3;
 #endif
 
   void clear_();
-  void printDigit_(const uint8_t &digit, const uint8_t &col);
-  void printValue_(const uint8_t &value, const uint8_t &col);
+  void printDigit_(uint8_t digit, uint8_t col);
+  void printValue_(uint8_t value, uint8_t col);
   void printHumidity_();
   void printTemperature_();
 };
@@ -91,7 +95,7 @@ void EqLcd::clear_() {
   }
 }
 
-void EqLcd::printDigit_(const uint8_t &digit, const uint8_t &col) {
+void EqLcd::printDigit_(uint8_t digit, uint8_t col) {
   lcd_.setCursor(col, 0);
   for (uint8_t __i = 0; __i < 6; __i++) {
     lcd_.write(digits_[digit][__i]);
@@ -100,19 +104,19 @@ void EqLcd::printDigit_(const uint8_t &digit, const uint8_t &col) {
   }
 }
 
-void EqLcd::printValue_(const uint8_t &value, const uint8_t &col) {
+void EqLcd::printValue_(uint8_t value, uint8_t col) {
   printDigit_(value / 10, col);
   printDigit_(value % 10, col + 3);
 }
 
 void EqLcd::printHumidity_() {
-#if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
+#if (EQ_DISPLAY_TYPE == EQ_LCD_1602) || (EQ_DISPLAY_TYPE == EQ_LCD_2004)
   printValue_(lastDH_ / 10, 0);
   lcd_.setCursor(6, 0);
   lcd_.write('.');
   lcd_.write((lastDH_ % 10) + 48); // digit to ascii code
   lcd_.write('%');
-#elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
+#else
 // TODO
 #endif
 }
@@ -126,7 +130,15 @@ void EqLcd::printTemperature_() {
   lcd_.write((lastDT_ % 10) + 48); // digit to ascii code
   lcd_.write(0xDF);
 #elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
-// TODO
+  lcd_.setCursor(9, 0);
+  lcd_.print(F("  "));
+  lcd_.setCursor(6, 1);
+  lcd_.print(F("     "));
+  printValue_(lastDT_ / 10, 11);
+  lcd_.setCursor(17, 0);
+  lcd_.write('.');
+  lcd_.write((lastDT_ % 10) + 48); // digit to ascii code
+  lcd_.write(0xDF);
 #endif
 }
 
@@ -176,12 +188,12 @@ void EqLcd::showHT() {
 
 void EqLcd::showOverdriveTime() {
   clear_();
-  printValue_(EqConfig::overdriveTime() / 60, 2);
-  lcd_.setCursor(8, 0);
+  printValue_(EqConfig::overdriveTime() / 60, overdriveCol_);
+  lcd_.setCursor(overdriveCol_ + 6, 0);
   lcd_.write(0xA1);
-  lcd_.setCursor(8, 1);
+  lcd_.setCursor(overdriveCol_ + 6, 1);
   lcd_.write(0xDF);
-  printValue_(EqConfig::overdriveTime() % 60, 9);
+  printValue_(EqConfig::overdriveTime() % 60, overdriveCol_ + 7);
   lastSpeedDots_ = 0xFF;
 }
 
@@ -201,29 +213,27 @@ void EqLcd::showFanSpeed(bool detected, uint8_t percents) {
 }
 
 void EqLcd::showMessage(const char *message) {
-  lcd_.setCursor(0, 1);
+  lcd_.setCursor(0, messageRow_);
   for (uint8_t __i = 0; __i < maxCols_; __i++)
     lcd_.write(0x20);
-  lcd_.setCursor(maxCols_ + 1 - min(maxCols_, strlen(message)), 1);
+  lcd_.setCursor(maxCols_ - min(maxCols_, strlen(message)), messageRow_);
   lcd_.print(message);
 }
 
-void EqLcd::showAlert(const EqAlertType &alert) {
+void EqLcd::showAlert(EqAlertType alert) {
   clear_();
   lcd_.print(F("ALERT"));
   showMessage(EqConfig::alertAsString(alert));
   lastSpeedDots_ = 0xFF;
 }
 
-void EqLcd::showCalibrating(const uint8_t &percents) {
+void EqLcd::showCalibrating(uint8_t percents) {
   clear_();
   lcd_.print(F("Calibrating..."));
   showFanSpeed(false, percents);
 }
 
-EqLcd __lcd;
-
-} // namespace
+EqLcd __lcd{};
 
 /*
   specializations of EqDisplay
