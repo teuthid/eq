@@ -31,7 +31,7 @@ const PROGMEM uint8_p EqEeprom::paramSizes_[] = {
     3, // BlowingTime (uint16_t)
 };
 
-void EqEeprom::init(const bool &reset) {
+void EqEeprom::init(bool reset) {
   eeprom_busy_wait();
   uint8_t __value = EEPROM.read(startAddress);
   if (reset || (__value != marker_)) {

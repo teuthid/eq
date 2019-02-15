@@ -20,7 +20,7 @@ public:
   EqEeprom(EqEeprom &&) = delete;
   void operator=(const EqEeprom &) = delete;
 
-  static void init(const bool &reset = false);
+  static void init(bool reset = false);
   static void show();
 
   enum ParameterId : uint8_t {
