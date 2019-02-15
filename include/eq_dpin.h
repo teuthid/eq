@@ -14,7 +14,7 @@
 
 template <uint8_t DPin> class EqDPin final {
 public:
-  static inline void setOutput(const bool &value) {
+  static inline void setOutput(bool value) {
 #ifdef EQ_ARCH_AVR
     FastGPIO::Pin<DPin>::setOutput(value);
 #else
@@ -50,7 +50,7 @@ public:
 #endif
   }
 
-  static inline void setOutputValue(const bool &value) {
+  static inline void setOutputValue(bool value) {
 #ifdef EQ_ARCH_AVR
     FastGPIO::Pin<DPin>::setOutputValue(value);
 #else
