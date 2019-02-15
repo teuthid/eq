@@ -263,11 +263,11 @@ template <> void EqDisplayLcd::showMessage(const char *message) {
   __lcd.showMessage(message);
 }
 
-template <> void EqDisplayLcd::showAlert(const EqAlertType &alert) {
+template <> void EqDisplayLcd::showAlert(EqAlertType alert) {
   __lcd.showAlert(alert);
 }
 
-template <> void EqDisplayLcd::showCalibrating(const uint8_t &percents) {
+template <> void EqDisplayLcd::showCalibrating(uint8_t percents) {
   __lcd.showCalibrating(percents);
 }
 

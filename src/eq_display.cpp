@@ -13,9 +13,9 @@ template <> void EqDisplay<EQ_NO_DISPLAY>::turnOn_() {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::showHT_() {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::showOverdriveTime_() {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::showFanSpeed_() {}
-template <> void EqDisplay<EQ_NO_DISPLAY>::showMessage(const char) {}
-template <> void EqDisplay<EQ_NO_DISPLAY>::showAlert(const EqAlertType &) {}
-template <> void EqDisplay<EQ_NO_DISPLAY>::showCalibrating(const uint8_t &) {}
+template <> void EqDisplay<EQ_NO_DISPLAY>::showMessage(const char *) {}
+template <> void EqDisplay<EQ_NO_DISPLAY>::showAlert(EqAlertType) {}
+template <> void EqDisplay<EQ_NO_DISPLAY>::showCalibrating(uint8_t) {}
 
 #endif // (EQ_DISPLAY_TYPE == EQ_NO_DISPLAY)
 

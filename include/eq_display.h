@@ -17,8 +17,8 @@ public:
 
   // needs specialization:
   void showMessage(const char *message);
-  void showAlert(const EqAlertType &alert);
-  void showCalibrating(const uint8_t &percents);
+  void showAlert(EqAlertType alert);
+  void showCalibrating(uint8_t percents);
 
   EqDisplay(const EqDisplay &) = delete;
   EqDisplay(EqDisplay &&) = delete;
@@ -26,7 +26,7 @@ public:
 
 private:
   constexpr EqDisplay() {}
-  void backlight_(const bool &on = true);
+  void backlight_(bool on = true);
 
   // needs specialization:
   bool initDisplay_();
@@ -67,7 +67,7 @@ template <uint8_t Model> void EqDisplay<Model>::show() {
     backlight_(false);
 }
 
-template <uint8_t Model> void EqDisplay<Model>::backlight_(const bool &on) {
+template <uint8_t Model> void EqDisplay<Model>::backlight_(bool on) {
   if (on)
     if (!isOn_) {
       turnOn_();
