@@ -42,7 +42,7 @@ bool EqConfig::init() {
   eqLedAlert().test();
 #if (EQ_LED_STATUS_ENABLED)
   if (isFanTachometerEnabled())
-    eqLedStatus().test();
+    eqLedStatus().test(); // indicates that the tachometer is active
 #endif
   if (!eqLightSensor().init())
     return false;

@@ -21,9 +21,9 @@ template <uint8_t LedPin, bool Invert> class EqLed {
   friend EqLedStatus &eqLedStatus();
 
 public:
-  void setState(const bool &newState) const;
+  void setState(bool newState) const;
   void test() const;
-  void toggle(const bool &force = false) const;
+  void toggle(bool forcing = false) const;
 
   EqLed(const EqLed &) = delete;
   EqLed(EqLed &&) = delete;
@@ -45,7 +45,7 @@ template <uint8_t LedPin, bool Invert> EqLed<LedPin, Invert>::EqLed() {
 }
 
 template <uint8_t LedPin, bool Invert>
-void EqLed<LedPin, Invert>::setState(const bool &state) const {
+void EqLed<LedPin, Invert>::setState(bool state) const {
   EqDPin<LedPin>::setOutputValue(Invert ? !state : state);
 }
 
@@ -58,8 +58,8 @@ void EqLed<LedPin, Invert>::test() const {
 }
 
 template <uint8_t LedPin, bool Invert>
-void EqLed<LedPin, Invert>::toggle(const bool &force) const {
-  if (force || EqConfig::backlight())
+void EqLed<LedPin, Invert>::toggle(bool forcing) const {
+  if (forcing || EqConfig::backlight())
     EqDPin<LedPin>::setOutputValueToggle();
   else // led off
     EqDPin<LedPin>::setOutputValue(Invert);

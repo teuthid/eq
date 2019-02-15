@@ -106,6 +106,7 @@ bool EqHtSensor<Model, IsInternal>::init() {
   for (uint8_t __i = 0; __i < EqConfig::htSensorCollectorSize; __i++) {
     if (read())
       __c++;
+    // necessary for sequential reading of the sensor:
     delay(IsInternal ? EqConfig::itSensorSamplingPeriod
                      : EqConfig::htSensorSamplingPeriod);
   }
