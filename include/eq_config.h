@@ -113,19 +113,31 @@ public:
   EqConfig(EqConfig &&) = delete;
   void operator=(const EqConfig &) = delete;
 
-  // definitions for different architectures
+  /* definitions for different architectures */
+  // Disables the watchdog.
   static void disableWatchdog();
+  // Enables the watchdog.
   static void enableWatchdog();
+  // Resets the watchdog.
   static void resetWatchdog();
+  // Puts into the sleep mode.
   static void sleep();
+  /*******************************************/
 
-  static uint8_t readWatchdogPoint(); // from EEPROM
-  static void saveWatchdogPoint();    // in EEPROM (definition in main.cpp)
+  // Reads the last registered watchdog point from EEPROM.
+  static uint8_t readWatchdogPoint();
+  // Saves the current watchdog point in EEPROM.
+  static void saveWatchdogPoint(); // definition in main.cpp
+  // Cleares the watchdog point in EEPROM.
   static void clearWatchdogPoint();
 
+  // Initializes and tests all actuators.
   static bool init();
+  // Resets the controller. If 'cleanEeprom' is true, restores default values of
+  // controller settings in EEPROM.
   static void reset(bool cleanEeprom = false);
 
+  // debug functions:
   template <typename T>
   static void printValue(const __FlashStringHelper *description,
                          const T &value) {
@@ -134,7 +146,7 @@ public:
   }
   static void showSettings();
 
-  // alert
+  // alerts:
   static constexpr bool alertOnZeroSpeedDefault = true;
   static EqAlertType alert() { return alert_; }
   static void setAlert(EqAlertType value);
@@ -263,7 +275,7 @@ public:
   static void decreaseBacklightTimeCounter();
 
   // definition in main.cpp
-  static void disableAllTasks(); // in all scedulers
+  static void disableAllTasks(); // in all schedulers
 
 private:
   EqConfig() {}
