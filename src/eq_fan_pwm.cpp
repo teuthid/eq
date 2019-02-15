@@ -102,7 +102,7 @@ bool EqFanPwm::calibrate_() {
   maxSpeed_ = 0;
   for (uint8_t __i = 0; __i < 10; __i++) {
     eqDisplay().showCalibrating((__i + 1) * 10);
-    delay(1000);
+    delay(500);
     readSpeed();
     maxSpeed_ = max(lastSpeed_, maxSpeed_);
   }

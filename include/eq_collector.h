@@ -14,9 +14,10 @@ template <uint8_t Size> class EqCollector {
 public:
   constexpr EqCollector() {}
 
-  void clear(fixed_t value = 0);
-  void setAcceptableValueRange(fixed_t lowerBound, fixed_t upperBound);
-  bool add(fixed_t value);
+  void clear(const fixed_t &value = 0);
+  void setAcceptableValueRange(const fixed_t &lowerBound,
+                               const fixed_t &upperBound);
+  bool add(const fixed_t &value);
 
   constexpr fixed_t average() const { return average_; }
   constexpr long averageAsLong() const { return fixed_to_long(average_); }
@@ -35,26 +36,26 @@ private:
   int8_t trend_ = 0;
   uint8_t deviation_ = 0;
 
-  constexpr bool inRange_(fixed_t value) const {
+  constexpr bool inRange_(const fixed_t &value) const {
     return (value > upperBound_) ? false
                                  : ((value < lowerBound_) ? false : true);
   }
 };
 
-template <uint8_t Size> void EqCollector<Size>::clear(fixed_t value) {
+template <uint8_t Size> void EqCollector<Size>::clear(const fixed_t &value) {
   for (uint8_t __i = 0; __i < Size; __i++)
     collector_[__i] = value;
 }
 
 template <uint8_t Size>
-void EqCollector<Size>::setAcceptableValueRange(fixed_t lowerBound,
-                                                fixed_t upperBound) {
+void EqCollector<Size>::setAcceptableValueRange(const fixed_t &lowerBound,
+                                                const fixed_t &upperBound) {
   lowerBound_ = lowerBound;
   upperBound_ = upperBound;
   controlValueRange_ = true;
 }
 
-template <uint8_t Size> bool EqCollector<Size>::add(fixed_t value) {
+template <uint8_t Size> bool EqCollector<Size>::add(const fixed_t &value) {
   if (controlValueRange_ && !inRange_(value))
     return false;
 
@@ -79,6 +80,6 @@ template <uint8_t Size> bool EqCollector<Size>::add(fixed_t value) {
   return true;
 }
 
-template <> bool EqCollector<(uint8_t)1>::add(fixed_t value);
+template <> bool EqCollector<(uint8_t)1>::add(const fixed_t &value);
 
 #endif // __EQ_COLLECTOR_H__

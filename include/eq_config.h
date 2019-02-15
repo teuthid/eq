@@ -192,11 +192,11 @@ public:
   static uint8_t htSensorHumidityThreshold();                     // in percents
   static void setHtSensorHumidityThreshold(uint8_t value);        // in percents
   static fixed_t htSensorHumidityCorrection();
-  static void setHtSensorHumidityCorrection(fixed_t value);
+  static void setHtSensorHumidityCorrection(const fixed_t &value);
   static uint8_t htSensorTemperatureThreshold();              // in *C
   static void setHtSensorTemperatureThreshold(uint8_t value); // in *C
   static fixed_t htSensorTemperatureCorrection();
-  static void setHtSensorTemperatureCorrection(fixed_t value);
+  static void setHtSensorTemperatureCorrection(const fixed_t &value);
   static EqHtIndexType htIndexType();
   static void setHtIndexType(EqHtIndexType value);
 

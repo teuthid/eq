@@ -235,7 +235,7 @@ fixed_t EqConfig::htSensorHumidityCorrection() {
          10;
 }
 
-void EqConfig::setHtSensorHumidityCorrection(fixed_t value) {
+void EqConfig::setHtSensorHumidityCorrection(const fixed_t &value) {
   EqEeprom::writeValue<int8_t>(EqEeprom::HtSensorHumidityCorrection,
                                constrain(fixed_to_int(value * 10),
                                          -htSensorHumidityCorrectionMax,
@@ -263,7 +263,7 @@ fixed_t EqConfig::htSensorTemperatureCorrection() {
          10;
 }
 
-void EqConfig::setHtSensorTemperatureCorrection(fixed_t value) {
+void EqConfig::setHtSensorTemperatureCorrection(const fixed_t &value) {
   EqEeprom::writeValue<int8_t>(EqEeprom::HtSensorTemperatureCorrection,
                                constrain(fixed_to_int(value * 10),
                                          -htSensorTemperatureCorrectionMax,
