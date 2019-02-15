@@ -210,7 +210,7 @@ bool EqButton<Pin, PullUp, Invert>::update() {
   }
 
   // button is not released.
-  else if (currentState_ && time_ - lastChange_ >= heldThreshold_ &&
+  else if (currentState_ && __readStartedMs - lastChange_ >= heldThreshold_ &&
            pressedForCallback_) {
     wasHeld_ = true; // button has been pressed for at least the given time
     shortPressCount_ = 0;
