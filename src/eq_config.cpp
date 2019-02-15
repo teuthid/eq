@@ -19,7 +19,7 @@
 bool EqConfig::watchdogEnabled_{false};
 volatile bool EqConfig::saveWatchdogPoint_{true};
 EqAlertType EqConfig::alert_{EqAlertType::None};
-uint16_t EqConfig::overdriveTime_{0};
+uint16_t EqConfig::overdriveTimeCounter_{0};
 uint16_t EqConfig::backlightTimeCounter_{0};
 
 uint8_t EqConfig::readWatchdogPoint() {
@@ -63,7 +63,7 @@ bool EqConfig::init() {
   saveWatchdogPoint_ = true;
   enableWatchdog();
   alert_ = EqAlertType::None;
-  overdriveTime_ = 0;
+  overdriveTimeCounter_ = 0;
   backlightTimeCounter_ = 0;
   return true;
 }
@@ -282,21 +282,24 @@ void EqConfig::setHtIndexType(EqHtIndexType value) {
 }
 
 void EqConfig::setOverdriveTime(uint16_t value) {
-  EqConfig::overdriveTime_ =
+  EqConfig::overdriveTimeCounter_ =
       constrain(value, overdriveStepMin, overdriveMaxTime);
 }
 
 void EqConfig::decreaseOverdriveTime(uint16_t value) {
   if (value > 0)
-    overdriveTime_ = (overdriveTime_ > value) ? (overdriveTime_ - value) : 0;
+    overdriveTimeCounter_ =
+        (overdriveTimeCounter_ > value) ? (overdriveTimeCounter_ - value) : 0;
 }
 
 void EqConfig::increaseOverdriveTime(uint16_t value, bool backlight) {
   if (value > 0) {
-    if (overdriveTime_ == 0) // force overdrive mode for execution immediately
+    if (overdriveTimeCounter_ == 0)
+      // force overdrive mode for execution immediately
       eqTaskFanControl().forceNextIteration();
-    if (overdriveTime_ < overdriveMaxTime) {
-      overdriveTime_ = min(overdriveTime_ + value, overdriveMaxTime);
+    if (overdriveTimeCounter_ < overdriveMaxTime) {
+      overdriveTimeCounter_ =
+          min(overdriveTimeCounter_ + value, overdriveMaxTime);
       if (backlight)
         setBacklight();
     }

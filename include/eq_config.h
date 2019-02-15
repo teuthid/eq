@@ -201,12 +201,14 @@ public:
   static void setHtIndexType(EqHtIndexType value);
 
   // overdrive
-  static constexpr uint16_t overdriveMaxTime = 3599;         // in seconds
-  static constexpr uint16_t overdriveStepDefault = 10;       // in seconds
-  static constexpr uint16_t overdriveStepMin = 10;           // in seconds
-  static constexpr uint16_t overdriveStepMax = 600;          // in seconds
-  static uint16_t overdriveTime() { return overdriveTime_; } // in seconds
-  static void setOverdriveTime(uint16_t value);              // in seconds
+  static constexpr uint16_t overdriveMaxTime = 3599;   // in seconds
+  static constexpr uint16_t overdriveStepDefault = 10; // in seconds
+  static constexpr uint16_t overdriveStepMin = 10;     // in seconds
+  static constexpr uint16_t overdriveStepMax = 600;    // in seconds
+  static uint16_t overdriveTime() {                    // in seconds
+    return overdriveTimeCounter_;
+  }
+  static void setOverdriveTime(uint16_t value); // in seconds
   static void decreaseOverdriveTime(uint16_t value = 1);
   static void increaseOverdriveTime(uint16_t value, bool backlight = true);
   static uint16_t overdriveStep();
@@ -267,9 +269,9 @@ private:
   EqConfig() {}
   static bool watchdogEnabled_;
   static volatile bool saveWatchdogPoint_;
-  static EqAlertType alert_;
-  static uint16_t overdriveTime_;
-  static uint16_t backlightTimeCounter_;
+  static EqAlertType alert_;             // last detected alert
+  static uint16_t overdriveTimeCounter_; // current overdrive time
+  static uint16_t backlightTimeCounter_; // current backlight time
 };
 
 #endif // __EQ_CONFIG_H__
