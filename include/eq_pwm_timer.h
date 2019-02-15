@@ -13,7 +13,7 @@ class EqPwmTimer {
 
 public:
   void init();
-  void setDutyCycle(const uint8_t &duty); // 0% .. 100%
+  void setDutyCycle(uint8_t duty); // 0% .. 100%
   void attachCallback(callback_t callback);
   void detachCallback();
 

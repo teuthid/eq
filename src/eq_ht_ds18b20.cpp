@@ -43,7 +43,7 @@ public:
   bool begin();
   bool isConnected();
   bool readTemperature(fixed_t &temperature);
-  bool setResolution(const uint8_t &resolution);
+  bool setResolution(uint8_t resolution);
 
 private:
   DeviceAddress deviceAddress_ = {0};
@@ -121,7 +121,7 @@ bool EqDS18B20::readTemperature(fixed_t &temperature) {
   return true;
 }
 
-bool EqDS18B20::setResolution(const uint8_t &resolution) {
+bool EqDS18B20::setResolution(uint8_t resolution) {
   EQ_INTERRUPT_LOCK
   if (wire_.reset() == 0)
     return false;

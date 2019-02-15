@@ -13,7 +13,7 @@ void EqPwmTimer::init() {
   Timer1.pwm(EqConfig::fanPwmPin, 0);
 }
 
-void EqPwmTimer::setDutyCycle(const uint8_t &duty) {
+void EqPwmTimer::setDutyCycle(uint8_t duty) {
   Timer1.setPwmDuty(EqConfig::fanPwmPin, map(min(duty, 100), 0, 100, 0, 1023));
 }
 
