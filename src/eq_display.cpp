@@ -13,6 +13,7 @@ template <> void EqDisplay<EQ_NO_DISPLAY>::turnOn_() {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::showHT_() {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::showOverdriveTime_() {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::showFanSpeed_() {}
+template <> void EqDisplay<EQ_NO_DISPLAY>::clear() {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::showMessage(const char *) {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::showAlert(EqAlertType) {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::showCalibrating(uint8_t) {}

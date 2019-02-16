@@ -16,6 +16,7 @@ public:
   bool init();
 
   // needs specialization:
+  void clear();
   void showMessage(const char *message);
   void showAlert(EqAlertType alert);
   void showCalibrating(uint8_t percents);

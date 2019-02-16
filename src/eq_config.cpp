@@ -58,6 +58,7 @@ bool EqConfig::init() {
     eqButtonBacklight().read();
     eqButtonOverdrive().read();
   });
+  eqDisplay().clear();
   clearOverheating();
   clearWatchdogPoint();
   saveWatchdogPoint_ = true;
