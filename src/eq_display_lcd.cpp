@@ -49,7 +49,6 @@ private:
   static constexpr uint8_t colSpeedBar_ = 6;
   static constexpr uint8_t rowSpeedBar_ = 1;
   static constexpr uint8_t messageRow_ = 1;
-  static constexpr uint8_t overdriveCol_ = 2;
 #elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
   static constexpr uint8_t maxCols_ = 20;
   static constexpr uint8_t maxRows_ = 4;
@@ -57,14 +56,14 @@ private:
   static constexpr uint8_t colSpeedBar_ = 0;
   static constexpr uint8_t rowSpeedBar_ = 2;
   static constexpr uint8_t messageRow_ = 3;
-  static constexpr uint8_t overdriveCol_ = 3;
 #endif
 
   void clear_();
-  void printDigit_(uint8_t digit, uint8_t col);
-  void printValue_(uint8_t value, uint8_t col);
+  void printBigDigit_(uint8_t digit, uint8_t col);
+  void printBigValue_(uint8_t value, uint8_t col);
   void printHumidity_();
   void printTemperature_();
+  void printValue_(uint8_t value);
 };
 
 const PROGMEM EqLcd::Bar_ EqLcd::bars_[] = {
@@ -95,7 +94,7 @@ void EqLcd::clear_() {
   }
 }
 
-void EqLcd::printDigit_(uint8_t digit, uint8_t col) {
+void EqLcd::printBigDigit_(uint8_t digit, uint8_t col) {
   lcd_.setCursor(col, 0);
   for (uint8_t __i = 0; __i < 6; __i++) {
     lcd_.write(digits_[digit][__i]);
@@ -104,14 +103,14 @@ void EqLcd::printDigit_(uint8_t digit, uint8_t col) {
   }
 }
 
-void EqLcd::printValue_(uint8_t value, uint8_t col) {
-  printDigit_(value / 10, col);
-  printDigit_(value % 10, col + 3);
+void EqLcd::printBigValue_(uint8_t value, uint8_t col) {
+  printBigDigit_(value / 10, col);
+  printBigDigit_(value % 10, col + 3);
 }
 
 void EqLcd::printHumidity_() {
 #if (EQ_DISPLAY_TYPE == EQ_LCD_1602) || (EQ_DISPLAY_TYPE == EQ_LCD_2004)
-  printValue_(lastDH_ / 10, 0);
+  printBigValue_(lastDH_ / 10, 0);
   lcd_.setCursor(6, 0);
   lcd_.write('.');
   lcd_.write((lastDH_ % 10) + 48); // digit to ascii code
@@ -134,12 +133,17 @@ void EqLcd::printTemperature_() {
   lcd_.print(F("  "));
   lcd_.setCursor(6, 1);
   lcd_.print(F("     "));
-  printValue_(lastDT_ / 10, 11);
+  printBigValue_(lastDT_ / 10, 11);
   lcd_.setCursor(17, 0);
   lcd_.write('.');
   lcd_.write((lastDT_ % 10) + 48); // digit to ascii code
   lcd_.write(0xDF);
 #endif
+}
+
+void EqLcd::printValue_(uint8_t value) {
+  lcd_.print(value / 10);
+  lcd_.print(value % 10);
 }
 
 bool EqLcd::init() {
@@ -183,23 +187,38 @@ void EqLcd::showHT() {
     lastDT_ = __DT;
     printTemperature_();
   }
+#if (EQ_DISPLAY_TYPE == EQ_LCD_2004)
+  showMessage(""); // TODO: display internal temperature?
+#endif
   cleared_ = false;
 }
 
 void EqLcd::showOverdriveTime() {
+#if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
   clear_();
-  printValue_(EqConfig::overdriveTime() / 60, overdriveCol_);
-  lcd_.setCursor(overdriveCol_ + 6, 0);
+  printBigValue_(EqConfig::overdriveTime() / 60, 2);
+  lcd_.setCursor(8, 0);
   lcd_.write(0xA1);
-  lcd_.setCursor(overdriveCol_ + 6, 1);
+  lcd_.setCursor(8, 1);
   lcd_.write(0xDF);
-  printValue_(EqConfig::overdriveTime() % 60, overdriveCol_ + 7);
+  printBigValue_(EqConfig::overdriveTime() % 60, 9);
   lastSpeedDots_ = 0xFF;
+#elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
+  // there is enough space to display everything:
+  showHT();
+  showFanSpeed();
+  lcd_.setCursor(0, 3);
+  lcd_.print(F("Override:"));
+  lcd_.setCursor(15, 3);
+  printValue_(EqConfig::overdriveTime() / 60);
+  lcd_.write(':');
+  printValue_(EqConfig::overdriveTime() % 60);
+#endif
 }
 
 void EqLcd::showFanSpeed(bool detected, uint8_t percents) {
-  uint8_t __s = detected ? eqFanPwm().lastSpeed() : percents;
-  uint8_t __c = min(maxSpeedDots_, __s / maxSpeedDots_);
+  uint16_t __s = detected ? eqFanPwm().lastSpeed() : percents;
+  uint8_t __c = min(maxSpeedDots_, __s * maxSpeedDots_ / 100);
   if ((__s > 0) && (__c == 0))
     __c = 1;
   if (lastSpeedDots_ != __c) {
@@ -245,7 +264,7 @@ using EqDisplayLcd = EqDisplay<EQ_LCD_1602>;
 using EqDisplayLcd = EqDisplay<EQ_LCD_2004>;
 #endif
 
-template <> bool EqDisplayLcd::initDisplay_() { return __lcd.init(); }
+template <> bool EqDisplayLcd::init_() { return __lcd.init(); }
 
 template <> void EqDisplayLcd::turnOff_() { __lcd.turnOff(); }
 

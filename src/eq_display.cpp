@@ -7,7 +7,7 @@
 
 #if (EQ_DISPLAY_TYPE == EQ_NO_DISPLAY)
 
-template <> bool EqDisplay<EQ_NO_DISPLAY>::initDisplay_() { return true; }
+template <> bool EqDisplay<EQ_NO_DISPLAY>::init_() { return true; }
 template <> void EqDisplay<EQ_NO_DISPLAY>::turnOff_() {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::turnOn_() {}
 template <> void EqDisplay<EQ_NO_DISPLAY>::showHT_() {}

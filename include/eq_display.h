@@ -29,7 +29,7 @@ private:
   void backlight_(bool on = true);
 
   // needs specialization:
-  bool initDisplay_();
+  bool init_();
   void turnOff_();
   void turnOn_();
   void showHT_();
@@ -49,7 +49,7 @@ template <uint8_t Model> bool EqDisplay<Model>::init() {
 #ifdef EQ_DEBUG
   Serial.print(EqConfig::alertAsString(EqAlertType::Display));
 #endif
-  return initDisplay_();
+  return init_();
 }
 
 template <uint8_t Model> void EqDisplay<Model>::show() {
