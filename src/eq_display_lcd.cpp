@@ -236,10 +236,17 @@ void EqLcd::showMessage(const char *message) {
 }
 
 void EqLcd::showAlert(EqAlertType alert) {
+#if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
   clear();
   lcd_.print(F("ALERT"));
   showMessage(EqConfig::alertAsString(alert));
   lastSpeedDots_ = 0xFF;
+#elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
+  showHT();
+  lcd_.setCursor(0, 2);
+  lcd_.print(F("ALERT"));
+  showMessage(EqConfig::alertAsString(alert));
+#endif
 }
 
 void EqLcd::showCalibrating(uint8_t percents) {
