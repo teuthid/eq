@@ -184,7 +184,8 @@ void EqLcd::showHT() {
     printTemperature_();
   }
 #if (EQ_DISPLAY_TYPE == EQ_LCD_2004)
-  showMessage(""); // TODO: display internal temperature?
+  showMessage("");
+  // TODO: display uptime ?
 #endif
   cleared_ = false;
 }
@@ -200,11 +201,10 @@ void EqLcd::showOverdriveTime() {
   printBigValue_(EqConfig::overdriveTime() % 60, 9);
   lastSpeedDots_ = 0xFF;
 #elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
-  // there is enough space to display everything:
   showHT();
   showFanSpeed();
   lcd_.setCursor(0, 3);
-  lcd_.print(F("Override:"));
+  lcd_.print(F("Override"));
   lcd_.setCursor(15, 3);
   printValue_(EqConfig::overdriveTime() / 60);
   lcd_.write(':');
