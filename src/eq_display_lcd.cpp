@@ -183,7 +183,7 @@ void EqLcd::showHT() {
     printTemperature_();
   }
 #if (EQ_DISPLAY_TYPE == EQ_LCD_2004)
-  showMessage("Fan Speed", true);
+  showMessage(EqConfig::alertAsString(EqAlertType::Fan));
 #endif
   cleared_ = false;
 }
@@ -248,8 +248,7 @@ void EqLcd::showAlert(EqAlertType alert) {
   lastSpeedDots_ = 0xFF;
 #elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
   showHT();
-  lcd_.setCursor(0, 2);
-  showMessage("ALERT", true, 2);
+  showMessage(EqConfig::alertAsString(), true, 2);
   showMessage(EqConfig::alertAsString(alert));
   lastSpeedDots_ = 0xFF;
 #endif

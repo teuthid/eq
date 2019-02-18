@@ -104,7 +104,7 @@ void EqConfig::setAlertOnZeroSpeed(bool enabled) {
 }
 
 namespace {
-const char __eqStrAlertNone[] PROGMEM = "None ";
+const char __eqStrAlert[] PROGMEM = "ALERT ";
 const char __eqStrAlertDisplay[] PROGMEM = "Display ";
 const char __eqStrAlertFan[] PROGMEM = "Fan Controller ";
 const char __eqStrAlertHtSensor[] PROGMEM = "HT Sensor ";
@@ -113,7 +113,7 @@ const char __eqStrAlertTempSensor[] PROGMEM = "Temp Sensor ";
 const char __eqStrAlertItSensor[] PROGMEM = "Internal Sensor ";
 const char __eqStrAlertOverheating[] PROGMEM = "Overheating ";
 const char *const __eqStrAlerts[] PROGMEM = {
-    __eqStrAlertNone,     __eqStrAlertDisplay,     __eqStrAlertFan,
+    __eqStrAlert,         __eqStrAlertDisplay,     __eqStrAlertFan,
     __eqStrAlertHtSensor, __eqStrAlertLightSensor, __eqStrAlertTempSensor,
     __eqStrAlertItSensor, __eqStrAlertOverheating};
 char __eqStrAlertBuffer[17];
@@ -131,7 +131,7 @@ void EqConfig::showAlert(EqAlertType alert) {
     eqDisplay().showAlert(alert);
 #ifdef EQ_DEBUG
   Serial.println();
-  Serial.print(F("ALERT: "));
+  Serial.print(EqConfig::alertAsString());
   Serial.println(EqConfig::alertAsString(alert));
   Serial.flush();
 #endif
