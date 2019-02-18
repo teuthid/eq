@@ -149,8 +149,10 @@ public:
   // alerts:
   static constexpr bool alertOnZeroSpeedDefault = true;
   static EqAlertType alert() { return alert_; }
-  static void setAlert(EqAlertType value);
-  static void resetAlert(EqAlertType value);
+  static void setAlert(EqAlertType value) { alert_ = value; }
+  static void resetAlert(EqAlertType value) {
+    alert_ = (alert_ == value) ? EqAlertType::None : alert_;
+  }
   static bool anyAlert() { return (alert_ != EqAlertType::None); }
   static bool isAlertOnZeroSpeed();
   static void setAlertOnZeroSpeed(bool enabled = true);

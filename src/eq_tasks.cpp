@@ -57,7 +57,7 @@ template <> bool EqTaskItSensorControl::Callback() {
   if (!eqItSensor().read()) {
     EqConfig::setAlert(EqAlertType::ItSensor);
     return false;
-  } else { // sensor reading correct
+  } else { // correct reading of the sensor
     setWatchdogPoint(1);
     EqConfig::resetAlert(EqAlertType::ItSensor);
     if (eqItSensor().temperature() > EqConfig::itSensorMaxTemperature) {

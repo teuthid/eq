@@ -246,6 +246,7 @@ void EqLcd::showAlert(EqAlertType alert) {
   lcd_.setCursor(0, 2);
   lcd_.print(F("ALERT"));
   showMessage(EqConfig::alertAsString(alert));
+  lastSpeedDots_ = 0xFF;
 #endif
 }
 

@@ -94,15 +94,6 @@ void EqConfig::showSettings() {
   Serial.println();
 }
 
-void EqConfig::setAlert(EqAlertType value) {
-  setBacklight(value != alert_);
-  alert_ = value;
-}
-
-void EqConfig::resetAlert(EqAlertType value) {
-  alert_ = (alert_ == value) ? EqAlertType::None : alert_;
-}
-
 bool EqConfig::isAlertOnZeroSpeed() {
   return EqEeprom::readValue<bool>(EqEeprom::AlertOnZeroSpeed,
                                    alertOnZeroSpeedDefault);
