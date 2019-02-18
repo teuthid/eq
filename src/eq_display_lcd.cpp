@@ -24,7 +24,8 @@ public:
   void showHT();
   void showOverdriveTime();
   void showFanSpeed(bool detected = true, uint8_t percents = 0);
-  void showMessage(const char *message); // second line
+  void showMessage(const char *message, bool leftAligned = false,
+                   uint8_t row = maxRows_ - 1);
   void showAlert(EqAlertType alert);
   void showCalibrating(uint8_t percents);
 
@@ -49,14 +50,12 @@ private:
   static constexpr uint8_t maxSpeedDots_ = 10;
   static constexpr uint8_t colSpeedBar_ = 6;
   static constexpr uint8_t rowSpeedBar_ = 1;
-  static constexpr uint8_t messageRow_ = 1;
 #elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
   static constexpr uint8_t maxCols_ = 20;
   static constexpr uint8_t maxRows_ = 4;
   static constexpr uint8_t maxSpeedDots_ = 20;
   static constexpr uint8_t colSpeedBar_ = 0;
   static constexpr uint8_t rowSpeedBar_ = 2;
-  static constexpr uint8_t messageRow_ = 3;
 #endif
 
   void clear_();
@@ -184,8 +183,7 @@ void EqLcd::showHT() {
     printTemperature_();
   }
 #if (EQ_DISPLAY_TYPE == EQ_LCD_2004)
-  showMessage("");
-  // TODO: display uptime ?
+  showMessage("Fan Speed", true);
 #endif
   cleared_ = false;
 }
@@ -227,12 +225,19 @@ void EqLcd::showFanSpeed(bool detected, uint8_t percents) {
   }
 }
 
-void EqLcd::showMessage(const char *message) {
-  lcd_.setCursor(0, messageRow_);
-  for (uint8_t __i = 0; __i < maxCols_; __i++)
-    lcd_.write(0x20);
-  lcd_.setCursor(maxCols_ - min(maxCols_, strlen(message)), messageRow_);
-  lcd_.print(message);
+void EqLcd::showMessage(const char *message, bool leftAligned, uint8_t row) {
+  if (leftAligned) {
+    lcd_.setCursor(0, row);
+    lcd_.print(message);
+    for (uint8_t __i = strlen(message); __i < maxCols_; __i++)
+      lcd_.write(0x20);
+  } else { // right-aligned
+    uint8_t __pos = maxCols_ - min(maxCols_, strlen(message));
+    lcd_.setCursor(0, row);
+    for (uint8_t __i = 0; __i < __pos; __i++)
+      lcd_.write(0x20);
+    lcd_.print(message);
+  }
 }
 
 void EqLcd::showAlert(EqAlertType alert) {
@@ -244,7 +249,7 @@ void EqLcd::showAlert(EqAlertType alert) {
 #elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
   showHT();
   lcd_.setCursor(0, 2);
-  lcd_.print(F("ALERT"));
+  showMessage("ALERT", true, 2);
   showMessage(EqConfig::alertAsString(alert));
   lastSpeedDots_ = 0xFF;
 #endif
@@ -284,8 +289,9 @@ template <> void EqDisplayLcd::showFanSpeed_() { __lcd.showFanSpeed(); }
 
 template <> void EqDisplayLcd::clear() { __lcd.clear(); }
 
-template <> void EqDisplayLcd::showMessage(const char *message) {
-  __lcd.showMessage(message);
+template <>
+void EqDisplayLcd::showMessage(const char *message, bool leftAligned) {
+  __lcd.showMessage(message, leftAligned);
 }
 
 template <> void EqDisplayLcd::showAlert(EqAlertType alert) {

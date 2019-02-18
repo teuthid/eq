@@ -17,7 +17,7 @@ public:
 
   // needs specialization:
   void clear();
-  void showMessage(const char *message);
+  void showMessage(const char *message, bool leftAligned = false);
   void showAlert(EqAlertType alert);
   void showCalibrating(uint8_t percents);
 

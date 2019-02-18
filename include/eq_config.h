@@ -187,7 +187,7 @@ public:
   static constexpr uint8_t htSensorIntervalMin =        // in seconds
       max(1, htSensorSamplingPeriod / 1000);
   static constexpr uint8_t htSensorIntervalMax = 60;              // in seconds
-  static constexpr uint8_t htSensorHumidityThresholdDefault = 45; // in percents
+  static constexpr uint8_t htSensorHumidityThresholdDefault = 30; // in percents
   static constexpr uint8_t htSensorHumidityThresholdMin = 20;     // in percents
   static constexpr uint8_t htSensorHumidityThresholdMax = 80;     // in percents
   static constexpr uint8_t htSensorHumidityMin = 5;               // in percents
