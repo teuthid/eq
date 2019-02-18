@@ -64,7 +64,7 @@ private:
 
   // needs specializations:
   bool initHtSensor_();
-  void readHTSensor_(fixed_t &humidity, fixed_t &temperature);
+  bool readHTSensor_(fixed_t &humidity, fixed_t &temperature);
 
   void setAlert_() const {
     EqConfig::setAlert(IsInternal ? EqAlertType::ItSensor
@@ -119,8 +119,10 @@ bool EqHtSensor<Model, IsInternal>::init() {
 
 template <uint8_t Model, bool IsInternal>
 bool EqHtSensor<Model, IsInternal>::read() {
-  fixed_t __h = 0, __t = 0;
-  readHTSensor_(__h, __t);
+  fixed_t __h = 0;
+  fixed_t __t = 0;
+  if (!readHTSensor_(__h, __t))
+    return false; // incorrect reading of humidity or temperature
   if (HumidityOn)
     __h += EqConfig::htSensorHumidityCorrection();
   if (!IsInternal)

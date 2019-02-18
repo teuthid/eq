@@ -164,8 +164,8 @@ template <> bool EqItSensor::initHtSensor_() {
 }
 
 template <>
-void EqItSensor::readHTSensor_(fixed_t &humidity, fixed_t &temperature) {
-  __itSensor.readTemperature(temperature);
+bool EqItSensor::readHTSensor_(fixed_t &humidity, fixed_t &temperature) {
+  return __itSensor.readTemperature(temperature);
 }
 
 // specializations for DS18B20 (external sensor)

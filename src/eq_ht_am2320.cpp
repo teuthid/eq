@@ -94,8 +94,8 @@ template <> bool EqHtSensor<EQ_AM2320, false>::initHtSensor_() {
 }
 
 template <>
-void EqHtSensor<EQ_AM2320, false>::readHTSensor_(fixed_t &humidity,
+bool EqHtSensor<EQ_AM2320, false>::readHTSensor_(fixed_t &humidity,
                                                  fixed_t &temperature) {
-  __htSensor.readHT(humidity, temperature);
+  return __htSensor.readHT(humidity, temperature);
 }
 #endif // (EQ_HT_SENSOR_TYPE == EQ_AM2320)
