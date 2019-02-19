@@ -140,10 +140,7 @@ public:
   // debug functions:
   template <typename T>
   static void printValue(const __FlashStringHelper *description,
-                         const T &value) {
-    Serial.print(description);
-    Serial.print(value);
-  }
+                         const T &value);
   static void showSettings();
 
   // alerts:
@@ -287,5 +284,12 @@ private:
   static uint16_t overdriveTimeCounter_; // current overdrive time
   static uint16_t backlightTimeCounter_; // current backlight time
 };
+
+template <typename T>
+void EqConfig::printValue(const __FlashStringHelper *description,
+                          const T &value) {
+  Serial.print(description);
+  Serial.print(value);
+}
 
 #endif // __EQ_CONFIG_H__
