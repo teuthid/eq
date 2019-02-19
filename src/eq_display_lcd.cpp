@@ -21,7 +21,7 @@ public:
   void clear();
   void turnOff();
   void turnOn();
-  void showHT();
+  void showHT(bool withMessage = true);
   void showOverdriveTime();
   void showFanSpeed(bool detected = true, uint8_t percents = 0);
   void showMessage(const char *message, bool leftAligned = false,
@@ -58,7 +58,7 @@ private:
   static constexpr uint8_t rowSpeedBar_ = 2;
 #endif
 
-  void clear_();
+  void clearRow_(uint8_t row, uint8_t colBegin, uint8_t colEnd);
   void printBigDigit_(uint8_t digit, uint8_t col);
   void printBigValue_(uint8_t value, uint8_t col);
   void printHumidity_();
@@ -86,6 +86,12 @@ const PROGMEM EqLcd::Digit_ EqLcd::digits_[] = {{2, 8, 1, 2, 6, 1},     // 0
                                                 {2, 8, 1, 32, 32, 1},   // 7
                                                 {2, 3, 1, 2, 6, 1},     // 8
                                                 {2, 3, 1, 7, 6, 1}};    // 9
+
+void EqLcd::clearRow_(uint8_t row, uint8_t colBegin, uint8_t colEnd) {
+  lcd_.setCursor(colBegin, row);
+  for (uint8_t __i = colBegin; __i <= colEnd; __i++)
+    lcd_.write(0x20);
+}
 
 void EqLcd::printBigDigit_(uint8_t digit, uint8_t col) {
   lcd_.setCursor(col, 0);
@@ -171,7 +177,7 @@ void EqLcd::turnOff() {
 
 void EqLcd::turnOn() { lcd_.setBacklight(0xFF); }
 
-void EqLcd::showHT() {
+void EqLcd::showHT(bool withMessage) {
   uint16_t __DH = fixed_to_int(eqHtSensor().lastHumidity() * 10);
   uint16_t __DT = fixed_to_int(eqHtSensor().lastTemperature() * 10);
   if (cleared_ || (__DH != lastDH_)) {
@@ -183,7 +189,8 @@ void EqLcd::showHT() {
     printTemperature_();
   }
 #if (EQ_DISPLAY_TYPE == EQ_LCD_2004)
-  showMessage(EqConfig::alertAsString(EqAlertType::Fan));
+  if (withMessage)
+    showMessage(EqConfig::alertAsString(EqAlertType::Fan));
 #endif
   cleared_ = false;
 }
@@ -199,10 +206,9 @@ void EqLcd::showOverdriveTime() {
   printBigValue_(EqConfig::overdriveTime() % 60, 9);
   lastSpeedDots_ = 0xFF;
 #elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
-  showHT();
+  showHT(false);
   showFanSpeed();
-  lcd_.setCursor(0, 3);
-  lcd_.print(F("Override"));
+  showMessage("Overdrive", true);
   lcd_.setCursor(15, 3);
   printValue_(EqConfig::overdriveTime() / 60);
   lcd_.write(':');
@@ -229,13 +235,11 @@ void EqLcd::showMessage(const char *message, bool leftAligned, uint8_t row) {
   if (leftAligned) {
     lcd_.setCursor(0, row);
     lcd_.print(message);
-    for (uint8_t __i = strlen(message); __i < maxCols_; __i++)
-      lcd_.write(0x20);
+    clearRow_(row, strlen(message), maxCols_ - 1);
   } else { // right-aligned
     uint8_t __pos = maxCols_ - min(maxCols_, strlen(message));
-    lcd_.setCursor(0, row);
-    for (uint8_t __i = 0; __i < __pos; __i++)
-      lcd_.write(0x20);
+    if (__pos > 0)
+      clearRow_(row, 0, __pos - 1);
     lcd_.print(message);
   }
 }
@@ -247,7 +251,7 @@ void EqLcd::showAlert(EqAlertType alert) {
   showMessage(EqConfig::alertAsString(alert));
   lastSpeedDots_ = 0xFF;
 #elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
-  showHT();
+  showHT(false);
   showMessage(EqConfig::alertAsString(), true, 2);
   showMessage(EqConfig::alertAsString(alert));
   lastSpeedDots_ = 0xFF;
