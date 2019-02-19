@@ -64,7 +64,7 @@ enum class EqAlertType : uint8_t {
 
 class EqConfig final {
 public:
-  // hardware configuration
+  /* hardware configuration */
 
 #ifdef EQ_ARCH_AVR
   static constexpr uint8_t ledHeartbeatPin = 13;
@@ -82,8 +82,9 @@ public:
 // TODO: other architectures
 #endif
 
-  // inverts button logic
-  // if true, low level means pressed else high level means pressed
+  /* inverts button logic - if true, low level means pressed else high level
+   * means pressed */
+
   static constexpr bool ledHeartbeatInvert = false;
   static constexpr bool ledAlertInvert = false;
   static constexpr bool ledStatusInvert = false;
@@ -93,10 +94,13 @@ public:
   static constexpr bool buttonOverdriveInvert = true;
   static constexpr bool buttonOverdrivePullUpEnabled = true;
 
+  /* I2C addresses */
+
   static constexpr uint8_t lcdI2CAddress = 0x27;    // EQ_LCD_1602
   static constexpr uint8_t am2320I2CAddress = 0x5C; // EQ_AM2320
 
-  // non-configurable parameters
+  /* non-configurable parameters */
+
   static constexpr uint8_t sensorMaxDeviation = 30;        // in percents
   static constexpr uint16_t htSensorSamplingPeriod = 2000; // in milliseconds
   static constexpr uint16_t itSensorSamplingPeriod = 1000; // in milliseconds
@@ -113,7 +117,6 @@ public:
   EqConfig(EqConfig &&) = delete;
   void operator=(const EqConfig &) = delete;
 
-  /* definitions for different architectures */
   // Disables the watchdog.
   static void disableWatchdog();
   // Enables the watchdog.
@@ -122,7 +125,6 @@ public:
   static void resetWatchdog();
   // Puts into the sleep mode.
   static void sleep();
-  /*******************************************/
 
   // Reads the last registered watchdog point from EEPROM.
   static uint8_t readWatchdogPoint();
@@ -137,7 +139,8 @@ public:
   // controller settings in EEPROM.
   static void reset(bool cleanEeprom = false);
 
-  // debug functions:
+  /* debug functions */
+
   template <typename T>
   static void printValue(const __FlashStringHelper *description,
                          const T &value);
