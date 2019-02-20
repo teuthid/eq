@@ -26,6 +26,8 @@ public:
   void showFanSpeed(bool detected = true, uint8_t percents = 0);
   void showMessage(const char *message, bool leftAligned = false,
                    uint8_t row = maxRows_ - 1);
+  void showMessage(const __FlashStringHelper *message, bool leftAligned = false,
+                   uint8_t row = maxRows_ - 1);
   void showAlert(EqAlertType alert);
   void showCalibrating(uint8_t percents);
 
@@ -190,7 +192,7 @@ void EqLcd::showHT(bool withMessage) {
   }
 #if (EQ_DISPLAY_TYPE == EQ_LCD_2004)
   if (withMessage)
-    showMessage(EqConfig::alertAsString(EqAlertType::Fan));
+    showMessage(F("elektroda.pl"));
 #endif
   cleared_ = false;
 }
@@ -208,7 +210,7 @@ void EqLcd::showOverdriveTime() {
 #elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
   showHT(false);
   showFanSpeed();
-  showMessage("Overdrive", true);
+  showMessage(F("Overdrive"), true);
   lcd_.setCursor(15, 3);
   printValue_(EqConfig::overdriveTime() / 60);
   lcd_.write(':');
@@ -244,6 +246,13 @@ void EqLcd::showMessage(const char *message, bool leftAligned, uint8_t row) {
   }
 }
 
+void EqLcd::showMessage(const __FlashStringHelper *message, bool leftAligned,
+                        uint8_t row) {
+  char __s[strlen_P((const char *)message) + 1];
+  strcpy_P(__s, (const char *)message);
+  showMessage(__s, leftAligned, row);
+}
+
 void EqLcd::showAlert(EqAlertType alert) {
 #if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
   clear();
@@ -252,7 +261,7 @@ void EqLcd::showAlert(EqAlertType alert) {
   lastSpeedDots_ = 0xFF;
 #elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
   showHT(false);
-  showMessage(EqConfig::alertAsString(), true, 2);
+  showMessage(F("ALERT"), true, 2);
   showMessage(EqConfig::alertAsString(alert));
   lastSpeedDots_ = 0xFF;
 #endif
