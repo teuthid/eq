@@ -43,8 +43,8 @@ private:
 };
 
 template <uint8_t Size> void EqCollector<Size>::clear(const fixed_t &value) {
-  for (uint8_t __i = 0; __i < Size; __i++)
-    collector_[__i] = value;
+  for (fixed_t &__v : collector_)
+    __v = value;
 }
 
 template <uint8_t Size>
