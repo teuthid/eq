@@ -35,7 +35,7 @@ void setup() {
 #endif
     eqController.startNow();
   } else {
-    EqConfig::showAlert(EqConfig::alert());
+    EqConfig::showAlert();
     abort();
   }
 }

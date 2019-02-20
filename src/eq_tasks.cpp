@@ -181,7 +181,7 @@ template <> bool EqTaskDebug::Callback() {
   EqConfig::resetWatchdog();
   if (EqConfig::anyAlert()) {
     Serial.print(F("ALERT: "));
-    Serial.println(EqConfig::alertAsString(EqConfig::alert()));
+    Serial.println(EqConfig::alertAsString());
   } else { // no alerts
     EqConfig::printValue(F("L="), eqLightSensor().intensity());
     EqConfig::printValue(F(" H="), fixed_to_float(eqHtSensor().lastHumidity()));

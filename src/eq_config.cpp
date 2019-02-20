@@ -127,11 +127,11 @@ const char *EqConfig::alertAsString(EqAlertType alert) {
 void EqConfig::showAlert(EqAlertType alert) {
   eqLedAlert().setState(true);
   if (alert_ != EqAlertType::Display)
-    eqDisplay().showAlert(alert);
+    eqDisplay().showAlert();
 #ifdef EQ_DEBUG
   Serial.println();
   Serial.print(F("ALERT: "));
-  Serial.println(EqConfig::alertAsString(alert));
+  Serial.println(EqConfig::alertAsString());
   Serial.flush();
 #endif
 }

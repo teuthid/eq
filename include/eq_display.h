@@ -18,7 +18,7 @@ public:
   // needs specialization:
   void clear();
   void showMessage(const char *message, bool leftAligned = false);
-  void showAlert(EqAlertType alert);
+  void showAlert();
   void showCalibrating(uint8_t percents);
 
   EqDisplay(const EqDisplay &) = delete;
@@ -63,7 +63,7 @@ template <uint8_t Model> void EqDisplay<Model>::show() {
       } else // show overdrive time
         showOverdriveTime_();
     else // show alert
-      showAlert(EqConfig::alert());
+      showAlert();
   } else // turn off display
     backlight_(false);
 }

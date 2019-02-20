@@ -28,7 +28,7 @@ public:
                    uint8_t row = maxRows_ - 1);
   void showMessage(const __FlashStringHelper *message, bool leftAligned = false,
                    uint8_t row = maxRows_ - 1);
-  void showAlert(EqAlertType alert);
+  void showAlert();
   void showCalibrating(uint8_t percents);
 
 private:
@@ -253,16 +253,16 @@ void EqLcd::showMessage(const __FlashStringHelper *message, bool leftAligned,
   showMessage(__s, leftAligned, row);
 }
 
-void EqLcd::showAlert(EqAlertType alert) {
+void EqLcd::showAlert() {
 #if (EQ_DISPLAY_TYPE == EQ_LCD_1602)
   clear();
   lcd_.print(F("ALERT"));
-  showMessage(EqConfig::alertAsString(alert));
+  showMessage(EqConfig::alertAsString());
   lastSpeedDots_ = 0xFF;
 #elif (EQ_DISPLAY_TYPE == EQ_LCD_2004)
   showHT(false);
   showMessage(F("ALERT"), true, 2);
-  showMessage(EqConfig::alertAsString(alert));
+  showMessage(EqConfig::alertAsString());
   lastSpeedDots_ = 0xFF;
 #endif
 }
@@ -306,9 +306,7 @@ void EqDisplayLcd::showMessage(const char *message, bool leftAligned) {
   __lcd.showMessage(message, leftAligned);
 }
 
-template <> void EqDisplayLcd::showAlert(EqAlertType alert) {
-  __lcd.showAlert(alert);
-}
+template <> void EqDisplayLcd::showAlert() { __lcd.showAlert(); }
 
 template <> void EqDisplayLcd::showCalibrating(uint8_t percents) {
   __lcd.showCalibrating(percents);

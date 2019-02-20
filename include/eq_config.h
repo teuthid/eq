@@ -156,8 +156,8 @@ public:
   static bool anyAlert() { return (alert_ != EqAlertType::None); }
   static bool isAlertOnZeroSpeed();
   static void setAlertOnZeroSpeed(bool enabled = true);
-  static const char *alertAsString(EqAlertType alert = EqAlertType::None);
-  static void showAlert(EqAlertType alert);
+  static const char *alertAsString(EqAlertType alert = alert_);
+  static void showAlert(EqAlertType alert = alert_);
 
   // LED status
   static constexpr EqLedStatusMode ledStatusModeDefault =
