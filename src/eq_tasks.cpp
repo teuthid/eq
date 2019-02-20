@@ -179,15 +179,20 @@ EqTaskDebug::EqTask()
 
 template <> bool EqTaskDebug::Callback() {
   EqConfig::resetWatchdog();
-  EqConfig::printValue(F("L="), eqLightSensor().intensity());
-  EqConfig::printValue(F(" H="), fixed_to_float(eqHtSensor().lastHumidity()));
-  EqConfig::printValue(F(" T="),
-                       fixed_to_float(eqHtSensor().lastTemperature()));
-  EqConfig::printValue(F(" F="), eqFanPwm().lastSpeed());
-  EqConfig::printValue(F(" I="),
-                       fixed_to_float(eqItSensor().lastTemperature()));
-  EqConfig::printValue(F(" M="), freeMemory());
-  Serial.println();
+  if (EqConfig::anyAlert()) {
+    Serial.print(F("ALERT: "));
+    Serial.println(EqConfig::alertAsString(EqConfig::alert()));
+  } else { // no alerts
+    EqConfig::printValue(F("L="), eqLightSensor().intensity());
+    EqConfig::printValue(F(" H="), fixed_to_float(eqHtSensor().lastHumidity()));
+    EqConfig::printValue(F(" T="),
+                         fixed_to_float(eqHtSensor().lastTemperature()));
+    EqConfig::printValue(F(" F="), eqFanPwm().lastSpeed());
+    EqConfig::printValue(F(" I="),
+                         fixed_to_float(eqItSensor().lastTemperature()));
+    EqConfig::printValue(F(" M="), freeMemory());
+    Serial.println();
+  }
   return true;
 }
 #endif // EQ_DEBUG
