@@ -13,6 +13,7 @@
 
 #include "eq_fan_pwm.h"
 #include "eq_ht_sensor.h"
+#include "eq_uptime.h"
 
 class EqLcd {
 public:
