@@ -44,8 +44,8 @@ void EqEeprom::init(bool reset) {
 
 void EqEeprom::show() {
   uint16_t __size = 0;
-  for (uint8_t __i = 0; __i < sizeof(paramSizes_); __i++)
-    __size += paramSizes_[__i];
+  for (uint8_p &__s : paramSizes_)
+    __size += __s;
   Serial.print(F("EEPROM: "));
   for (uint16_t __i = startAddress; __i <= startAddress + __size; __i++) {
     Serial.print(EEPROM.read(__i), HEX);
