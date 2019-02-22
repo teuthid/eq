@@ -14,6 +14,7 @@ public:
   static uint8_t hours() { return hours_; }
   static uint8_t minutes() { return minutes_; }
   static uint8_t seconds() { return seconds_; }
+  static void update();
 
 private:
   EqUptime() {}
