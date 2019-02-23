@@ -9,7 +9,7 @@
 #include <TimerOne.h>
 
 void EqPwmTimer::init() {
-  Timer1.initialize(EqConfig::fanPwmCycle);
+  Timer1.initialize(EqConfig::fanPwmCycle * 1000UL);
   Timer1.pwm(EqConfig::fanPwmPin, 0);
 }
 

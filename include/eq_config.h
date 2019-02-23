@@ -101,6 +101,7 @@ public:
 
   /* non-configurable parameters */
 
+  static constexpr uint16_t fanPwmCycle = 100;             // in milliseconds
   static constexpr uint8_t sensorMaxDeviation = 30;        // in percents
   static constexpr uint16_t htSensorSamplingPeriod = 2000; // in milliseconds
   static constexpr uint16_t itSensorSamplingPeriod = 1000; // in milliseconds
@@ -235,7 +236,6 @@ public:
   static constexpr uint8_t fanPwmMinDefault = 10;     // in percents
   static constexpr uint8_t fanPwmMaxDefault = 100;    // in percents
   static constexpr uint8_t fanPwmOverdriveDefault = fanPwmMaxDefault;
-  static constexpr uint32_t fanPwmCycle = 100000; // in microseconds
   static constexpr bool fanPwmStepModeDefault = false;
   static uint8_t fanPwmInterval();               // in seconds
   static void setFanPwmInterval(uint8_t value);  // in seconds
