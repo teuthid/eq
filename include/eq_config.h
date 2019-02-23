@@ -169,7 +169,7 @@ public:
   // overheating
   static constexpr uint8_t maxCountOverheating = 3;
   static bool overheating();         // true if overheating detected
-  static void registerOverheating(); // increase overheating countet in eeprom
+  static void registerOverheating(); // increase overheating counter in eeprom
   static void clearOverheating();    // clear overheating counter in eeprom
 
   // light sensor
