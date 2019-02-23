@@ -15,8 +15,11 @@ public:
   static uint8_t minutes() { return minutes_; }
   static uint8_t seconds() { return seconds_; }
   static void update();
+  static const char *asString();
 
 private:
+  static char str_[18];
+
   EqUptime() {}
   static unsigned long days_;
   static uint8_t hours_;

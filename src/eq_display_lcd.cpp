@@ -193,7 +193,7 @@ void EqLcd::showHT(bool withMessage) {
   }
 #if (EQ_DISPLAY_TYPE == EQ_LCD_2004)
   if (withMessage)
-    showMessage(F("elektroda.pl"));
+    showMessage(EqUptime::asString());
 #endif
   cleared_ = false;
 }

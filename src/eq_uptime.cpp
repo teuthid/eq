@@ -11,6 +11,7 @@ uint8_t EqUptime::minutes_{0};
 uint8_t EqUptime::seconds_{0};
 bool EqUptime::highMillis_{false};
 unsigned long EqUptime::rollOver_{0};
+char EqUptime::str_[18];
 
 void EqUptime::update() {
   unsigned long __m = millis();
@@ -29,4 +30,37 @@ void EqUptime::update() {
   hours_ = (__s / (60 * 60)) % 24;
   // first portion takes care of a rollover (around 50 days)
   days_ = (rollOver_ * 50) + (__s / (60UL * 60UL * 24UL));
+}
+
+const char *EqUptime::asString() {
+  uint8_t __i = 0;
+  update();
+  // using sprintf() results in a larger code by 2kB
+  str_[__i++] = 'U';
+  str_[__i++] = 'p';
+  str_[__i++] = ' ';
+  str_[__i++] = ' ';
+  if (days_ > 100)
+    str_[__i++] = days_ / 100 + 0x30;
+  if (days_ > 10)
+    str_[__i++] = days_ / 10 + 0x30;
+  str_[__i++] = days_ % 10 + 0x30;
+  str_[__i++] = 'd';
+  str_[__i++] = ' ';
+  if (hours_ > 10)
+    str_[__i++] = hours_ / 10 + 0x30;
+  str_[__i++] = hours_ % 10 + 0x30;
+  str_[__i++] = 'h';
+  str_[__i++] = ' ';
+  if (minutes_ > 10)
+    str_[__i++] = minutes_ / 10 + 0x30;
+  str_[__i++] = minutes_ % 10 + 0x30;
+  str_[__i++] = 'm';
+  str_[__i++] = ' ';
+  if (seconds_ > 10)
+    str_[__i++] = seconds_ / 10 + 0x30;
+  str_[__i++] = seconds_ % 10 + 0x30;
+  str_[__i++] = 's';
+  str_[__i] = 0;
+  return str_;
 }
