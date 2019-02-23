@@ -40,24 +40,24 @@ const char *EqUptime::asString() {
   str_[__i++] = 'p';
   str_[__i++] = ' ';
   str_[__i++] = ' ';
-  if (days_ > 100)
+  if (days_ >= 100)
     str_[__i++] = days_ / 100 + 0x30;
-  if (days_ > 10)
+  if (days_ >= 10)
     str_[__i++] = days_ / 10 + 0x30;
   str_[__i++] = days_ % 10 + 0x30;
   str_[__i++] = 'd';
   str_[__i++] = ' ';
-  if (hours_ > 10)
+  if (hours_ >= 10)
     str_[__i++] = hours_ / 10 + 0x30;
   str_[__i++] = hours_ % 10 + 0x30;
   str_[__i++] = 'h';
   str_[__i++] = ' ';
-  if (minutes_ > 10)
+  if (minutes_ >= 10)
     str_[__i++] = minutes_ / 10 + 0x30;
   str_[__i++] = minutes_ % 10 + 0x30;
   str_[__i++] = 'm';
   str_[__i++] = ' ';
-  if (seconds_ > 10)
+  if (seconds_ >= 10)
     str_[__i++] = seconds_ / 10 + 0x30;
   str_[__i++] = seconds_ % 10 + 0x30;
   str_[__i++] = 's';
