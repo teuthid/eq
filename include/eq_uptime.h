@@ -18,7 +18,7 @@ public:
   static const char *asString();
 
 private:
-  static char str_[18];
+  static char str_[11];
 
   EqUptime() {}
   static unsigned long days_;

@@ -101,7 +101,7 @@ public:
 
   /* non-configurable parameters */
 
-  static constexpr uint16_t fanPwmCycle = 100;             // in milliseconds
+  static constexpr uint8_t fanPwmCycle = 100;              // in milliseconds
   static constexpr uint8_t sensorMaxDeviation = 30;        // in percents
   static constexpr uint16_t htSensorSamplingPeriod = 2000; // in milliseconds
   static constexpr uint16_t itSensorSamplingPeriod = 1000; // in milliseconds
