@@ -169,7 +169,7 @@ template <> bool EqTaskBlowingControl::Callback() {
 
 // debugging
 #ifdef EQ_DEBUG
-#include "MemoryFree.h"
+#include "MemoryInfo.h"
 template <>
 EqTaskDebug::EqTask()
     : Task(EqConfig::debugInterval * TASK_SECOND, TASK_FOREVER, nullptr,
@@ -190,7 +190,7 @@ template <> bool EqTaskDebug::Callback() {
     EqConfig::printValue(F(" F="), eqFanPwm().lastSpeed());
     EqConfig::printValue(F(" I="),
                          fixed_to_float(eqItSensor().lastTemperature()));
-    EqConfig::printValue(F(" M="), freeMemory());
+    EqConfig::printValue(F(" M="), getTotalAvailableMemory());
     Serial.println();
   }
   return true;
