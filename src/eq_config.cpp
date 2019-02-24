@@ -10,6 +10,7 @@
 #include "eq_dpin.h"
 #include "eq_eeprom.h"
 #include "eq_fan_pwm.h"
+#include "eq_flash.h"
 #include "eq_ht_sensor.h"
 #include "eq_led.h"
 #include "eq_light_sensor.h"
@@ -104,14 +105,14 @@ void EqConfig::setAlertOnZeroSpeed(bool enabled) {
 }
 
 namespace {
-const PROGMEM char __eqStrAlertDisplay[] = "Display ";
-const PROGMEM char __eqStrAlertFan[] = "Fan Controller ";
-const PROGMEM char __eqStrAlertHtSensor[] = "HT Sensor ";
-const PROGMEM char __eqStrAlertLightSensor[] = "Light Sensor ";
-const PROGMEM char __eqStrAlertTempSensor[] = "Temp Sensor ";
-const PROGMEM char __eqStrAlertItSensor[] = "Internal Sensor ";
-const PROGMEM char __eqStrAlertOverheating[] = "Overheating ";
-const PROGMEM char *const __eqStrAlerts[] = {
+static flashchar_t __eqStrAlertDisplay[] = "Display ";
+static flashchar_t __eqStrAlertFan[] = "Fan Controller ";
+static flashchar_t __eqStrAlertHtSensor[] = "HT Sensor ";
+static flashchar_t __eqStrAlertLightSensor[] = "Light Sensor ";
+static flashchar_t __eqStrAlertTempSensor[] = "Temp Sensor ";
+static flashchar_t __eqStrAlertItSensor[] = "Internal Sensor ";
+static flashchar_t __eqStrAlertOverheating[] = "Overheating ";
+static flashstring_t const __eqStrAlerts[] = {
     __eqStrAlertDisplay,     __eqStrAlertFan,        __eqStrAlertHtSensor,
     __eqStrAlertLightSensor, __eqStrAlertTempSensor, __eqStrAlertItSensor,
     __eqStrAlertOverheating};
@@ -119,9 +120,12 @@ char __eqStrAlertBuffer[17];
 } // namespace
 
 const char *EqConfig::alertAsString(EqAlertType alert) {
-  return strncpy_P(__eqStrAlertBuffer,
-                   (char *)pgm_read_word(&(__eqStrAlerts[(uint8_t)alert - 1])),
-                   sizeof(__eqStrAlertBuffer));
+  /*
+    return flashstring_copy(__eqStrAlertBuffer,
+                            __eqStrAlerts[(uint8_t)alert - 1]);
+    */
+  return strcpy_P(__eqStrAlertBuffer,
+                  (PGM_P)pgm_read_word(&(__eqStrAlerts[(uint8_t)alert - 1])));
 }
 
 void EqConfig::showAlert(EqAlertType alert) {
