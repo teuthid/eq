@@ -16,4 +16,15 @@ char *fstring_copy_n(char *buffer, const void *address_short, size_t n) {
 }
 
 #else // without using flash memory
+
+#include <string.h>
+
+char *fstring_copy(char *buffer, const char *const *str) {
+  return strcpy(buffer, *str);
+}
+
+char *fstring_copy_n(char *buffer, const char *const *str, size_t n) {
+  return strncpy(buffer, *str, n);
+}
+
 #endif

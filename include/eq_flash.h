@@ -7,15 +7,21 @@
 #define __EQ_FLASH_H__
 
 #ifdef EQ_ARCH_AVR
+
 #include <avr/pgmspace.h>
 #define fchar_t const PROGMEM char
 #define fstring_t const PROGMEM char *
+char *fstring_copy(char *buffer, const void *address_short);
+char *fstring_copy_n(char *buffer, const void *address_short, size_t n);
 
 #else // without using flash memory
 
-#endif
+#include <stdlib.h> // for size_t
+#define fchar_t const char
+#define fstring_t const char *
+char *fstring_copy(char *buffer, const char *const *str);
+char *fstring_copy_n(char *buffer, const char *const *str, size_t n);
 
-char *fstring_copy(char *buffer, const void *address_short);
-char *fstring_copy_n(char *buffer, const void *address_short, size_t n);
+#endif
 
 #endif // __EQ_FLASH_H__
