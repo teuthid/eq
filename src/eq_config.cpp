@@ -105,14 +105,14 @@ void EqConfig::setAlertOnZeroSpeed(bool enabled) {
 }
 
 namespace {
-static flashchar_t __eqStrAlertDisplay[] = "Display ";
-static flashchar_t __eqStrAlertFan[] = "Fan Controller ";
-static flashchar_t __eqStrAlertHtSensor[] = "HT Sensor ";
-static flashchar_t __eqStrAlertLightSensor[] = "Light Sensor ";
-static flashchar_t __eqStrAlertTempSensor[] = "Temp Sensor ";
-static flashchar_t __eqStrAlertItSensor[] = "Internal Sensor ";
-static flashchar_t __eqStrAlertOverheating[] = "Overheating ";
-static flashstring_t const __eqStrAlerts[] = {
+static fchar_t __eqStrAlertDisplay[] = "Display ";
+static fchar_t __eqStrAlertFan[] = "Fan Controller ";
+static fchar_t __eqStrAlertHtSensor[] = "HT Sensor ";
+static fchar_t __eqStrAlertLightSensor[] = "Light Sensor ";
+static fchar_t __eqStrAlertTempSensor[] = "Temp Sensor ";
+static fchar_t __eqStrAlertItSensor[] = "Internal Sensor ";
+static fchar_t __eqStrAlertOverheating[] = "Overheating ";
+static fstring_t const __eqStrAlerts[] = {
     __eqStrAlertDisplay,     __eqStrAlertFan,        __eqStrAlertHtSensor,
     __eqStrAlertLightSensor, __eqStrAlertTempSensor, __eqStrAlertItSensor,
     __eqStrAlertOverheating};
@@ -120,12 +120,10 @@ char __eqStrAlertBuffer[17];
 } // namespace
 
 const char *EqConfig::alertAsString(EqAlertType alert) {
-  /*
-    return flashstring_copy(__eqStrAlertBuffer,
-                            __eqStrAlerts[(uint8_t)alert - 1]);
-    */
-  return strcpy_P(__eqStrAlertBuffer,
-                  (PGM_P)pgm_read_word(&(__eqStrAlerts[(uint8_t)alert - 1])));
+
+  return fstring_copy_n(__eqStrAlertBuffer,
+                        &(__eqStrAlerts[(uint8_t)alert - 1]),
+                        sizeof(__eqStrAlertBuffer));
 }
 
 void EqConfig::showAlert(EqAlertType alert) {

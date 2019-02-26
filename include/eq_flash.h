@@ -8,14 +8,14 @@
 
 #ifdef EQ_ARCH_AVR
 #include <avr/pgmspace.h>
-#define flashchar_t const PROGMEM char
-#define flashstring_t const PROGMEM char *
+#define fchar_t const PROGMEM char
+#define fstring_t const PROGMEM char *
 
-inline char *flashstring_copy(char *buffer, const char *fstr) {
-  return strcpy_P(buffer, (PGM_P)pgm_read_word(&(fstr)));
-}
+#else // without using flash memory
 
-#else // without using flash
 #endif
+
+char *fstring_copy(char *buffer, const void *address_short);
+char *fstring_copy_n(char *buffer, const void *address_short, size_t n);
 
 #endif // __EQ_FLASH_H__
