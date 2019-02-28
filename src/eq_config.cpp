@@ -37,6 +37,9 @@ bool EqConfig::init() {
   backlightTimeCounter_ = backlightTime();
   // analogReadResolution(10); // TODO: for non-AVR architecture
   Wire.begin(); // TO FIX: for ESP32
+#if defined(EQ_UNIT_TEST)
+  return false;
+#endif
   if (!eqDisplay().init())
     return false;
   eqLedHeartbeat().test();

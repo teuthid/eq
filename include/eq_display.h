@@ -14,6 +14,7 @@ template <uint8_t Model> class EqDisplay {
 public:
   void show();
   bool init();
+  void off();
 
   // needs specialization:
   void clear();
@@ -66,6 +67,13 @@ template <uint8_t Model> void EqDisplay<Model>::show() {
       showAlert();
   } else // turn off display
     backlight_(false);
+}
+
+template <uint8_t Model> void EqDisplay<Model>::off() {
+#if defined(EQ_UNIT_TEST)
+  init_();
+#endif
+  turnOff_();
 }
 
 template <uint8_t Model> void EqDisplay<Model>::backlight_(bool on) {

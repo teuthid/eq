@@ -8,8 +8,11 @@
 #include "eq_tasks.h"
 
 #include <TaskScheduler.h>
+
 #if defined(EQ_UNIT_TEST)
 #include <AUnitVerbose.h>
+
+#include "eq_display.h"
 #include "test_eq.h"
 #endif
 
@@ -43,9 +46,11 @@ void setup() {
     EqConfig::showAlert();
     abort();
   }
-#else
-// TODO
-#endif // !defined(EQ_UNIT_TEST)
+#else // defined(EQ_UNIT_TEST)
+  Serial.println(F("Testing..."));
+  EqConfig::init();
+  eqDisplay().off();
+#endif
 }
 
 void loop() {

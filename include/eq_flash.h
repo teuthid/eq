@@ -13,7 +13,7 @@
 class EqFlashString final {
 public:
   EqFlashString(const void *address) : address_(address) {}
-  // size_t length() const;
+  //size_t length() const;
 
 private:
   const void *address_;
