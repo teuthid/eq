@@ -12,11 +12,11 @@
 
 class EqFlashString final {
 public:
-  EqFlashString(const char **address) : address_(address) {}
-  size_t length() const;
+  EqFlashString(const void *address) : address_(address) {}
+  // size_t length() const;
 
 private:
-  const char **address_;
+  const void *address_;
 };
 
 #define fchar_t const PROGMEM char

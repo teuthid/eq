@@ -8,13 +8,18 @@
 #include "eq_tasks.h"
 
 #include <TaskScheduler.h>
+#if defined(EQ_UNIT_TEST)
+#include <AUnitVerbose.h>
+#include "test_eq.h"
+#endif
 
 Scheduler eqController;
 Scheduler eqHPController; // high priority scheduler
 
 void setup() {
   Serial.begin(115200);
-#ifdef EQ_DEBUG
+#if !defined(EQ_UNIT_TEST)
+#if defined(EQ_DEBUG)
   Serial.print(F("Initializing... "));
 #endif
   if (EqConfig::init()) {
@@ -23,12 +28,12 @@ void setup() {
     eqController.addTask(eqTaskHtSensorControl());
     eqController.addTask(eqTaskFanControl());
     eqController.addTask(eqTaskBlowingControl());
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
     eqController.addTask(eqTaskDebug());
 #endif
     eqController.setHighPriorityScheduler(&eqHPController);
     eqController.enableAll();
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
     Serial.println();
     EqConfig::showSettings();
     Serial.println(F("Running..."));
@@ -38,9 +43,18 @@ void setup() {
     EqConfig::showAlert();
     abort();
   }
+#else
+// TODO
+#endif // !defined(EQ_UNIT_TEST)
 }
 
-void loop() { eqController.execute(); }
+void loop() {
+#if !defined(EQ_UNIT_TEST)
+  eqController.execute();
+#else
+  aunit::TestRunner::run();
+#endif
+}
 
 void EqConfig::disableAllTasks() {
   // disable all tasks in both schedulers

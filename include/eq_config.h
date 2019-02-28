@@ -9,7 +9,9 @@
 #include "Arduino.h"
 
 #include "eq_fixedpoints.h"
+#include "eq_flash.h"
 
+#define EQ_UNIT_TEST
 #define EQ_DEBUG
 
 // #define EQ_STD_FUNCTION
