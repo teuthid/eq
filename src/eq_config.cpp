@@ -66,7 +66,7 @@ bool EqConfig::init() {
   enableWatchdog();
   alert_ = EqAlertType::None;
   overdriveTimeCounter_ = 0;
-  backlightTimeCounter_ = 0;
+  setBacklight(); // force backlight at start-up
   return true;
 }
 

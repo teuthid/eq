@@ -7,6 +7,8 @@
 
 #ifdef EQ_ARCH_AVR
 
+size_t EqFlashString::length() const { return strlen_P(*address_); }
+
 char *fstring_copy(char *buffer, const void *address_short) {
   return strcpy_P(buffer, (PGM_P)pgm_read_word(address_short));
 }

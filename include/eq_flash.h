@@ -9,6 +9,16 @@
 #ifdef EQ_ARCH_AVR
 
 #include <avr/pgmspace.h>
+
+class EqFlashString final {
+public:
+  EqFlashString(const char **address) : address_(address) {}
+  size_t length() const;
+
+private:
+  const char **address_;
+};
+
 #define fchar_t const PROGMEM char
 #define fstring_t const PROGMEM char *
 char *fstring_copy(char *buffer, const void *address_short);
