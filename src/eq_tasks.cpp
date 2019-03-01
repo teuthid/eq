@@ -24,17 +24,16 @@ template <> bool EqTaskHeartbeat::Callback() {
   setWatchdogPoint(1);
   if (EqConfig::anyAlert()) {
     eqLedAlert().toggle(true); // force blinking ledAlert
-#if (EQ_LED_STATUS_ENABLED)
-    eqLedStatus().setState(false);
-#endif
+    if (EqConfig::ledStatusEnabled)
+      eqLedStatus().setState(false);
   } else { // no alerts
     eqLedAlert().setState(false);
-#if (EQ_LED_STATUS_ENABLED)
-    if (EqConfig::overdriveTime() > 0)
-      eqLedStatus().toggle(true); // force blinking ledStatus
-    else
-      EqConfig::setLedStatus();
-#endif // EQ_LED_STATUS_ENABLED
+    if (EqConfig::ledStatusEnabled) {
+      if (EqConfig::overdriveTime() > 0)
+        eqLedStatus().toggle(true); // force blinking ledStatus
+      else
+        EqConfig::setLedStatus();
+    }
   }
   eqLedHeartbeat().toggle(true);
   eqDisplay().show();
@@ -74,9 +73,8 @@ template <> bool EqTaskItSensorControl::Callback() {
         eqPwmTimer().detachCallback();
         eqLedHeartbeat().setState(false);
         eqLedAlert().setState(true);
-#if (EQ_LED_STATUS_ENABLED)
-        eqLedStatus().setState(false);
-#endif
+        if (EqConfig::ledStatusEnabled)
+          eqLedStatus().setState(false);
         EqConfig::disableWatchdog();
         EqConfig::sleep(); // wait for pressing override button
       }

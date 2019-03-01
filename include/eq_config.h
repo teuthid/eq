@@ -22,8 +22,6 @@ typedef std::function<void()> callback_t;
 typedef void (*callback_t)();
 #endif
 
-#define EQ_LED_STATUS_ENABLED true
-
 enum class EqLedStatusMode : uint8_t {
   LowTemperature = 0, // default
   HighTemperatue = 1,
@@ -70,6 +68,7 @@ public:
 #ifdef EQ_ARCH_AVR
   static constexpr uint8_t ledHeartbeatPin = 13;
   static constexpr uint8_t ledAlertPin = 4;
+  static constexpr bool ledStatusEnabled = true;
   static constexpr uint8_t ledStatusPin = A3; // optional
   static constexpr uint8_t lightSensorPin = A0;
   static constexpr uint8_t htSensorPin = 8; // if I2C is not used

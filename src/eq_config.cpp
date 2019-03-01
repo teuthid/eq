@@ -10,7 +10,6 @@
 #include "eq_dpin.h"
 #include "eq_eeprom.h"
 #include "eq_fan_pwm.h"
-#include "eq_flash.h"
 #include "eq_ht_sensor.h"
 #include "eq_led.h"
 #include "eq_light_sensor.h"
@@ -44,10 +43,9 @@ bool EqConfig::init() {
     return false;
   eqLedHeartbeat().test();
   eqLedAlert().test();
-#if (EQ_LED_STATUS_ENABLED)
-  if (isFanTachometerEnabled())
-    eqLedStatus().test(); // indicates that the tachometer is active
-#endif
+  if (ledStatusEnabled)
+    if (isFanTachometerEnabled())
+      eqLedStatus().test(); // indicates that the tachometer is active
   if (!eqLightSensor().init())
     return false;
   if (!eqItSensor().init())

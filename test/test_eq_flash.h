@@ -7,6 +7,4 @@
 
 const PROGMEM char strTest[] = "0123456789";
 
-test(EqFlashString) { 
-    EqFlashString __str(&strTest); 
-}
+test(EqFlashString) { EqFlashString __str(&strTest); }
