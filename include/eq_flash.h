@@ -12,15 +12,23 @@
 
 class EqFlashString {
 public:
-  EqFlashString(const void *address) : address_(address) {}
-  size_t length() const;
-  int compare(const char *str) const;
-  int compare_n(const char *str, size_t n) const;
-  char *copy(char *str, size_t offset = 0) const;
-  char *copy_n(char *str, size_t n, size_t offset = 0) const;
+  EqFlashString(const void *pstr) {
+    pstr_ = reinterpret_cast<const char *>(pstr);
+  }
+  size_t length() const { return strlen_P(pstr_); }
+  int compare(const char *str) const { return -strcmp_P(str, pstr_); }
+  int compare_n(const char *str, size_t n) const {
+    return -strncmp_P(str, pstr_, n);
+  }
+  char *copy(char *str, size_t offset = 0) const {
+    return strcpy_P(str, pstr_ + offset);
+  }
+  char *copy_n(char *str, size_t n, size_t offset = 0) const {
+    return strncpy_P(str, pstr_ + offset, n);
+  }
 
 private:
-  const void *address_;
+  const char *pstr_;
 };
 
 // TO REMOVE:

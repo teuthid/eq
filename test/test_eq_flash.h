@@ -8,7 +8,7 @@
 const PROGMEM char strTest[] = "0123456789";
 
 test(EqFlashString) {
-  EqFlashString __str(&strTest);
+  EqFlashString __str(strTest);
   uint8_t __length = __str.length();
   assertEqual(__length, 10);
   assertTrue(__str.compare("0123456789") == 0);
