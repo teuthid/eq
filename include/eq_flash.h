@@ -26,6 +26,8 @@ public:
   char *copy_n(char *str, size_t n, size_t offset = 0) const {
     return strncpy_P(str, pstr_ + offset, n);
   }
+  char *append(char *str) const { return strcat_P(str, pstr_); }
+  char *append_n(char *str, size_t n) const { return strncat_P(str, pstr_, n); }
 
 private:
   const char *pstr_;

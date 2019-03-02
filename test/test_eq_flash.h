@@ -16,11 +16,17 @@ test(EqFlashString) {
   assertTrue(__str.compare("1") < 0);
   assertTrue(__str.compare_n("01234", 5) == 0);
   assertTrue(__str.compare_n("01234", 6) != 0);
-  char __s[15];
+  char __s[25];
   __str.copy(__s);
   assertTrue(__str.compare("0123456789") == 0);
   __str.copy(__s, 1);
   assertTrue(strcmp(__s, "123456789") == 0);
   __str.copy_n(__s, 5);
   assertTrue(strncmp(__s, "01234", 5) == 0);
+  __str.copy(__s);
+  __str.append(__s);
+  assertTrue(strcmp(__s, "01234567890123456789") == 0);
+  __str.copy(__s);
+  __str.append_n(__s, 5);
+  assertTrue(strcmp(__s, "012345678901234") == 0);
 }
