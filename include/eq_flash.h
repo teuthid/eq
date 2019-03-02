@@ -10,15 +10,20 @@
 
 #include <avr/pgmspace.h>
 
-class EqFlashString final {
+class EqFlashString {
 public:
   EqFlashString(const void *address) : address_(address) {}
-  //size_t length() const;
+  size_t length() const;
+  int compare(const char *str) const;
+  int compare_n(const char *str, size_t n) const;
+  char *copy(char *str, size_t offset = 0) const;
+  char *copy_n(char *str, size_t n, size_t offset = 0) const;
 
 private:
   const void *address_;
 };
 
+// TO REMOVE:
 #define fchar_t const PROGMEM char
 #define fstring_t const PROGMEM char *
 char *fstring_copy(char *buffer, const void *address_short);
@@ -26,11 +31,7 @@ char *fstring_copy_n(char *buffer, const void *address_short, size_t n);
 
 #else // without using flash memory
 
-#include <stdlib.h> // for size_t
-#define fchar_t const char
-#define fstring_t const char *
-char *fstring_copy(char *buffer, const char *const *str);
-char *fstring_copy_n(char *buffer, const char *const *str, size_t n);
+// TODO
 
 #endif
 

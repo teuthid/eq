@@ -7,8 +7,27 @@
 
 #ifdef EQ_ARCH_AVR
 
-//size_t EqFlashString::length() const { return strlen_P(*address_); }
+size_t EqFlashString::length() const {
+  return strlen_P(reinterpret_cast<const char *>(address_));
+}
 
+int EqFlashString::compare(const char *str) const {
+  return -strcmp_P(str, reinterpret_cast<const char *>(address_));
+}
+
+int EqFlashString::compare_n(const char *str, size_t n) const {
+  return -strncmp_P(str, reinterpret_cast<const char *>(address_), n);
+}
+
+char *EqFlashString::copy(char *str, size_t offset) const {
+  return strcpy_P(str, reinterpret_cast<const char *>(address_) + offset);
+}
+
+char *EqFlashString::copy_n(char *str, size_t n, size_t offset) const {
+  return strncpy_P(str, reinterpret_cast<const char *>(address_) + offset, n);
+}
+
+// TO REMOVE:
 char *fstring_copy(char *buffer, const void *address_short) {
   return strcpy_P(buffer, (PGM_P)pgm_read_word(address_short));
 }
@@ -19,14 +38,6 @@ char *fstring_copy_n(char *buffer, const void *address_short, size_t n) {
 
 #else // without using flash memory
 
-#include <string.h>
-
-char *fstring_copy(char *buffer, const char *const *str) {
-  return strcpy(buffer, *str);
-}
-
-char *fstring_copy_n(char *buffer, const char *const *str, size_t n) {
-  return strncpy(buffer, *str, n);
-}
+// TODO
 
 #endif
