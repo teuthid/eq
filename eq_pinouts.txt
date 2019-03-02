@@ -1,31 +1,23 @@
+/*
+   eq - transcendental fan controller ;)
+   Copyright (c) 2018-2019 Mariusz Przygodzki
+*/
 
 
-
-                                           +-----+
-              +----[PWR]-------------------| USB |---+
-              |                            +-----+   |
-              |         GND/RST2  [ ][ ]             |
-              |       MOSI2/SCK2  [ ][ ]  A5/SCL [ ] | C5 display/htSensor
-              |          5V/MISO2 [ ][ ]  A4/SDA [ ] | C4 display/htSensor
-              |                             AREF [ ] |
-              |                              GND [ ] |
-              | [ ] N/C                   SCK/13 [X] | B5 ledHeartbeat
-              | [ ] IOREF                MISO/12 [ ] | B4 SoftSerial
-              | [ ] RST                  MOSI/11 [ ]~| B3 SoftSerial 
-              | [ ] 3V3                       10 [ ]~| B2
-              | [ ] 5v                         9 [X]~| B1 fanPwm
-              | [ ] GND                        8 [ ] | B0 htSensor (option)
-              | [ ] GND                              |
-              | [ ] Vin                        7 [ ] | D7
-              |                                6 [ ]~| D6 
-  lightSensor | [X] A0                         5 [X]~| D5 btnBacklight/reset
-tachometerCtl | [X] A1                         4 [X] | D4 ledAlert
-     itSensor | [X] A2                    INT1/3 [X]~| D3 fanTachometer
-              | [ ] A3                    INT0/2 [X] | D2 btnOverdrv/hard reset
-              | [ ] A4/SDA  RST SCK MISO    TX>1 [ ] | D1
-              | [ ] A5/SCL  [ ] [ ] [ ]     RX<0 [ ] | D0
-              |             [ ] [ ] [ ]              |
-              |  UNO_R3     GND MOSI 5V  ____________/
-              \_______________________/
-          
+Atmel/AVR
+---------
+D0    not used                        A0  lightSensor
+D1    not used                        A1  fanTachometerControl
+D2    buttonOverdrive/hard reset      A2  itSensor
+D3    fanTachometerPin                A3
+D4    ledAlert                        A4  I2C/SDA
+D5    buttonBacklight/soft reset      A5  I2C/SCL
+D6                                    A6
+D7                                    A7
+D8    htSensor (optional)
+D9    fanPwm
+D10
+D11   SoftSerial
+D12   SoftSerial
+D13   ledHeartbeat
 
