@@ -10,8 +10,6 @@
 #include "eq_interrupt_lock.h"
 #include "eq_pwm_timer.h"
 
-#include <TimerOne.h>
-
 volatile uint32_t EqFanPwm::counter_ = 0;
 
 bool EqFanPwm::init() {
