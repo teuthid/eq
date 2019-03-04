@@ -1,6 +1,6 @@
 # eq - transcendental fan controller ;)
 
-Based on the amateur and hobby framework allows writing cross-platform software - Arduino.
+Based on the amateur and hobby framework allows writing cross-platform software - Arduino Hardware Abstraction Libraries.
 
 ![lcd_2004_1](extras/lcd_2004_1.png)
 
