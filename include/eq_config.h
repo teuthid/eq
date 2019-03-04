@@ -110,7 +110,7 @@ public:
   static constexpr uint16_t buttonDebounceTime = 300;      // in milliseconds
   static constexpr uint16_t buttonLongPressedTime = 3000;  // in milliseconds
 
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
   static constexpr uint8_t debugInterval = 5; // in seconds
 #endif
 

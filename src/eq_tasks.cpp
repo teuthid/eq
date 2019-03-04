@@ -166,7 +166,7 @@ template <> bool EqTaskBlowingControl::Callback() {
 }
 
 // debugging
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
 #include "MemoryInfo.h"
 template <>
 EqTaskDebug::EqTask()
@@ -201,6 +201,6 @@ template <> EqTaskItSensorControl EqTaskItSensorControl::instance_{};
 template <> EqTaskHtSensorControl EqTaskHtSensorControl::instance_{};
 template <> EqTaskFanControl EqTaskFanControl::instance_{};
 template <> EqTaskBlowingControl EqTaskBlowingControl::instance_{};
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
 template <> EqTaskDebug EqTaskDebug::instance_{};
 #endif

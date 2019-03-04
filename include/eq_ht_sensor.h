@@ -88,7 +88,7 @@ bool EqHtSensor<Model, IsInternal>::init() {
           ? EqConfig::alertAsString(EqAlertType::ItSensor)
           : EqConfig::alertAsString(HumidityOn ? EqAlertType::HtSensor
                                                : EqAlertType::TempSensor);
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
   Serial.print(__s);
 #endif
   eqDisplay().showMessage(__s);

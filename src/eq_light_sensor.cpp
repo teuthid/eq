@@ -36,7 +36,7 @@ void EqLightSensor::read() {
 
 bool EqLightSensor::init() {
   const char *__s = EqConfig::alertAsString(EqAlertType::LightSensor);
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
   Serial.print(__s);
 #endif
   eqDisplay().showMessage(__s);

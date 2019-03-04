@@ -48,7 +48,7 @@ inline EqDisplay<EQ_DISPLAY_TYPE> &eqDisplay() {
 }
 
 template <uint8_t Model> bool EqDisplay<Model>::init() {
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
   Serial.print(EqConfig::alertAsString(EqAlertType::Display));
 #endif
   return init_();

@@ -29,7 +29,7 @@ using EqTaskItSensorControl = EqTask<EqTaskId::ItSensorControl>;
 using EqTaskHtSensorControl = EqTask<EqTaskId::HtSensorControl>;
 using EqTaskFanControl = EqTask<EqTaskId::FanControl>;
 using EqTaskBlowingControl = EqTask<EqTaskId::BlowingControl>;
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
 using EqTaskDebug = EqTask<EqTaskId::Debug>;
 #endif
 
@@ -39,7 +39,7 @@ template <EqTaskId Id> class EqTask : public Task {
   friend EqTaskHtSensorControl &eqTaskHtSensorControl();
   friend EqTaskFanControl &eqTaskFanControl();
   friend EqTaskBlowingControl &eqTaskBlowingControl();
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
   friend EqTaskDebug &eqTaskDebug();
 #endif
 
@@ -68,12 +68,12 @@ inline EqTaskFanControl &eqTaskFanControl() {
 inline EqTaskBlowingControl &eqTaskBlowingControl() {
   return EqTaskBlowingControl::instance_;
 }
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
 inline EqTaskDebug &eqTaskDebug() { return EqTaskDebug::instance_; }
 #endif
 
 template <EqTaskId Id> void EqTask<Id>::setWatchdogPoint(uint8_t point) {
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
   EQ_INTERRUPT_LOCK
   setControlPoint(static_cast<uint8_t>(Id) + point);
 #endif

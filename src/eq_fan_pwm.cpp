@@ -14,7 +14,7 @@ volatile uint32_t EqFanPwm::counter_ = 0;
 
 bool EqFanPwm::init() {
   const char *__s = EqConfig::alertAsString(EqAlertType::Fan);
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
   Serial.print(__s);
 #endif
   eqDisplay().showMessage(__s);

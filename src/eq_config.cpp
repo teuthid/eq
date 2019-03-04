@@ -131,7 +131,7 @@ void EqConfig::showAlert(EqAlertType alert) {
   eqLedAlert().setState(true);
   if (alert_ != EqAlertType::Display)
     eqDisplay().showAlert();
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
   Serial.println();
   Serial.print(F("ALERT: "));
   Serial.println(EqConfig::alertAsString());

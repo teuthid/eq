@@ -69,7 +69,7 @@ void EqConfig::disableAllTasks() {
 void EqConfig::saveWatchdogPoint() {
   if (saveWatchdogPoint_) {
     Task &__t = eqController.currentTask();
-#ifdef EQ_DEBUG
+#if defined(EQ_DEBUG)
     uint8_t __cp = __t.getControlPoint();
     if (__cp == 0) // control point is not set
       __cp = __t.getId();
