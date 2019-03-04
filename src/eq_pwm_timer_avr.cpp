@@ -23,9 +23,7 @@ void EqPwmTimer::attachCallback(callback_t callback) {
 
 void EqPwmTimer::detachCallback() { Timer1.detachInterrupt(); }
 
-#else
-// TODO: other architectures
-#endif
-
 // instance of EqTimer
 EqPwmTimer EqPwmTimer::instance_{};
+
+#endif // EQ_ARCH_AVR
