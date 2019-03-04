@@ -4,6 +4,7 @@ Based on the amateur and hobby framework allows writing cross-platform software 
 
 ![lcd_2004_1](extras/lcd_2004_1.png)
 ![lcd_2004_2](extras/lcd_2004_2.png)
+![lcd_2004_3](extras/lcd_2004_3.png)
 
 * Fan speed control based on current humidity and temperature measurements.
 * Display of current humidity and temperature values, and their trends in time.
