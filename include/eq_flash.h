@@ -6,11 +6,13 @@
 #ifndef __EQ_FLASH_H__
 #define __EQ_FLASH_H__
 
+#include "Arduino.h"
+
 #ifdef EQ_ARCH_AVR
 
 #include <avr/pgmspace.h>
 
-class EqFlashString {
+class EqFlashString : public Printable {
 public:
   EqFlashString(const void *pstr) {
     pstr_ = reinterpret_cast<const char *>(pstr);
@@ -31,6 +33,10 @@ public:
 
   char operator[](size_t index) const {
     return static_cast<char>(pgm_read_byte(pstr_ + index));
+  }
+
+  size_t printTo(Print &p) const { // virtual method from Printable class
+    return p.print((__FlashStringHelper *)pstr_);
   }
 
 private:
