@@ -29,6 +29,10 @@ public:
   char *append(char *str) const { return strcat_P(str, pstr_); }
   char *append_n(char *str, size_t n) const { return strncat_P(str, pstr_, n); }
 
+  char operator[](size_t index) const {
+    return static_cast<char>(pgm_read_byte(pstr_ + index));
+  }
+
 private:
   const char *pstr_;
 };

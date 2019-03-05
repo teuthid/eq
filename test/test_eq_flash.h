@@ -29,4 +29,6 @@ test(EqFlashString) {
   __str.copy(__s);
   __str.append_n(__s, 5);
   assertTrue(strcmp(__s, "012345678901234") == 0);
+  for (uint8_t __i = 0; __i < 10; __i++)
+    assertTrue(__str[__i] == (char)(__i + 48));
 }
