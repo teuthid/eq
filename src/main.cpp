@@ -14,7 +14,7 @@
 
 #include "eq_display.h"
 #include "test_eq.h"
-#endif
+#endif // defined(EQ_UNIT_TEST)
 
 Scheduler eqController;
 Scheduler eqHPController; // high priority scheduler

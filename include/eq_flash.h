@@ -14,8 +14,7 @@
 
 class EqFlashString : public Printable {
 public:
-  constexpr EqFlashString(const void *pstr)
-      : pstr_(reinterpret_cast<const char *>(pstr)) {}
+  constexpr EqFlashString(const char *pstr) : pstr_(pstr) {}
 
   size_t length() const { return strlen_P(pstr_); }
 
