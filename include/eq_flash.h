@@ -47,16 +47,8 @@ private:
   const char *pstr_;
 };
 
-// TO REMOVE:
-#define fchar_t const PROGMEM char
-#define fstring_t const PROGMEM char *
-char *fstring_copy(char *buffer, const void *address_short);
-char *fstring_copy_n(char *buffer, const void *address_short, size_t n);
-
 #else // without using flash memory
-
 // TODO
-
 #endif
 
 #endif // __EQ_FLASH_H__
