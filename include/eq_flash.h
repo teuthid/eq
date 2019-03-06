@@ -9,7 +9,6 @@
 #include "Arduino.h"
 
 #ifdef EQ_ARCH_AVR
-
 #include <avr/pgmspace.h>
 
 class EqFlashString : public Printable {
@@ -46,6 +45,10 @@ public:
 private:
   const char *pstr_;
 };
+
+#define EQ_FSTR(name, value)                                                   \
+  static const char __flash_##name[] PROGMEM = value;                          \
+  EqFlashString name(__flash_##name);
 
 #else // without using flash memory
 // TODO

@@ -5,9 +5,8 @@
 
 #include "eq_config.h"
 
-const PROGMEM char strTest[] = "0123456789";
-
 test(EqFlashString) {
+  EQ_FSTR(strTest, "0123456789");
   EqFlashString __str(strTest);
   uint8_t __length = __str.length();
   assertEqual(__length, 10);
