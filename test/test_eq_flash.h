@@ -29,8 +29,10 @@ test(EqFlashString) {
   __str.append_n(__s, 5);
   assertTrue(strcmp(__s, "012345678901234") == 0);
   assertTrue(strcmp(__str(__s), "0123456789") == 0);
-  for (uint8_t __i = 0; __i < 10; __i++)
+  for (uint8_t __i = 0; __i < 10; __i++) {
+    assertTrue(__str.charAt(__i) == (char)(__i + 48));
     assertTrue(__str[__i] == (char)(__i + 48));
+  }
   aunit::fake::FakePrint fakePrint;
   fakePrint.print(__str);
   assertEqual("0123456789", fakePrint.getBuffer());
