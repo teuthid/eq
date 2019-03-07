@@ -63,34 +63,33 @@ inline size_t EqFlashString::printTo(Print &p) const {
 
 #else // without using flash memory
 
-class EqFlashString : public Printable {
-public:
-  constexpr EqFlashString(const char *pstr) : pstr_(pstr) {}
-  size_t length() const { return strlen(pstr_); }
-  int compare(const char *str) const { return -strcmp(str, pstr_); }
-  int compare_n(const char *str, size_t n) const {
-    return -strncmp(str, pstr_, n);
-  }
-  char *copy(char *str, size_t offset = 0) const {
-    return strcpy(str, pstr_ + offset);
-  }
-  char *copy_n(char *str, size_t n, size_t offset = 0) const {
-    return strncpy(str, pstr_ + offset, n);
-  }
-  char *append(char *str) const { return strcat(str, pstr_); }
-  char *append_n(char *str, size_t n) const { return strncat(str, pstr_, n); }
-  char operator[](size_t index) const { return pstr_[index]; }
-  char *operator()(char *str) const { return strcpy(str, pstr_); }
-  size_t printTo(Print &p) const { return p.print(pstr_); }
-
-private:
-  const char *pstr_;
-};
+// EqFlashString
+inline size_t EqFlashString::length() const { return strlen(pstr_); }
+inline int EqFlashString::compare(const char *str) const {
+  return -strcmp(str, pstr_);
+}
+inline int EqFlashString::compare_n(const char *str, size_t n) const {
+  return -strncmp(str, pstr_, n);
+}
+inline char *EqFlashString::copy(char *str, size_t offset) const {
+  return strcpy(str, pstr_ + offset);
+}
+inline char *EqFlashString::copy_n(char *str, size_t n, size_t offset) const {
+  return strncpy(str, pstr_ + offset, n);
+}
+inline char *EqFlashString::append(char *str) const {
+  return strcat(str, pstr_);
+}
+inline char *EqFlashString::append_n(char *str, size_t n) const {
+  return strncat(str, pstr_, n);
+}
+inline char EqFlashString::charAt(size_t index) const { return pstr_[index]; }
+inline size_t EqFlashString::printTo(Print &p) const { return p.print(pstr_); }
 
 #define EQ_FSTR(name, value)                                                   \
   static const char __flash_##name[] = value;                                  \
   EqFlashString name(__flash_##name);
 
-#endif
+#endif // architectures
 
 #endif // __EQ_FLASH_H__
