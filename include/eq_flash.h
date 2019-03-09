@@ -57,7 +57,7 @@ inline size_t EqFlashString::printTo(Print &p) const {
   return p.print((__FlashStringHelper *)pstr_);
 }
 
-#define EQ_FSTR(name, value)                                                   \
+#define EQ_FSTRING(name, value)                                                   \
   static const char __flash_##name[] PROGMEM = value;                          \
   EqFlashString name(__flash_##name);
 
@@ -86,7 +86,7 @@ inline char *EqFlashString::append_n(char *str, size_t n) const {
 inline char EqFlashString::charAt(size_t index) const { return pstr_[index]; }
 inline size_t EqFlashString::printTo(Print &p) const { return p.print(pstr_); }
 
-#define EQ_FSTR(name, value)                                                   \
+#define EQ_FSTRING(name, value)                                                   \
   static const char __flash_##name[] = value;                                  \
   EqFlashString name(__flash_##name);
 
