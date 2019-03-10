@@ -38,11 +38,13 @@ test(EqFlashString) {
   assertEqual("0123456789", fakePrint.getBuffer());
 }
 
-static const char *const PROGMEM strArrayTest[] = {"1", "22", "333", "4444",
+static const PROGMEM char *const strArrayTest[] = {"1", "22", "333", "4444",
                                                    "55555"};
 
 test(EqFlashStringArray) {
   EqFlashStringArray<sizeof(strArrayTest) / sizeof(strArrayTest[0])> __strArray(
-      const_cast<const char **>(strArrayTest));
+      strArrayTest);
   assertTrue(__strArray.size() == 5);
+  Serial.println(__strArray[0]);
+  // assertTrue(__strArray[0].compare("1") == 0);
 }

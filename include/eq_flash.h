@@ -32,12 +32,16 @@ template <size_t Size> class EqFlashStringArray {
                 "The size of EqFlashStringArray should be greater than 0");
 
 public:
-  constexpr EqFlashStringArray(const char **pstrArray)
+  constexpr EqFlashStringArray(const char *const *pstrArray)
       : pstrArray_(pstrArray) {}
   constexpr size_t size() { return Size; }
+  EqFlashString operator[](size_t index) const {
+        return EqFlashString(pstrArray_[index]);
+    //return EqFlashString((PGM_P)pgm_read_word(&(pstrArray_[index])));
+  }
 
 private:
-  const char **pstrArray_;
+  const char *const *pstrArray_;
 };
 
 #if defined(EQ_ARCH_AVR)
