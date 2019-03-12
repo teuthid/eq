@@ -21,7 +21,9 @@ public:
   char charAt(size_t index) const;
   char operator[](size_t index) const { return charAt(index); }
   char *operator()(char *str) const { return copy(str); }
-  size_t printTo(Print &p) const; // virtual method from Printable class
+  size_t printTo(Print &p) const { // virtual method from Printable class
+    return p.print(pstr_);
+  }
 
 private:
   const char *pstr_;
@@ -36,8 +38,7 @@ public:
       : pstrArray_(pstrArray) {}
   constexpr size_t size() { return Size; }
   EqFlashString operator[](size_t index) const {
-        return EqFlashString(pstrArray_[index]);
-    //return EqFlashString((PGM_P)pgm_read_word(&(pstrArray_[index])));
+    return EqFlashString(pstrArray_[index]);
   }
 
 private:
@@ -70,9 +71,6 @@ inline char *EqFlashString::append_n(char *str, size_t n) const {
 inline char EqFlashString::charAt(size_t index) const {
   return static_cast<char>(pgm_read_byte(pstr_ + index));
 }
-inline size_t EqFlashString::printTo(Print &p) const {
-  return p.print((__FlashStringHelper *)pstr_);
-}
 
 #define EQ_FSTRING(name, value)                                                \
   static const char __flash_##name[] PROGMEM = value;                          \
@@ -101,7 +99,6 @@ inline char *EqFlashString::append_n(char *str, size_t n) const {
   return strncat(str, pstr_, n);
 }
 inline char EqFlashString::charAt(size_t index) const { return pstr_[index]; }
-inline size_t EqFlashString::printTo(Print &p) const { return p.print(pstr_); }
 
 #define EQ_FSTRING(name, value)                                                \
   static const char __flash_##name[] = value;                                  \

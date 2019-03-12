@@ -35,7 +35,7 @@ test(EqFlashString) {
   }
   aunit::fake::FakePrint fakePrint;
   fakePrint.print(__str);
-  assertEqual("0123456789", fakePrint.getBuffer());
+  assertTrue(strcmp("0123456789", fakePrint.getBuffer()));
 }
 
 static const PROGMEM char *const strArrayTest[] = {"1", "22", "333", "4444",
@@ -45,6 +45,6 @@ test(EqFlashStringArray) {
   EqFlashStringArray<sizeof(strArrayTest) / sizeof(strArrayTest[0])> __strArray(
       strArrayTest);
   assertTrue(__strArray.size() == 5);
-  Serial.println(__strArray[0]);
-  // assertTrue(__strArray[0].compare("1") == 0);
+  assertTrue(__strArray[0].length() == 1);
+  assertTrue(__strArray[4].length() == 5);
 }
