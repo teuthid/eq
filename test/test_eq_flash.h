@@ -37,14 +37,3 @@ test(EqFlashString) {
   assertTrue(strcmp("0123456789", fakePrint.getBuffer())); // ???
 }
 
-static const PROGMEM char *const strArrayTest[] = {"1", "22", "333", "4444",
-                                                   "55555"};
-
-test(EqFlashStringArray) {
-  EqFlashStringArray<sizeof(strArrayTest) / sizeof(strArrayTest[0])> __strArray(
-      strArrayTest);
-  assertEqual(__strArray.size(), size_t(5));
-  assertEqual(__strArray[0].length(), size_t(1));
-  assertEqual(__strArray[4].length(), size_t(5));
-  //assertEqual(__strArray[1].compare("22"), 0);
-}

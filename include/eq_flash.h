@@ -10,7 +10,10 @@
 
 class EqFlashString : public Printable {
 public:
-  constexpr EqFlashString(const char *pstr) : pstr_(pstr) {}
+  EqFlashString() = delete;
+  EqFlashString(const char *pstr) : pstr_(pstr) {}
+  EqFlashString(const EqFlashString &fstr) : pstr_(fstr.pstr_) {}
+  EqFlashString(EqFlashString &&fstr) : pstr_(fstr.pstr_) {}
   size_t length() const;
   int compare(const char *str) const;
   int compare_n(const char *str, size_t n) const;
@@ -29,21 +32,6 @@ private:
   const char *pstr_;
 };
 
-template <size_t Size> class EqFlashStringArray {
-  static_assert(Size > 0,
-                "The size of EqFlashStringArray should be greater than 0");
-
-public:
-  constexpr EqFlashStringArray(const char *const *pstrArray)
-      : pstrArray_(pstrArray) {}
-  constexpr size_t size() { return Size; }
-  EqFlashString operator[](size_t index) const {
-    return EqFlashString(pstrArray_[index]);
-  }
-
-private:
-  const char *const *pstrArray_;
-};
 
 #if defined(EQ_ARCH_AVR)
 #include <avr/pgmspace.h>
