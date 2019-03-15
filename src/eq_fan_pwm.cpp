@@ -5,7 +5,6 @@
 
 #include "eq_fan_pwm.h"
 #include "eq_display.h"
-#include "eq_dpin.h"
 #include "eq_ht_sensor.h"
 #include "eq_interrupt_lock.h"
 #include "eq_pwm_timer.h"
@@ -33,7 +32,7 @@ bool EqFanPwm::init() {
 }
 
 void EqFanPwm::startTachometer() {
-  EqDPin<EqConfig::fanTachometerPin>::setInputPulledUp();
+  pinMode(EqConfig::fanTachometerPin, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(EqConfig::fanTachometerPin),
                   []() {
                     EQ_INTERRUPT_LOCK

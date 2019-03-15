@@ -32,6 +32,7 @@ const PROGMEM uint8_p EqEeprom::paramSizes_[] = {
 };
 
 void EqEeprom::init(bool reset) {
+  // EEPROM.begin(); ???
   eeprom_busy_wait();
   uint8_t __value = EEPROM.read(startAddress);
   if (reset || (__value != marker_)) {

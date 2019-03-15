@@ -7,7 +7,6 @@
 #define __EQ_LED_H__
 
 #include "eq_config.h"
-#include "eq_dpin.h"
 
 template <uint8_t LedPin, bool Invert> class EqLed;
 using EqLedAlert = EqLed<EqConfig::ledAlertPin, EqConfig::ledAlertInvert>;
@@ -41,18 +40,19 @@ inline EqLedHeartbeat &eqLedHeartbeat() { return EqLedHeartbeat::instance_; }
 inline EqLedStatus &eqLedStatus() { return EqLedStatus::instance_; }
 
 template <uint8_t LedPin, bool Invert> EqLed<LedPin, Invert>::EqLed() {
-  EqDPin<LedPin>::setOutput(Invert);
+  pinMode(LedPin, OUTPUT);
+  digitalWrite(LedPin, Invert ? HIGH : LOW);
 }
 
 template <uint8_t LedPin, bool Invert>
 void EqLed<LedPin, Invert>::setState(bool state) const {
-  EqDPin<LedPin>::setOutputValue(Invert ? !state : state);
+  digitalWrite(LedPin, Invert ? !state : state);
 }
 
 template <uint8_t LedPin, bool Invert>
 void EqLed<LedPin, Invert>::test() const {
   for (uint16_t __i = 0; __i < (2 * testIterations_); __i++) {
-    EqDPin<LedPin>::setOutputValueToggle();
+    digitalWrite(LedPin, (digitalRead(LedPin) == HIGH) ? LOW : HIGH);
     delay(testInterval_);
   }
 }
@@ -60,9 +60,9 @@ void EqLed<LedPin, Invert>::test() const {
 template <uint8_t LedPin, bool Invert>
 void EqLed<LedPin, Invert>::toggle(bool forcing) const {
   if (forcing || EqConfig::backlight())
-    EqDPin<LedPin>::setOutputValueToggle();
+    digitalWrite(LedPin, (digitalRead(LedPin) == HIGH) ? LOW : HIGH);
   else // led off
-    EqDPin<LedPin>::setOutputValue(Invert);
+    digitalWrite(LedPin, Invert ? HIGH : LOW);
 }
 
 #endif // __EQ_LED_H__

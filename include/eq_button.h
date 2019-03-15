@@ -11,7 +11,6 @@
 #define __EQ_BUTTON_H__
 
 #include "eq_config.h"
-#include "eq_dpin.h"
 
 template <uint8_t Pin, bool PullUp, bool Invert> class EqButton;
 using EqButtonBacklight = EqButton<EqConfig::buttonBacklightPin,
@@ -90,6 +89,7 @@ private:
       pressedSequenceCallback_; // callback function for pressedSequence events.
 
   constexpr EqButton() {}
+  bool digitalRead_() const;
 
   static constexpr uint32_t dbTime_ = EqConfig::buttonDebounceTime;
   static EqButton instance_;
@@ -103,13 +103,17 @@ inline EqButtonOverdrive &eqButtonOverdrive() {
 }
 
 template <uint8_t Pin, bool PullUp, bool Invert>
+bool EqButton<Pin, PullUp, Invert>::digitalRead_() const {
+  return digitalRead(Pin) == (Invert ? LOW : HIGH);
+}
+
+template <uint8_t Pin, bool PullUp, bool Invert>
 void EqButton<Pin, PullUp, Invert>::init() {
   if (PullUp)
-    EqDPin<Pin>::setInputPulledUp();
+    pinMode(Pin, INPUT_PULLUP);
   else
-    EqDPin<Pin>::setInput();
-  currentState_ =
-      Invert ? EqDPin<Pin>::isInputLow() : EqDPin<Pin>::isInputHigh();
+    pinMode(Pin, INPUT);
+  currentState_ = digitalRead_();
   time_ = millis();
   lastState_ = currentState_;
   changed_ = false;
@@ -172,7 +176,7 @@ EqButton<Pin, PullUp, Invert>::releasedFor(uint32_t duration) const {
 template <uint8_t Pin, bool PullUp, bool Invert>
 bool EqButton<Pin, PullUp, Invert>::update() {
   uint32_t __readStartedMs = millis();
-  bool pinVal = Invert ? EqDPin<Pin>::isInputLow() : EqDPin<Pin>::isInputHigh();
+  bool pinVal = digitalRead_();
   if (__readStartedMs - lastChange_ < dbTime_) {
     changed_ = false;
   } else { // button's state has changed.

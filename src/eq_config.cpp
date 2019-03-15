@@ -7,7 +7,6 @@
 
 #include "eq_button.h"
 #include "eq_display.h"
-#include "eq_dpin.h"
 #include "eq_eeprom.h"
 #include "eq_fan_pwm.h"
 #include "eq_ht_sensor.h"
@@ -32,7 +31,6 @@ void EqConfig::clearWatchdogPoint() {
 
 bool EqConfig::init() {
   EqEeprom::init();
-  EqDPin<fanTachometerControlPin>::setInputPulledUp();
   backlightTimeCounter_ = backlightTime();
   // analogReadResolution(10); // TODO: for non-AVR architecture
   Wire.begin(); // TO FIX: for ESP32
@@ -366,7 +364,7 @@ void EqConfig::setFanPwmStepMode(bool enabled) {
 }
 
 bool EqConfig::isFanTachometerEnabled() {
-  return EqDPin<EqConfig::fanTachometerControlPin>::isInputHigh();
+  return (digitalRead(fanTachometerControlPin) == HIGH);
 }
 
 bool EqConfig::isBlowingEnabled() {

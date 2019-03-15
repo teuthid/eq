@@ -5,7 +5,6 @@
 
 #include "eq_light_sensor.h"
 #include "eq_display.h"
-#include "eq_dpin.h"
 
 void EqLightSensor::collect_() {
   if (EqConfig::lightSensorIsAnalog) {
@@ -13,8 +12,8 @@ void EqLightSensor::collect_() {
     collector_.add(EqConfig::lightSensorInvert ? 1023 - __l : __l);
   } else { // digital light sensor
     bool __s = EqConfig::lightSensorInvert
-                   ? EqDPin<EqConfig::lightSensorPin>::isInputLow()
-                   : EqDPin<EqConfig::lightSensorPin>::isInputHigh();
+                   ? (digitalRead(EqConfig::lightSensorPin) == LOW)
+                   : (digitalRead(EqConfig::lightSensorPin) == HIGH);
     collector_.add(__s ? 1023 : 0);
   }
 }
@@ -40,7 +39,7 @@ bool EqLightSensor::init() {
   Serial.print(__s);
 #endif
   eqDisplay().showMessage(__s);
-  EqDPin<EqConfig::lightSensorPin>::setInput();
+  pinMode(EqConfig::lightSensorPin, INPUT);
   for (uint8_t __i = 0; __i < EqConfig::lightSensorCollectorSize; __i++) {
     delay(200);
     collect_();
